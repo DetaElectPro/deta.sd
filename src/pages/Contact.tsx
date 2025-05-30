@@ -1,11 +1,9 @@
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SecureContactForm from "@/components/SecureContactForm";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
 const Contact = () => {
   const contactInfo = [
@@ -111,74 +109,8 @@ const Contact = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Form */}
-            <Card className="border-none shadow-lg">
-              <CardContent className="p-8">
-                <h2 className="text-3xl font-bold text-deta-green mb-6 arabic-heading">
-                  أرسل لنا رسالة
-                </h2>
-                <form className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        الاسم الأول *
-                      </label>
-                      <Input placeholder="أدخل اسمك الأول" required />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        الاسم الأخير *
-                      </label>
-                      <Input placeholder="أدخل اسمك الأخير" required />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      البريد الإلكتروني *
-                    </label>
-                    <Input type="email" placeholder="أدخل بريدك الإلكتروني" required />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      رقم الهاتف
-                    </label>
-                    <Input placeholder="أدخل رقم هاتفك" />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      الشركة/المؤسسة
-                    </label>
-                    <Input placeholder="أدخل اسم شركتك أو مؤسستك" />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      موضوع الرسالة *
-                    </label>
-                    <Input placeholder="أدخل موضوع رسالتك" required />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      الرسالة *
-                    </label>
-                    <Textarea 
-                      placeholder="أدخل تفاصيل رسالتك أو استفسارك"
-                      rows={6}
-                      required
-                    />
-                  </div>
-                  
-                  <Button type="submit" className="w-full bg-deta-green hover:bg-deta-green/90" size="lg">
-                    إرسال الرسالة
-                    <Send className="w-4 h-4 mr-2" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            {/* Secure Form */}
+            <SecureContactForm />
 
             {/* Map and Additional Info */}
             <div className="space-y-8">
