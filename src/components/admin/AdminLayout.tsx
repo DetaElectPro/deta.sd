@@ -11,7 +11,9 @@ import {
   Image,
   LogOut,
   Menu,
-  X
+  X,
+  Tag,
+  Users
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -25,7 +27,9 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
   const navigation = [
     { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
-    { name: 'المقالات', href: '/admin/articles', icon: FileText },
+    { name: 'إدارة المحتوى', href: '/admin/content', icon: FileText },
+    { name: 'إدارة الفئات', href: '/admin/categories', icon: Tag },
+    { name: 'إدارة المستخدمين', href: '/admin/users', icon: Users },
     { name: 'الوسائط', href: '/admin/media', icon: Image },
     { name: 'إعدادات الموقع', href: '/admin/settings', icon: Settings },
     { name: 'التحليلات', href: '/admin/analytics', icon: BarChart3 },
@@ -50,7 +54,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         sidebarOpen ? 'translate-x-0' : 'translate-x-full'
       } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex items-center justify-between h-16 px-6 border-b">
-          <h1 className="text-xl font-bold text-deta-green arabic-heading">لوحة التحكم</h1>
+          <h1 className="text-xl font-bold text-deta-green arabic-heading">نظام إدارة المحتوى</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -71,7 +75,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive
                       ? 'bg-deta-green text-white'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -108,7 +112,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         {/* Top bar */}
         <div className="bg-white shadow-sm border-b lg:hidden">
           <div className="flex items-center justify-between h-16 px-4">
-            <h1 className="text-lg font-medium text-gray-900">لوحة التحكم</h1>
+            <h1 className="text-lg font-medium text-gray-900 arabic-heading">نظام إدارة المحتوى</h1>
             <Button
               variant="ghost"
               size="sm"
