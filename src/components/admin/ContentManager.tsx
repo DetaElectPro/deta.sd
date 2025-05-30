@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,8 @@ import {
   Filter,
   Eye,
   Calendar,
-  User
+  User,
+  FileText
 } from 'lucide-react';
 
 export const ContentManager = () => {
@@ -147,12 +147,12 @@ export const ContentManager = () => {
 
   if (editingArticle || isCreating) {
     return (
-      <div className="space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold arabic-heading">
             {editingArticle ? 'تعديل المقال' : 'إضافة مقال جديد'}
           </h2>
-          <div className="space-x-2">
+          <div className="flex gap-2">
             <Button onClick={handleSave} className="bg-deta-green hover:bg-deta-green/90">
               حفظ
             </Button>

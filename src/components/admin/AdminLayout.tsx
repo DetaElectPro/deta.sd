@@ -13,7 +13,8 @@ import {
   Menu,
   X,
   Tag,
-  Users
+  Users,
+  ChevronLeft
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -24,6 +25,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut, userProfile } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const navigation = [
     { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
@@ -40,7 +42,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -50,22 +52,37 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 right-0 z-30 w-64 bg-white shadow-lg transform ${
+      <div className={`fixed inset-y-0 right-0 z-30 bg-white shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
         sidebarOpen ? 'translate-x-0' : 'translate-x-full'
-      } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
-        <div className="flex items-center justify-between h-16 px-6 border-b">
-          <h1 className="text-xl font-bold text-deta-green arabic-heading">نظام إدارة المحتوى</h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X className="h-5 w-5" />
-          </Button>
+      } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
+        
+        {/* Sidebar Header */}
+        <div className={`flex items-center justify-between h-16 px-4 border-b ${sidebarCollapsed ? 'px-2' : 'px-6'}`}>
+          {!sidebarCollapsed && (
+            <h1 className="text-xl font-bold text-deta-green arabic-heading">نظام إدارة المحتوى</h1>
+          )}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden lg:flex"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
+              <ChevronLeft className={`h-5 w-5 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         
-        <nav className="mt-6 px-3">
+        {/* Navigation */}
+        <nav className="mt-6 px-3 flex-1">
           <div className="space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -75,41 +92,48 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-deta-green text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                      ? 'bg-deta-green text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-deta-green'
+                  } ${sidebarCollapsed ? 'justify-center' : ''}`}
+                  title={sidebarCollapsed ? item.name : ''}
                 >
-                  <Icon className="ml-3 h-5 w-5 flex-shrink-0" />
-                  {item.name}
+                  <Icon className={`h-5 w-5 flex-shrink-0 ${sidebarCollapsed ? '' : 'ml-3'}`} />
+                  {!sidebarCollapsed && <span>{item.name}</span>}
                 </Link>
               );
             })}
           </div>
         </nav>
 
-        <div className="absolute bottom-0 w-full p-4 border-t">
-          <div className="flex items-center mb-4">
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-700">{userProfile?.full_name}</p>
-              <p className="text-xs text-gray-500">{userProfile?.role}</p>
+        {/* User Profile & Logout */}
+        <div className="absolute bottom-0 w-full p-4 border-t bg-gray-50">
+          {!sidebarCollapsed && (
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 bg-deta-green rounded-full flex items-center justify-center text-white font-bold">
+                {userProfile?.full_name?.charAt(0) || 'A'}
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-700">{userProfile?.full_name}</p>
+                <p className="text-xs text-gray-500">{userProfile?.role}</p>
+              </div>
             </div>
-          </div>
+          )}
           <Button
             variant="outline"
-            className="w-full"
+            className={`w-full hover:bg-red-50 hover:text-red-600 hover:border-red-200 ${sidebarCollapsed ? 'px-2' : ''}`}
             onClick={handleSignOut}
           >
-            <LogOut className="h-4 w-4 ml-2" />
-            تسجيل الخروج
+            <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : 'ml-2'}`} />
+            {!sidebarCollapsed && 'تسجيل الخروج'}
           </Button>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="lg:mr-64">
-        {/* Top bar */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Top bar for mobile */}
         <div className="bg-white shadow-sm border-b lg:hidden">
           <div className="flex items-center justify-between h-16 px-4">
             <h1 className="text-lg font-medium text-gray-900 arabic-heading">نظام إدارة المحتوى</h1>
@@ -124,8 +148,10 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         </div>
 
         {/* Page content */}
-        <main className="p-6">
-          {children}
+        <main className="flex-1 p-6 overflow-auto">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>
