@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -15,6 +16,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [loginData, setLoginData] = useState({
     email: '',
@@ -30,8 +32,10 @@ const Auth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
+      console.log('Starting login process...');
       await signIn(loginData.email, loginData.password);
       toast({
         title: "تم تسجيل الدخول بنجاح",
@@ -39,9 +43,25 @@ const Auth = () => {
       });
       navigate('/admin');
     } catch (error: any) {
+      console.error('Login error:', error);
+      let errorMessage = "حدث خطأ في تسجيل الدخول";
+      
+      if (error.message) {
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = "بيانات الدخول غير صحيحة";
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = "يرجى تأكيد البريد الإلكتروني أولاً";
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage = "مشكلة في الاتصال. يرجى المحاولة مرة أخرى";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setError(errorMessage);
       toast({
         title: "خطأ في تسجيل الدخول",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -52,17 +72,37 @@ const Auth = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
+      console.log('Starting registration process...');
       await signUp(registerData.email, registerData.password, registerData.fullName);
       toast({
         title: "تم إنشاء الحساب بنجاح",
-        description: "يرجى تسجيل الدخول"
+        description: "يمكنك الآن تسجيل الدخول"
       });
+      // Clear form
+      setRegisterData({ email: '', password: '', fullName: '' });
     } catch (error: any) {
+      console.error('Registration error:', error);
+      let errorMessage = "حدث خطأ في إنشاء الحساب";
+      
+      if (error.message) {
+        if (error.message.includes('User already registered')) {
+          errorMessage = "المستخدم مسجل بالفعل";
+        } else if (error.message.includes('Password should be')) {
+          errorMessage = "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage = "مشكلة في الاتصال. يرجى المحاولة مرة أخرى";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setError(errorMessage);
       toast({
         title: "خطأ في إنشاء الحساب",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -78,6 +118,12 @@ const Auth = () => {
           <p className="text-gray-600">نظام إدارة المحتوى</p>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
           <Tabs defaultValue="login" className="space-y-4">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">تسجيل الدخول</TabsTrigger>
@@ -94,6 +140,7 @@ const Auth = () => {
                     value={loginData.email}
                     onChange={(e) => setLoginData({...loginData, email: e.target.value})}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -104,6 +151,7 @@ const Auth = () => {
                     value={loginData.password}
                     onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -123,6 +171,7 @@ const Auth = () => {
                     value={registerData.fullName}
                     onChange={(e) => setRegisterData({...registerData, fullName: e.target.value})}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -133,6 +182,7 @@ const Auth = () => {
                     value={registerData.email}
                     onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
                     required
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -143,6 +193,8 @@ const Auth = () => {
                     value={registerData.password}
                     onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
                     required
+                    disabled={loading}
+                    minLength={6}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
