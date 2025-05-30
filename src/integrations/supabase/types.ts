@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      article_translations: {
+        Row: {
+          article_id: string
+          content: string | null
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          language_code: string
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          article_id: string
+          content?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language_code: string
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          article_id?: string
+          content?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language_code?: string
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_translations_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "article_translations_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "languages"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       articles: {
         Row: {
           author: string
@@ -78,6 +129,84 @@ export type Database = {
           id?: string
           name?: string
           slug?: string
+        }
+        Relationships: []
+      }
+      category_translations: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          language_code: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          language_code: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          language_code?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_translations_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "category_translations_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "languages"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      languages: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          is_default: boolean | null
+          is_rtl: boolean | null
+          name: string
+          native_name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          is_rtl?: boolean | null
+          name: string
+          native_name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          is_rtl?: boolean | null
+          name?: string
+          native_name?: string
         }
         Relationships: []
       }
@@ -170,6 +299,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      site_setting_translations: {
+        Row: {
+          created_at: string | null
+          id: string
+          language_code: string
+          setting_key: string
+          updated_at: string | null
+          value: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          language_code: string
+          setting_key: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          language_code?: string
+          setting_key?: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_setting_translations_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "languages"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       site_settings: {
         Row: {

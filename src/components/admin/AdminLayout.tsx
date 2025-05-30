@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
+import { LanguageSelector } from './LanguageSelector';
 import {
   LayoutDashboard,
   FileText,
@@ -14,7 +16,8 @@ import {
   X,
   Tag,
   Users,
-  ChevronLeft
+  ChevronLeft,
+  Globe
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -23,18 +26,20 @@ interface AdminLayoutProps {
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut, userProfile } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const navigation = [
-    { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
-    { name: 'إدارة المحتوى', href: '/admin/content', icon: FileText },
-    { name: 'إدارة الفئات', href: '/admin/categories', icon: Tag },
-    { name: 'إدارة المستخدمين', href: '/admin/users', icon: Users },
-    { name: 'الوسائط', href: '/admin/media', icon: Image },
-    { name: 'إعدادات الموقع', href: '/admin/settings', icon: Settings },
-    { name: 'التحليلات', href: '/admin/analytics', icon: BarChart3 },
+    { name: t('admin.dashboard') || 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
+    { name: t('admin.content') || 'إدارة المحتوى', href: '/admin/content', icon: FileText },
+    { name: t('admin.categories') || 'إدارة الفئات', href: '/admin/categories', icon: Tag },
+    { name: t('admin.users') || 'إدارة المستخدمين', href: '/admin/users', icon: Users },
+    { name: t('admin.languages') || 'إدارة اللغات', href: '/admin/languages', icon: Globe },
+    { name: t('admin.media') || 'الوسائط', href: '/admin/media', icon: Image },
+    { name: t('admin.settings') || 'إعدادات الموقع', href: '/admin/settings', icon: Settings },
+    { name: t('admin.analytics') || 'التحليلات', href: '/admin/analytics', icon: BarChart3 },
   ];
 
   const handleSignOut = async () => {
@@ -80,6 +85,13 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             </Button>
           </div>
         </div>
+        
+        {/* Language Selector */}
+        {!sidebarCollapsed && (
+          <div className="p-4 border-b">
+            <LanguageSelector />
+          </div>
+        )}
         
         {/* Navigation */}
         <nav className="mt-6 px-3 flex-1">
