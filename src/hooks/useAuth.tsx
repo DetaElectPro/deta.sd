@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .eq('id', session.user.id)
                 .maybeSingle();
               
-              if (error) {
+              if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching profile:', error);
               } else {
                 setUserProfile(profile);
@@ -76,6 +76,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     console.log('Attempting sign in for:', email);
+    
+    // Check network connectivity first
+    if (!navigator.onLine) {
+      throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى.');
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ 
         email, 
@@ -84,18 +90,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('Sign in error:', error);
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error('بيانات الدخول غير صحيحة');
+        } else if (error.message.includes('Email not confirmed')) {
+          throw new Error('يرجى تأكيد البريد الإلكتروني أولاً');
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+          throw new Error('مشكلة في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى');
+        }
         throw error;
       }
       
       console.log('Sign in successful:', data.user?.email);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Sign in failed:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('مشكلة في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى');
+      }
       throw error;
     }
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
     console.log('Attempting sign up for:', email);
+    
+    // Check network connectivity first
+    if (!navigator.onLine) {
+      throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى.');
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -107,12 +129,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('Sign up error:', error);
+        if (error.message.includes('User already registered')) {
+          throw new Error('المستخدم مسجل بالفعل');
+        } else if (error.message.includes('Password should be')) {
+          throw new Error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+          throw new Error('مشكلة في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى');
+        }
         throw error;
       }
       
       console.log('Sign up successful:', data.user?.email);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Sign up failed:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('مشكلة في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى');
+      }
       throw error;
     }
   };
@@ -126,8 +158,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw error;
       }
       console.log('Sign out successful');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Sign out failed:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('مشكلة في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى');
+      }
       throw error;
     }
   };

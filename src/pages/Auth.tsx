@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
+import { ConnectionTest } from '@/components/ConnectionTest';
 
 const Auth = () => {
   const { signIn, signUp } = useAuth();
@@ -47,15 +48,7 @@ const Auth = () => {
       let errorMessage = "حدث خطأ في تسجيل الدخول";
       
       if (error.message) {
-        if (error.message.includes('Invalid login credentials')) {
-          errorMessage = "بيانات الدخول غير صحيحة";
-        } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = "يرجى تأكيد البريد الإلكتروني أولاً";
-        } else if (error.message.includes('Failed to fetch')) {
-          errorMessage = "مشكلة في الاتصال. يرجى المحاولة مرة أخرى";
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
       
       setError(errorMessage);
@@ -88,15 +81,7 @@ const Auth = () => {
       let errorMessage = "حدث خطأ في إنشاء الحساب";
       
       if (error.message) {
-        if (error.message.includes('User already registered')) {
-          errorMessage = "المستخدم مسجل بالفعل";
-        } else if (error.message.includes('Password should be')) {
-          errorMessage = "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
-        } else if (error.message.includes('Failed to fetch')) {
-          errorMessage = "مشكلة في الاتصال. يرجى المحاولة مرة أخرى";
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
       
       setError(errorMessage);
@@ -123,6 +108,10 @@ const Auth = () => {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
+          
+          <div className="mb-4">
+            <ConnectionTest />
+          </div>
           
           <Tabs defaultValue="login" className="space-y-4">
             <TabsList className="grid w-full grid-cols-2">
