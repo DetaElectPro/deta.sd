@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         
         if (session?.user) {
+          console.log('User logged in, fetching profile...');
           // Use setTimeout to avoid blocking the auth state change
           setTimeout(async () => {
             try {
@@ -41,9 +42,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .eq('id', session.user.id)
                 .maybeSingle();
               
+              console.log('Profile fetch result:', { profile, error });
+              
               if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching profile:', error);
+                // إذا لم يكن هناك ملف شخصي، قم بإنشاء واحد
+                if (error.code === 'PGRST301' || error.message?.includes('no rows returned')) {
+                  console.log('No profile found, creating one...');
+                  const { data: newProfile, error: insertError } = await supabase
+                    .from('profiles')
+                    .insert({
+                      id: session.user.id,
+                      email: session.user.email,
+                      full_name: session.user.user_metadata?.full_name || session.user.email,
+                      role: 'admin' // مؤقتاً جعل جميع المستخدمين مديرين للاختبار
+                    })
+                    .select()
+                    .single();
+                    
+                  if (insertError) {
+                    console.error('Error creating profile:', insertError);
+                  } else {
+                    console.log('Profile created successfully:', newProfile);
+                    setUserProfile(newProfile);
+                  }
+                }
               } else {
+                console.log('Profile loaded successfully:', profile);
                 setUserProfile(profile);
               }
             } catch (err) {
@@ -51,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }, 0);
         } else {
+          console.log('User logged out, clearing profile...');
           setUserProfile(null);
         }
         setLoading(false);
