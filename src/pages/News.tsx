@@ -1,68 +1,20 @@
 
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, ArrowLeft } from "lucide-react";
+import { useArticles } from "@/hooks/useArticles";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { usePageTracking } from "@/hooks/usePageTracking";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const News = () => {
-  const newsArticles = [
-    {
-      id: 1,
-      title: "مجموعة ديتا تطلق مبادرة جديدة للزراعة المستدامة",
-      excerpt: "في إطار التزامها بالتنمية المستدامة، أطلقت مجموعة ديتا مبادرة جديدة تهدف إلى تعزيز الممارسات الزراعية المستدامة في السودان...",
-      date: "2024-03-15",
-      author: "فريق الأخبار",
-      category: "الزراعة",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "افتتاح مصنع جديد لتصنيع الأغذية في الخرطوم",
-      excerpt: "افتتحت مجموعة ديتا مصنعاً جديداً لتصنيع الأغذية بأحدث التقنيات العالمية، والذي سيساهم في زيادة الطاقة الإنتاجية للمجموعة...",
-      date: "2024-03-10",
-      author: "إدارة الإعلام",
-      category: "التصنيع",
-      featured: false
-    },
-    {
-      id: 3,
-      title: "شراكة استراتيجية مع جامعة الخرطوم للبحث والتطوير",
-      excerpt: "وقعت مجموعة ديتا اتفاقية شراكة مع جامعة الخرطوم لتطوير البحث العلمي في مجالات الزراعة وتقنيات الغذاء...",
-      date: "2024-03-05",
-      author: "قسم العلاقات العامة",
-      category: "الشراكات",
-      featured: false
-    },
-    {
-      id: 4,
-      title: "إطلاق منصة رقمية لخدمة المزارعين",
-      excerpt: "أطلقت مجموعة ديتا منصة رقمية جديدة تهدف إلى تقديم الخدمات والاستشارات الزراعية للمزارعين في جميع أنحاء السودان...",
-      date: "2024-02-28",
-      author: "قسم التطوير التقني",
-      category: "التكنولوجيا",
-      featured: false
-    },
-    {
-      id: 5,
-      title: "مشاركة مجموعة ديتا في معرض الخرطوم الدولي للزراعة",
-      excerpt: "شاركت مجموعة ديتا في معرض الخرطوم الدولي للزراعة بجناح متميز عرضت فيه أحدث منتجاتها وخدماتها...",
-      date: "2024-02-20",
-      author: "فريق المعارض",
-      category: "المعارض",
-      featured: false
-    },
-    {
-      id: 6,
-      title: "حصول مجموعة ديتا على شهادة الأيزو للجودة",
-      excerpt: "حصلت مجموعة ديتا على شهادة الأيزو 22000 لإدارة سلامة الغذاء، مما يؤكد التزامها بأعلى معايير الجودة والسلامة...",
-      date: "2024-02-15",
-      author: "إدارة الجودة",
-      category: "الجودة",
-      featured: false
-    }
-  ];
+  usePageTracking();
+  const { data: articles, isLoading } = useArticles();
+  const { data: settings } = useSiteSettings();
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -85,8 +37,41 @@ const News = () => {
     });
   };
 
-  const featuredNews = newsArticles.find(article => article.featured);
-  const regularNews = newsArticles.filter(article => !article.featured);
+  const featuredNews = articles?.find(article => article.is_featured);
+  const regularNews = articles?.filter(article => !article.is_featured) || [];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <section className="bg-deta-gradient py-20">
+          <div className="container mx-auto px-4 text-center text-white">
+            <Skeleton className="h-12 w-96 mx-auto mb-6 bg-white/20" />
+            <Skeleton className="h-6 w-[600px] mx-auto bg-white/20" />
+          </div>
+        </section>
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="border-none shadow-lg">
+                  <CardContent className="p-0">
+                    <Skeleton className="h-48 w-full" />
+                    <div className="p-6 space-y-4">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-6 w-full" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -95,7 +80,9 @@ const News = () => {
       {/* Hero Section */}
       <section className="bg-deta-gradient py-20">
         <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">الأخبار والمستجدات</h1>
+          <h1 className="text-5xl font-bold mb-6 arabic-heading">
+            {settings?.site_title ? `أخبار ${settings.site_title}` : 'الأخبار والمستجدات'}
+          </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
             تابعوا آخر أخبار مجموعة ديتا وإنجازاتها في مختلف المجالات
           </p>
@@ -110,7 +97,15 @@ const News = () => {
             <Card className="border-none shadow-xl overflow-hidden">
               <CardContent className="p-0">
                 <div className="grid lg:grid-cols-2 gap-0">
-                  <div className="h-64 lg:h-auto bg-gradient-to-br from-deta-green to-deta-green-light"></div>
+                  <div className="h-64 lg:h-auto bg-gradient-to-br from-deta-green to-deta-green-light">
+                    {featuredNews.image_url && (
+                      <img 
+                        src={featuredNews.image_url} 
+                        alt={featuredNews.title}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
                   <div className="p-8">
                     <div className="flex items-center gap-4 mb-4">
                       <Badge className={getCategoryColor(featuredNews.category)}>
@@ -118,7 +113,7 @@ const News = () => {
                       </Badge>
                       <div className="flex items-center gap-2 text-gray-500 text-sm">
                         <Calendar className="w-4 h-4" />
-                        <span>{formatDate(featuredNews.date)}</span>
+                        <span>{formatDate(featuredNews.published_at)}</span>
                       </div>
                     </div>
                     <h3 className="text-2xl font-bold text-deta-green mb-4 arabic-heading leading-tight">
@@ -153,7 +148,15 @@ const News = () => {
             {regularNews.map((article) => (
               <Card key={article.id} className="border-none shadow-lg hover-scale overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green"></div>
+                  <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
+                    {article.image_url && (
+                      <img 
+                        src={article.image_url} 
+                        alt={article.title}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
                   <div className="p-6">
                     <div className="flex items-center gap-4 mb-3">
                       <Badge className={getCategoryColor(article.category)}>
@@ -161,7 +164,7 @@ const News = () => {
                       </Badge>
                       <div className="flex items-center gap-2 text-gray-500 text-sm">
                         <Calendar className="w-4 h-4" />
-                        <span>{formatDate(article.date)}</span>
+                        <span>{formatDate(article.published_at)}</span>
                       </div>
                     </div>
                     <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading leading-tight">
