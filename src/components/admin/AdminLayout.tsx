@@ -32,6 +32,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  console.log('AdminLayout render:', { userProfile, currentPath: location.pathname });
+
   const navigation = [
     { name: t('admin.dashboard'), href: '/admin', icon: LayoutDashboard },
     { name: t('admin.content'), href: '/admin/content', icon: FileText },
@@ -44,7 +46,11 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   ];
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const ChevronIcon = isRTL ? ChevronRight : ChevronLeft;
@@ -60,8 +66,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 ${isRTL ? 'left-0' : 'right-0'} z-30 bg-white shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-        sidebarOpen ? 'translate-x-0' : isRTL ? '-translate-x-full' : 'translate-x-full'
+      <div className={`fixed inset-y-0 ${isRTL ? 'right-0' : 'left-0'} z-30 bg-white shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        sidebarOpen ? 'translate-x-0' : isRTL ? 'translate-x-full' : '-translate-x-full'
       } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
         
         {/* Sidebar Header */}
@@ -132,8 +138,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                 {userProfile?.full_name?.charAt(0) || 'A'}
               </div>
               <div className={`${isRTL ? 'mr-3' : 'ml-3'}`}>
-                <p className="text-sm font-medium text-gray-700">{userProfile?.full_name}</p>
-                <p className="text-xs text-gray-500">{userProfile?.role}</p>
+                <p className="text-sm font-medium text-gray-700">{userProfile?.full_name || 'Admin'}</p>
+                <p className="text-xs text-gray-500">{userProfile?.role || 'admin'}</p>
               </div>
             </div>
           )}

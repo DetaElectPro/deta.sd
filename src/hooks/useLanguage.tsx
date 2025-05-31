@@ -93,6 +93,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const { data: languages = [], isLoading } = useQuery({
     queryKey: ['languages'],
     queryFn: async () => {
+      console.log('Fetching languages from database...');
       const { data, error } = await supabase
         .from('languages')
         .select('*')
@@ -106,16 +107,20 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
           { id: '2', code: 'en', name: 'English', native_name: 'English', is_rtl: false, is_default: false }
         ];
       }
+      console.log('Languages loaded:', data);
       return data as Language[];
     }
   });
 
   useEffect(() => {
-    if (languages.length > 0 && !currentLanguage) {
+    if (languages.length > 0) {
       const defaultLang = languages.find(lang => lang.is_default) || languages[0];
-      setCurrentLanguage(defaultLang.code);
+      if (!currentLanguage || currentLanguage !== defaultLang.code) {
+        console.log('Setting default language:', defaultLang.code);
+        setCurrentLanguage(defaultLang.code);
+      }
     }
-  }, [languages, currentLanguage]);
+  }, [languages]);
 
   const currentLangData = languages.find(lang => lang.code === currentLanguage);
   const isRTL = currentLangData?.is_rtl || currentLanguage === 'ar';
