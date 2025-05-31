@@ -16,16 +16,16 @@ import {
   Trash2, 
   Plus, 
   Search, 
-  Eye,
   Calendar,
   User,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
 
 export const MultilingualContentManager = () => {
-  const { data: articles, refetch } = useMultilingualArticles();
+  const { data: articles = [], refetch, isLoading } = useMultilingualArticles();
   const { toast } = useToast();
-  const { languages, currentLanguage, t } = useLanguage();
+  const { languages, currentLanguage, t, isRTL } = useLanguage();
   const createArticle = useCreateMultilingualArticle();
   const updateArticle = useUpdateMultilingualArticle();
   
@@ -43,45 +43,66 @@ export const MultilingualContentManager = () => {
 
   const [translations, setTranslations] = useState<Record<string, any>>({});
 
-  const filteredArticles = articles?.filter(article => {
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         article.content?.toLowerCase().includes(searchTerm.toLowerCase());
+  // تصفية المقالات
+  const filteredArticles = articles.filter(article => {
+    if (!article) return false;
+    const matchesSearch = (article.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (article.content || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = filterCategory === 'all' || article.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = [...new Set(articles?.map(article => article.category) || [])];
+  const categories = [...new Set(articles.map(article => article?.category).filter(Boolean))];
 
   const handleEdit = async (article: any) => {
     setEditingArticle(article);
     setFormData({
-      author: article.author,
-      category: article.category,
+      author: article.author || '',
+      category: article.category || '',
       image_url: article.image_url || '',
       is_featured: article.is_featured || false
     });
 
     // جلب جميع الترجمات للمقال
-    const { data: articleTranslations } = await supabase
-      .from('article_translations')
-      .select('*')
-      .eq('article_id', article.id);
+    try {
+      const { data: articleTranslations } = await supabase
+        .from('article_translations')
+        .select('*')
+        .eq('article_id', article.id);
 
-    const translationsMap: Record<string, any> = {};
-    languages.forEach(lang => {
-      const translation = articleTranslations?.find(t => t.language_code === lang.code);
-      translationsMap[lang.code] = {
-        title: translation?.title || '',
-        excerpt: translation?.excerpt || '',
-        content: translation?.content || '',
-        slug: translation?.slug || ''
-      };
-    });
-    setTranslations(translationsMap);
+      const translationsMap: Record<string, any> = {};
+      languages.forEach(lang => {
+        const translation = articleTranslations?.find(t => t.language_code === lang.code);
+        translationsMap[lang.code] = {
+          title: translation?.title || '',
+          excerpt: translation?.excerpt || '',
+          content: translation?.content || '',
+          slug: translation?.slug || ''
+        };
+      });
+      setTranslations(translationsMap);
+    } catch (error) {
+      console.error('Error loading translations:', error);
+      toast({
+        title: "خطأ في تحميل الترجمات",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleSave = async () => {
     try {
+      // التحقق من وجود ترجمة واحدة على الأقل
+      const hasValidTranslation = Object.values(translations).some((t: any) => t?.title?.trim());
+      if (!hasValidTranslation) {
+        toast({
+          title: "خطأ",
+          description: "يجب إضافة عنوان للمقال في لغة واحدة على الأقل",
+          variant: "destructive"
+        });
+        return;
+      }
+
       if (editingArticle) {
         await updateArticle.mutateAsync({
           articleId: editingArticle.id,
@@ -91,7 +112,7 @@ export const MultilingualContentManager = () => {
           },
           translations
         });
-        toast({ title: t('content.article_updated') || "تم تحديث المقال بنجاح" });
+        toast({ title: "تم تحديث المقال بنجاح" });
       } else {
         await createArticle.mutateAsync({
           articleData: {
@@ -100,12 +121,13 @@ export const MultilingualContentManager = () => {
           },
           translations
         });
-        toast({ title: t('content.article_created') || "تم إنشاء المقال بنجاح" });
+        toast({ title: "تم إنشاء المقال بنجاح" });
       }
 
       handleCancel();
       refetch();
     } catch (error: any) {
+      console.error('Error saving article:', error);
       toast({
         title: "خطأ في حفظ المقال",
         description: error.message,
@@ -158,15 +180,30 @@ export const MultilingualContentManager = () => {
     }));
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   if (editingArticle || isCreating) {
     return (
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold arabic-heading">
-            {editingArticle ? t('content.edit_article') || 'تعديل المقال' : t('content.add_article') || 'إضافة مقال جديد'}
+            {editingArticle ? t('content.edit_article') : t('content.add_article')}
           </h2>
           <div className="flex gap-2">
-            <Button onClick={handleSave} className="bg-deta-green hover:bg-deta-green/90">
+            <Button 
+              onClick={handleSave} 
+              className="bg-deta-green hover:bg-deta-green/90"
+              disabled={createArticle.isPending || updateArticle.isPending}
+            >
+              {(createArticle.isPending || updateArticle.isPending) && (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              )}
               {t('content.save')}
             </Button>
             <Button variant="outline" onClick={handleCancel}>
@@ -221,54 +258,56 @@ export const MultilingualContentManager = () => {
             </div>
 
             {/* تبويبات الترجمات */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">الترجمات</h3>
-              <Tabs defaultValue={languages[0]?.code}>
-                <TabsList className="grid w-full grid-cols-2">
+            {languages.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4">الترجمات</h3>
+                <Tabs defaultValue={languages[0]?.code}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    {languages.map(lang => (
+                      <TabsTrigger key={lang.code} value={lang.code}>
+                        {lang.native_name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  
                   {languages.map(lang => (
-                    <TabsTrigger key={lang.code} value={lang.code}>
-                      {lang.native_name}
-                    </TabsTrigger>
+                    <TabsContent key={lang.code} value={lang.code} className="space-y-4">
+                      <div>
+                        <Label htmlFor={`title_${lang.code}`}>{t('content.title')}</Label>
+                        <Input
+                          id={`title_${lang.code}`}
+                          value={translations[lang.code]?.title || ''}
+                          onChange={(e) => updateTranslation(lang.code, 'title', e.target.value)}
+                          placeholder={`أدخل العنوان باللغة ${lang.native_name}`}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor={`excerpt_${lang.code}`}>{t('content.excerpt')}</Label>
+                        <Textarea
+                          id={`excerpt_${lang.code}`}
+                          value={translations[lang.code]?.excerpt || ''}
+                          onChange={(e) => updateTranslation(lang.code, 'excerpt', e.target.value)}
+                          placeholder={`أدخل المقطع التعريفي باللغة ${lang.native_name}`}
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor={`content_${lang.code}`}>{t('content.content')}</Label>
+                        <Textarea
+                          id={`content_${lang.code}`}
+                          value={translations[lang.code]?.content || ''}
+                          onChange={(e) => updateTranslation(lang.code, 'content', e.target.value)}
+                          placeholder={`أدخل محتوى المقال باللغة ${lang.native_name}`}
+                          rows={10}
+                        />
+                      </div>
+                    </TabsContent>
                   ))}
-                </TabsList>
-                
-                {languages.map(lang => (
-                  <TabsContent key={lang.code} value={lang.code} className="space-y-4">
-                    <div>
-                      <Label htmlFor={`title_${lang.code}`}>{t('content.title')}</Label>
-                      <Input
-                        id={`title_${lang.code}`}
-                        value={translations[lang.code]?.title || ''}
-                        onChange={(e) => updateTranslation(lang.code, 'title', e.target.value)}
-                        placeholder={`أدخل العنوان باللغة ${lang.native_name}`}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor={`excerpt_${lang.code}`}>{t('content.excerpt')}</Label>
-                      <Textarea
-                        id={`excerpt_${lang.code}`}
-                        value={translations[lang.code]?.excerpt || ''}
-                        onChange={(e) => updateTranslation(lang.code, 'excerpt', e.target.value)}
-                        placeholder={`أدخل المقطع التعريفي باللغة ${lang.native_name}`}
-                        rows={3}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor={`content_${lang.code}`}>{t('content.content')}</Label>
-                      <Textarea
-                        id={`content_${lang.code}`}
-                        value={translations[lang.code]?.content || ''}
-                        onChange={(e) => updateTranslation(lang.code, 'content', e.target.value)}
-                        placeholder={`أدخل محتوى المقال باللغة ${lang.native_name}`}
-                        rows={10}
-                      />
-                    </div>
-                  </TabsContent>
-                ))}
-              </Tabs>
-            </div>
+                </Tabs>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -280,7 +319,7 @@ export const MultilingualContentManager = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">{t('admin.content')}</h1>
         <Button onClick={() => setIsCreating(true)} className="bg-deta-green hover:bg-deta-green/90">
-          <Plus className="h-4 w-4 ml-2" />
+          <Plus className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
           {t('content.add_new')}
         </Button>
       </div>
@@ -291,12 +330,12 @@ export const MultilingualContentManager = () => {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3 h-4 w-4 text-gray-400`} />
                 <Input
                   placeholder="البحث في المقالات..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pr-10"
+                  className={isRTL ? 'pl-10' : 'pr-10'}
                 />
               </div>
             </div>
@@ -318,7 +357,7 @@ export const MultilingualContentManager = () => {
 
       {/* قائمة المقالات */}
       <div className="grid gap-4">
-        {filteredArticles?.map((article) => (
+        {filteredArticles.map((article) => (
           <Card key={article.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
@@ -347,7 +386,7 @@ export const MultilingualContentManager = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-4">
+                <div className={`flex items-center gap-2 ${isRTL ? 'mr-4' : 'ml-4'}`}>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -371,7 +410,7 @@ export const MultilingualContentManager = () => {
         ))}
       </div>
 
-      {!filteredArticles?.length && (
+      {!filteredArticles.length && (
         <Card>
           <CardContent className="p-12 text-center">
             <div className="text-gray-500">

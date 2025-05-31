@@ -18,6 +18,7 @@ interface LanguageContextType {
   languages: Language[];
   isRTL: boolean;
   t: (key: string) => string;
+  isLoading: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -43,7 +44,16 @@ const translations = {
     'content.edit': 'تعديل',
     'content.delete': 'حذف',
     'content.add_new': 'إضافة جديد',
-    'language.switch': 'تغيير اللغة'
+    'content.edit_article': 'تعديل المقال',
+    'content.add_article': 'إضافة مقال جديد',
+    'language.switch': 'تغيير اللغة',
+    'site.title': 'الموقع الإلكتروني',
+    'site.home': 'الرئيسية',
+    'site.about': 'عن الشركة',
+    'site.products': 'المنتجات',
+    'site.services': 'الخدمات',
+    'site.news': 'الأخبار',
+    'site.contact': 'اتصل بنا'
   },
   en: {
     'admin.dashboard': 'Dashboard',
@@ -64,14 +74,23 @@ const translations = {
     'content.edit': 'Edit',
     'content.delete': 'Delete',
     'content.add_new': 'Add New',
-    'language.switch': 'Switch Language'
+    'content.edit_article': 'Edit Article',
+    'content.add_article': 'Add New Article',
+    'language.switch': 'Switch Language',
+    'site.title': 'Website',
+    'site.home': 'Home',
+    'site.about': 'About',
+    'site.products': 'Products',
+    'site.services': 'Services',
+    'site.news': 'News',
+    'site.contact': 'Contact'
   }
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState('ar');
 
-  const { data: languages = [] } = useQuery({
+  const { data: languages = [], isLoading } = useQuery({
     queryKey: ['languages'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -79,28 +98,39 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         .select('*')
         .order('is_default', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching languages:', error);
+        // إذا فشل تحميل اللغات، ارجع لقائمة افتراضية
+        return [
+          { id: '1', code: 'ar', name: 'Arabic', native_name: 'العربية', is_rtl: true, is_default: true },
+          { id: '2', code: 'en', name: 'English', native_name: 'English', is_rtl: false, is_default: false }
+        ];
+      }
       return data as Language[];
     }
   });
 
   useEffect(() => {
-    const defaultLang = languages.find(lang => lang.is_default);
-    if (defaultLang) {
+    if (languages.length > 0 && !currentLanguage) {
+      const defaultLang = languages.find(lang => lang.is_default) || languages[0];
       setCurrentLanguage(defaultLang.code);
     }
-  }, [languages]);
+  }, [languages, currentLanguage]);
 
   const currentLangData = languages.find(lang => lang.code === currentLanguage);
-  const isRTL = currentLangData?.is_rtl || false;
+  const isRTL = currentLangData?.is_rtl || currentLanguage === 'ar';
 
   const t = (key: string): string => {
-    return translations[currentLanguage as keyof typeof translations]?.[key] || key;
+    const langTranslations = translations[currentLanguage as keyof typeof translations];
+    return langTranslations?.[key as keyof typeof langTranslations] || key;
   };
 
   useEffect(() => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = currentLanguage;
+    
+    // إضافة كلاس CSS للغة
+    document.documentElement.className = isRTL ? 'rtl' : 'ltr';
   }, [currentLanguage, isRTL]);
 
   return (
@@ -109,7 +139,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       setCurrentLanguage,
       languages,
       isRTL,
-      t
+      t,
+      isLoading
     }}>
       {children}
     </LanguageContext.Provider>

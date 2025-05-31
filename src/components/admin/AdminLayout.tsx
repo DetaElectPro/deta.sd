@@ -17,6 +17,7 @@ import {
   Tag,
   Users,
   ChevronLeft,
+  ChevronRight,
   Globe
 } from 'lucide-react';
 
@@ -26,28 +27,30 @@ interface AdminLayoutProps {
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut, userProfile } = useAuth();
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const navigation = [
-    { name: t('admin.dashboard') || 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
-    { name: t('admin.content') || 'إدارة المحتوى', href: '/admin/content', icon: FileText },
-    { name: t('admin.categories') || 'إدارة الفئات', href: '/admin/categories', icon: Tag },
-    { name: t('admin.users') || 'إدارة المستخدمين', href: '/admin/users', icon: Users },
-    { name: t('admin.languages') || 'إدارة اللغات', href: '/admin/languages', icon: Globe },
-    { name: t('admin.media') || 'الوسائط', href: '/admin/media', icon: Image },
-    { name: t('admin.settings') || 'إعدادات الموقع', href: '/admin/settings', icon: Settings },
-    { name: t('admin.analytics') || 'التحليلات', href: '/admin/analytics', icon: BarChart3 },
+    { name: t('admin.dashboard'), href: '/admin', icon: LayoutDashboard },
+    { name: t('admin.content'), href: '/admin/content', icon: FileText },
+    { name: t('admin.categories'), href: '/admin/categories', icon: Tag },
+    { name: t('admin.users'), href: '/admin/users', icon: Users },
+    { name: t('admin.languages'), href: '/admin/languages', icon: Globe },
+    { name: t('admin.media'), href: '/admin/media', icon: Image },
+    { name: t('admin.settings'), href: '/admin/settings', icon: Settings },
+    { name: t('admin.analytics'), href: '/admin/analytics', icon: BarChart3 },
   ];
 
   const handleSignOut = async () => {
     await signOut();
   };
 
+  const ChevronIcon = isRTL ? ChevronRight : ChevronLeft;
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -57,14 +60,16 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 right-0 z-30 bg-white shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-        sidebarOpen ? 'translate-x-0' : 'translate-x-full'
+      <div className={`fixed inset-y-0 ${isRTL ? 'left-0' : 'right-0'} z-30 bg-white shadow-lg transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        sidebarOpen ? 'translate-x-0' : isRTL ? '-translate-x-full' : 'translate-x-full'
       } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
         
         {/* Sidebar Header */}
         <div className={`flex items-center justify-between h-16 px-4 border-b ${sidebarCollapsed ? 'px-2' : 'px-6'}`}>
           {!sidebarCollapsed && (
-            <h1 className="text-xl font-bold text-deta-green arabic-heading">نظام إدارة المحتوى</h1>
+            <h1 className="text-xl font-bold text-deta-green arabic-heading">
+              {t('site.title')}
+            </h1>
           )}
           <div className="flex items-center gap-2">
             <Button
@@ -73,7 +78,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
               className="hidden lg:flex"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             >
-              <ChevronLeft className={`h-5 w-5 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
+              <ChevronIcon className={`h-5 w-5 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
             </Button>
             <Button
               variant="ghost"
@@ -111,7 +116,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                   } ${sidebarCollapsed ? 'justify-center' : ''}`}
                   title={sidebarCollapsed ? item.name : ''}
                 >
-                  <Icon className={`h-5 w-5 flex-shrink-0 ${sidebarCollapsed ? '' : 'ml-3'}`} />
+                  <Icon className={`h-5 w-5 flex-shrink-0 ${sidebarCollapsed ? '' : isRTL ? 'ml-3' : 'mr-3'}`} />
                   {!sidebarCollapsed && <span>{item.name}</span>}
                 </Link>
               );
@@ -126,7 +131,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
               <div className="w-8 h-8 bg-deta-green rounded-full flex items-center justify-center text-white font-bold">
                 {userProfile?.full_name?.charAt(0) || 'A'}
               </div>
-              <div className="ml-3">
+              <div className={`${isRTL ? 'mr-3' : 'ml-3'}`}>
                 <p className="text-sm font-medium text-gray-700">{userProfile?.full_name}</p>
                 <p className="text-xs text-gray-500">{userProfile?.role}</p>
               </div>
@@ -137,8 +142,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             className={`w-full hover:bg-red-50 hover:text-red-600 hover:border-red-200 ${sidebarCollapsed ? 'px-2' : ''}`}
             onClick={handleSignOut}
           >
-            <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : 'ml-2'}`} />
-            {!sidebarCollapsed && 'تسجيل الخروج'}
+            <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : isRTL ? 'ml-2' : 'mr-2'}`} />
+            {!sidebarCollapsed && (isRTL ? 'تسجيل الخروج' : 'Logout')}
           </Button>
         </div>
       </div>
@@ -148,7 +153,9 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         {/* Top bar for mobile */}
         <div className="bg-white shadow-sm border-b lg:hidden">
           <div className="flex items-center justify-between h-16 px-4">
-            <h1 className="text-lg font-medium text-gray-900 arabic-heading">نظام إدارة المحتوى</h1>
+            <h1 className="text-lg font-medium text-gray-900 arabic-heading">
+              {t('site.title')}
+            </h1>
             <Button
               variant="ghost"
               size="sm"
