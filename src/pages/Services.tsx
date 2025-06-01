@@ -1,148 +1,125 @@
-
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { 
-  Leaf, 
-  Package, 
-  Code, 
-  Users, 
-  Target, 
-  Award,
-  ArrowLeft,
-  CheckCircle 
-} from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { usePageTracking } from "@/hooks/usePageTracking";
+import { Agriculture, Factory, Code, Consulting, ShieldCheck, Users, Lightbulb, TrendingUp } from 'lucide-react';
 
 const Services = () => {
+  usePageTracking();
   const { t } = useLanguage();
 
-  const services = [
+  const mainServices = [
     {
-      icon: <Leaf className="w-16 h-16 text-deta-gold" />,
       title: t('services.agriculture'),
-      description: t('services.agriculture_desc'),
+      description: t('services.agriculture_description'),
+      icon: Agriculture,
       features: [
-        t('services.agriculture_features.modern_farming'),
-        t('services.agriculture_features.organic_production'),
-        t('services.agriculture_features.irrigation_systems'),
-        t('services.agriculture_features.crop_consulting')
-      ]
+        t('services.agriculture_feature1'),
+        t('services.agriculture_feature2'),
+        t('services.agriculture_feature3'),
+      ],
     },
     {
-      icon: <Package className="w-16 h-16 text-deta-gold" />,
       title: t('services.food_manufacturing'),
-      description: t('services.food_manufacturing_desc'),
+      description: t('services.food_manufacturing_description'),
+      icon: Factory,
       features: [
-        t('services.food_features.quality_control'),
-        t('services.food_features.packaging'),
-        t('services.food_features.distribution'),
-        t('services.food_features.certifications')
-      ]
+        t('services.food_manufacturing_feature1'),
+        t('services.food_manufacturing_feature2'),
+        t('services.food_manufacturing_feature3'),
+      ],
     },
     {
-      icon: <Code className="w-16 h-16 text-deta-gold" />,
       title: t('services.software_development'),
-      description: t('services.software_development_desc'),
+      description: t('services.software_development_description'),
+      icon: Code,
       features: [
-        t('services.software_features.web_development'),
-        t('services.software_features.mobile_apps'),
-        t('services.software_features.erp_systems'),
-        t('services.software_features.consulting')
-      ]
-    }
+        t('services.software_development_feature1'),
+        t('services.software_development_feature2'),
+        t('services.software_development_feature3'),
+      ],
+    },
+    {
+      title: t('services.consulting'),
+      description: t('services.consulting_description'),
+      icon: Consulting,
+      features: [
+        t('services.consulting_feature1'),
+        t('services.consulting_feature2'),
+        t('services.consulting_feature3'),
+      ],
+    },
   ];
 
-  const processSteps = [
+  const whyChooseUs = [
     {
-      icon: <Users className="w-12 h-12 text-deta-gold" />,
-      title: t('process.consultation'),
-      description: t('process.consultation_desc')
+      title: t('services.quality_assurance'),
+      description: t('services.quality_assurance_description'),
+      icon: ShieldCheck,
     },
     {
-      icon: <Target className="w-12 h-12 text-deta-gold" />,
-      title: t('process.planning'),
-      description: t('process.planning_desc')
+      title: t('services.expert_team'),
+      description: t('services.expert_team_description'),
+      icon: Users,
     },
     {
-      icon: <Award className="w-12 h-12 text-deta-gold" />,
-      title: t('process.execution'),
-      description: t('process.execution_desc')
-    }
+      title: t('services.innovative_solutions'),
+      description: t('services.innovative_solutions_description'),
+      icon: Lightbulb,
+    },
+    {
+      title: t('services.proven_track_record'),
+      description: t('services.proven_track_record_description'),
+      icon: TrendingUp,
+    },
   ];
 
   return (
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-deta-gradient py-20">
+      {/* Hero Section - Fixed gradient background */}
+      <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
         <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">{t('site.services')}</h1>
+          <h1 className="text-5xl font-bold mb-6 arabic-heading">
+            {t('services.title')}
+          </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
-            {t('sections.services_description')}
+            {t('services.description')}
           </p>
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Main Services Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
-              {t('sections.our_services')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {t('services.detailed_description')}
-            </p>
-          </div>
-          
-          <div className="space-y-20">
-            {services.map((service, index) => (
-              <Card key={index} className="border-none shadow-lg overflow-hidden">
-                <CardContent className="p-0">
-                  <div className={`grid lg:grid-cols-2 gap-0 ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                    <div className={`p-12 ${index % 2 === 1 ? 'lg:col-start-2' : ''}`}>
-                      <div className="flex items-center gap-4 mb-6">
-                        {service.icon}
-                        <h3 className="text-3xl font-bold text-deta-green arabic-heading">
-                          {service.title}
-                        </h3>
-                      </div>
-                      <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                        {service.description}
-                      </p>
-                      
-                      <div className="space-y-4 mb-8">
-                        {service.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-center gap-3">
-                            <CheckCircle className="w-5 h-5 text-deta-gold" />
-                            <span className="text-gray-700">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <Button asChild className="bg-deta-green hover:bg-deta-green/90">
-                        <Link to="/contact">
-                          {t('buttons.request_service')}
-                          <ArrowLeft className="w-4 h-4 mr-2" />
-                        </Link>
-                      </Button>
-                    </div>
-                    
-                    <div className={`bg-deta-light-gradient ${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
-                      <div className="h-full min-h-[400px] bg-gradient-to-br from-deta-green/10 to-deta-gold/10 flex items-center justify-center">
-                        <div className="text-center p-8">
-                          {service.icon}
-                          <h4 className="text-2xl font-bold text-deta-green mt-4 arabic-heading">
-                            {service.title}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
+          <h2 className="text-3xl font-bold text-deta-green mb-12 text-center arabic-heading">
+            {t('services.main_services')}
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {mainServices.map((service, index) => (
+              <Card key={index} className="border-none shadow-lg hover-scale overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-deta-green to-deta-green-light rounded-lg flex items-center justify-center mb-4">
+                    <service.icon className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="text-xl font-bold text-deta-green mb-3 arabic-heading">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    {service.description}
+                  </p>
+                  <ul className="space-y-2">
+                    {service.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="w-2 h-2 bg-deta-gold rounded-full"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
@@ -150,30 +127,24 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Process Section */}
+      {/* Why Choose Us Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
-              {t('process.our_process')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {t('process.description')}
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {processSteps.map((step, index) => (
-              <Card key={index} className="text-center border-none shadow-lg hover-scale">
-                <CardContent className="p-8">
-                  <div className="w-20 h-20 bg-deta-green rounded-full flex items-center justify-center mx-auto mb-6">
-                    {step.icon}
+          <h2 className="text-3xl font-bold text-deta-green mb-12 text-center arabic-heading">
+            {t('services.why_choose_us')}
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {whyChooseUs.map((item, index) => (
+              <Card key={index} className="border-none shadow-lg text-center">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-deta-gold to-deta-gold-light rounded-full flex items-center justify-center mx-auto mb-4">
+                    <item.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-deta-green mb-4 arabic-heading">
-                    {step.title}
+                  <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading">
+                    {item.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {step.description}
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {item.description}
                   </p>
                 </CardContent>
               </Card>
@@ -183,20 +154,26 @@ const Services = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-deta-gradient">
-        <div className="container mx-auto px-4 text-center text-white">
-          <h2 className="text-4xl font-bold mb-6 arabic-heading">
-            {t('cta.ready_to_start')}
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            {t('cta.description')}
-          </p>
-          <Button asChild size="lg" className="bg-white text-deta-green hover:bg-gray-100">
-            <Link to="/contact">
-              {t('cta.start_project')}
-              <ArrowLeft className="w-4 h-4 mr-2" />
-            </Link>
-          </Button>
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <Card className="border-none shadow-lg bg-gradient-to-r from-deta-green to-deta-green-light">
+            <CardContent className="p-12 text-center text-white">
+              <h2 className="text-3xl font-bold mb-4 arabic-heading">
+                {t('services.ready_to_start')}
+              </h2>
+              <p className="text-lg mb-8 max-w-2xl mx-auto">
+                {t('services.contact_us_today')}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" variant="outline" className="bg-white text-deta-green border-white hover:bg-gray-100">
+                  {t('buttons.contact_us')}
+                </Button>
+                <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-deta-green">
+                  {t('buttons.view_portfolio')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

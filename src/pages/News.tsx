@@ -60,7 +60,7 @@ const News = () => {
     return (
       <div className="min-h-screen">
         <Header />
-        <section className="bg-deta-gradient py-20">
+        <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
           <div className="container mx-auto px-4 text-center text-white">
             <Skeleton className="h-12 w-96 mx-auto mb-6 bg-white/20" />
             <Skeleton className="h-6 w-[600px] mx-auto bg-white/20" />
@@ -93,8 +93,8 @@ const News = () => {
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-deta-gradient py-20">
+      {/* Hero Section - Fixed gradient background with proper text contrast */}
+      <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
         <div className="container mx-auto px-4 text-center text-white">
           <h1 className="text-5xl font-bold mb-6 arabic-heading">
             {t('news.title')}
@@ -213,7 +213,7 @@ const News = () => {
       {/* Newsletter Subscription */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <Card className="border-none shadow-lg bg-deta-light-gradient">
+          <Card className="border-none shadow-lg bg-gradient-to-r from-gray-50 to-gray-100">
             <CardContent className="p-12 text-center">
               <h2 className="text-3xl font-bold text-deta-green mb-4 arabic-heading">
                 {t('news.newsletter_title')}
