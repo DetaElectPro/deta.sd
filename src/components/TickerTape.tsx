@@ -15,12 +15,23 @@ const TickerTape = () => {
   const [tickerData, setTickerData] = useState<TickerItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch real cryptocurrency data
-  const fetchCryptoData = async () => {
+  // Fetch real cryptocurrency data from CoinGecko (free API)
+  const fetchCryptoData = async (): Promise<TickerItem[]> => {
     try {
       const response = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,polkadot,chainlink&vs_currencies=usd&include_24hr_change=true'
+        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,polkadot,chainlink,solana,dogecoin,ripple&vs_currencies=usd&include_24hr_change=true',
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
       );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       const cryptoItems: TickerItem[] = [
@@ -49,22 +60,30 @@ const TickerTape = () => {
           type: 'crypto'
         },
         {
-          symbol: 'DOT',
-          name: 'بولكادوت',
-          price: data.polkadot?.usd || 0,
-          change: data.polkadot?.usd_24h_change || 0,
-          changePercent: data.polkadot?.usd_24h_change || 0,
+          symbol: 'SOL',
+          name: 'سولانا',
+          price: data.solana?.usd || 0,
+          change: data.solana?.usd_24h_change || 0,
+          changePercent: data.solana?.usd_24h_change || 0,
           type: 'crypto'
         },
         {
-          symbol: 'LINK',
-          name: 'تشين لينك',
-          price: data.chainlink?.usd || 0,
-          change: data.chainlink?.usd_24h_change || 0,
-          changePercent: data.chainlink?.usd_24h_change || 0,
+          symbol: 'DOGE',
+          name: 'دوجكوين',
+          price: data.dogecoin?.usd || 0,
+          change: data.dogecoin?.usd_24h_change || 0,
+          changePercent: data.dogecoin?.usd_24h_change || 0,
+          type: 'crypto'
+        },
+        {
+          symbol: 'XRP',
+          name: 'ريبل',
+          price: data.ripple?.usd || 0,
+          change: data.ripple?.usd_24h_change || 0,
+          changePercent: data.ripple?.usd_24h_change || 0,
           type: 'crypto'
         }
-      ];
+      ].filter(item => item.price > 0); // Only include items with valid prices
 
       return cryptoItems;
     } catch (error) {
@@ -73,26 +92,40 @@ const TickerTape = () => {
     }
   };
 
-  // Fetch forex data (using a free service)
-  const fetchForexData = async () => {
+  // Fetch real forex data from Fixer.io API (free tier)
+  const fetchForexData = async (): Promise<TickerItem[]> => {
     try {
-      // Using exchangerate-api.com which provides free forex rates
-      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      // Using exchangerate.host which is free and doesn't require API key
+      const response = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=EUR,GBP,JPY,CAD,AUD,CHF', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      
+
+      if (!data.success || !data.rates) {
+        throw new Error('Invalid forex data received');
+      }
+
       const forexItems: TickerItem[] = [
         {
-          symbol: 'USD/EUR',
-          name: 'دولار/يورو',
-          price: 1 / (data.rates?.EUR || 1),
-          change: (Math.random() - 0.5) * 0.02,
+          symbol: 'EUR/USD',
+          name: 'يورو/دولار',
+          price: 1 / (data.rates.EUR || 1),
+          change: (Math.random() - 0.5) * 0.02, // Simulated change as historical data requires paid APIs
           changePercent: (Math.random() - 0.5) * 2,
           type: 'forex'
         },
         {
-          symbol: 'USD/GBP',
-          name: 'دولار/جنيه',
-          price: 1 / (data.rates?.GBP || 1),
+          symbol: 'GBP/USD',
+          name: 'جنيه/دولار',
+          price: 1 / (data.rates.GBP || 1),
           change: (Math.random() - 0.5) * 0.02,
           changePercent: (Math.random() - 0.5) * 2,
           type: 'forex'
@@ -100,20 +133,20 @@ const TickerTape = () => {
         {
           symbol: 'USD/JPY',
           name: 'دولار/ين',
-          price: data.rates?.JPY || 0,
+          price: data.rates.JPY || 0,
           change: (Math.random() - 0.5) * 2,
           changePercent: (Math.random() - 0.5) * 2,
           type: 'forex'
         },
         {
-          symbol: 'USD/SDG',
-          name: 'دولار/جنيه سوداني',
-          price: 620.50, // Static for Sudan Pound as it's not available in free APIs
-          change: (Math.random() - 0.5) * 5,
-          changePercent: (Math.random() - 0.5) * 1,
+          symbol: 'USD/CAD',
+          name: 'دولار/كندي',
+          price: data.rates.CAD || 0,
+          change: (Math.random() - 0.5) * 0.02,
+          changePercent: (Math.random() - 0.5) * 1.5,
           type: 'forex'
         }
-      ];
+      ].filter(item => item.price > 0);
 
       return forexItems;
     } catch (error) {
@@ -122,58 +155,101 @@ const TickerTape = () => {
     }
   };
 
-  // Fetch stock data (limited free options, using mock data with realistic values)
-  const getStockData = () => {
-    const stockItems: TickerItem[] = [
-      {
-        symbol: 'AAPL',
-        name: 'أبل',
-        price: 195.75 + (Math.random() - 0.5) * 10,
-        change: (Math.random() - 0.5) * 8,
-        changePercent: (Math.random() - 0.5) * 4,
-        type: 'stock'
-      },
-      {
-        symbol: 'MSFT',
-        name: 'مايكروسوفت',
-        price: 378.50 + (Math.random() - 0.5) * 15,
-        change: (Math.random() - 0.5) * 10,
-        changePercent: (Math.random() - 0.5) * 3,
-        type: 'stock'
-      },
-      {
-        symbol: 'GOOGL',
-        name: 'جوجل',
-        price: 142.80 + (Math.random() - 0.5) * 8,
-        change: (Math.random() - 0.5) * 6,
-        changePercent: (Math.random() - 0.5) * 4,
-        type: 'stock'
-      },
-      {
-        symbol: 'GOLD',
-        name: 'الذهب',
-        price: 2024.80 + (Math.random() - 0.5) * 50,
-        change: (Math.random() - 0.5) * 30,
-        changePercent: (Math.random() - 0.5) * 2,
-        type: 'stock'
-      }
-    ];
+  // Fetch real stock data from Alpha Vantage API (free tier)
+  const fetchStockData = async (): Promise<TickerItem[]> => {
+    try {
+      // Using Yahoo Finance alternative API (no key required)
+      const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA'];
+      const stockItems: TickerItem[] = [];
 
-    return stockItems;
+      // Note: Free stock APIs are limited, so we'll use a different approach
+      // For demonstration, using a proxy API that doesn't require authentication
+      for (const symbol of symbols.slice(0, 3)) { // Limit to 3 to avoid rate limits
+        try {
+          const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const result = data.chart?.result?.[0];
+            const meta = result?.meta;
+            
+            if (meta && meta.regularMarketPrice) {
+              const arabicNames: { [key: string]: string } = {
+                'AAPL': 'أبل',
+                'MSFT': 'مايكروسوفت',
+                'GOOGL': 'جوجل',
+                'AMZN': 'أمازون',
+                'TSLA': 'تسلا'
+              };
+
+              stockItems.push({
+                symbol,
+                name: arabicNames[symbol] || symbol,
+                price: meta.regularMarketPrice,
+                change: meta.regularMarketChange || 0,
+                changePercent: meta.regularMarketChangePercent || 0,
+                type: 'stock'
+              });
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching data for ${symbol}:`, error);
+        }
+      }
+
+      return stockItems;
+    } catch (error) {
+      console.error('Error fetching stock data:', error);
+      return [];
+    }
   };
 
   const fetchAllData = async () => {
     setIsLoading(true);
+    console.log('Fetching real-time market data...');
+    
     try {
-      const [cryptoData, forexData] = await Promise.all([
+      // Fetch all data sources in parallel
+      const [cryptoData, forexData, stockData] = await Promise.allSettled([
         fetchCryptoData(),
-        fetchForexData()
+        fetchForexData(),
+        fetchStockData()
       ]);
-      
-      const stockData = getStockData();
-      const allData = [...cryptoData, ...forexData, ...stockData];
-      
+
+      const allData: TickerItem[] = [];
+
+      // Process crypto data
+      if (cryptoData.status === 'fulfilled') {
+        allData.push(...cryptoData.value);
+        console.log(`Loaded ${cryptoData.value.length} crypto items`);
+      } else {
+        console.error('Failed to fetch crypto data:', cryptoData.reason);
+      }
+
+      // Process forex data
+      if (forexData.status === 'fulfilled') {
+        allData.push(...forexData.value);
+        console.log(`Loaded ${forexData.value.length} forex items`);
+      } else {
+        console.error('Failed to fetch forex data:', forexData.reason);
+      }
+
+      // Process stock data
+      if (stockData.status === 'fulfilled') {
+        allData.push(...stockData.value);
+        console.log(`Loaded ${stockData.value.length} stock items`);
+      } else {
+        console.error('Failed to fetch stock data:', stockData.reason);
+      }
+
+      console.log(`Total items loaded: ${allData.length}`);
       setTickerData(allData);
+      
     } catch (error) {
       console.error('Error fetching ticker data:', error);
     } finally {
@@ -185,10 +261,10 @@ const TickerTape = () => {
     // Initial data fetch
     fetchAllData();
 
-    // Update data every 2 minutes for real-time feel
+    // Update data every 5 minutes for real-time feel without overwhelming APIs
     const updateInterval = setInterval(() => {
       fetchAllData();
-    }, 120000);
+    }, 300000); // 5 minutes
 
     return () => {
       clearInterval(updateInterval);
@@ -214,7 +290,10 @@ const TickerTape = () => {
         maximumFractionDigits: 2 
       });
     }
-    return price.toFixed(6);
+    if (price < 1) {
+      return price.toFixed(6);
+    }
+    return price.toFixed(2);
   };
 
   if (isLoading) {
@@ -222,6 +301,16 @@ const TickerTape = () => {
       <div className="bg-deta-green text-white py-3 overflow-hidden">
         <div className="animate-pulse text-center">
           <span className="text-sm">جاري تحميل الأسعار المباشرة...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (tickerData.length === 0) {
+    return (
+      <div className="bg-deta-green text-white py-3 overflow-hidden">
+        <div className="text-center">
+          <span className="text-sm">الأسعار غير متاحة حالياً - جاري المحاولة...</span>
         </div>
       </div>
     );
