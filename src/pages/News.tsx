@@ -6,35 +6,51 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, ArrowLeft } from "lucide-react";
-import { useArticles } from "@/hooks/useArticles";
+import { useMultilingualArticles } from "@/hooks/useMultilingualArticles";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { usePageTracking } from "@/hooks/usePageTracking";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const News = () => {
   usePageTracking();
-  const { data: articles, isLoading } = useArticles();
+  const { t, currentLanguage } = useLanguage();
+  const { data: articles, isLoading } = useMultilingualArticles();
   const { data: settings } = useSiteSettings();
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "الزراعة": return "bg-deta-green text-white";
-      case "التصنيع": return "bg-deta-gold text-white";
-      case "التكنولوجيا": return "bg-blue-600 text-white";
-      case "الشراكات": return "bg-purple-600 text-white";
-      case "المعارض": return "bg-orange-600 text-white";
-      case "الجودة": return "bg-red-600 text-white";
+      case "الزراعة": 
+      case "Agriculture": return "bg-deta-green text-white";
+      case "التصنيع": 
+      case "Manufacturing": return "bg-deta-gold text-white";
+      case "التكنولوجيا": 
+      case "Technology": return "bg-blue-600 text-white";
+      case "الشراكات": 
+      case "Partnerships": return "bg-purple-600 text-white";
+      case "المعارض": 
+      case "Exhibitions": return "bg-orange-600 text-white";
+      case "الجودة": 
+      case "Quality": return "bg-red-600 text-white";
       default: return "bg-gray-600 text-white";
     }
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    if (currentLanguage === 'ar') {
+      return date.toLocaleDateString('ar-SA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } else {
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
   };
 
   const featuredNews = articles?.find(article => article.is_featured);
@@ -81,10 +97,10 @@ const News = () => {
       <section className="bg-deta-gradient py-20">
         <div className="container mx-auto px-4 text-center text-white">
           <h1 className="text-5xl font-bold mb-6 arabic-heading">
-            {settings?.site_title ? `أخبار ${settings.site_title}` : 'الأخبار والمستجدات'}
+            {t('news.title')}
           </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
-            تابعوا آخر أخبار مجموعة ديتا وإنجازاتها في مختلف المجالات
+            {t('news.description')}
           </p>
         </div>
       </section>
@@ -93,7 +109,9 @@ const News = () => {
       {featuredNews && (
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-deta-green mb-8 arabic-heading">الخبر المميز</h2>
+            <h2 className="text-3xl font-bold text-deta-green mb-8 arabic-heading">
+              {t('news.featured')}
+            </h2>
             <Card className="border-none shadow-xl overflow-hidden">
               <CardContent className="p-0">
                 <div className="grid lg:grid-cols-2 gap-0">
@@ -128,7 +146,7 @@ const News = () => {
                         <span>{featuredNews.author}</span>
                       </div>
                       <Button className="bg-deta-green hover:bg-deta-green/90">
-                        اقرأ المزيد
+                        {t('buttons.read_more')}
                         <ArrowLeft className="w-4 h-4 mr-2" />
                       </Button>
                     </div>
@@ -143,7 +161,9 @@ const News = () => {
       {/* Regular News */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-deta-green mb-12 arabic-heading">جميع الأخبار</h2>
+          <h2 className="text-3xl font-bold text-deta-green mb-12 arabic-heading">
+            {t('news.all_news')}
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {regularNews.map((article) => (
               <Card key={article.id} className="border-none shadow-lg hover-scale overflow-hidden">
@@ -179,7 +199,7 @@ const News = () => {
                         <span>{article.author}</span>
                       </div>
                       <Button variant="outline" size="sm" className="border-deta-green text-deta-green hover:bg-deta-green hover:text-white">
-                        اقرأ المزيد
+                        {t('buttons.read_more')}
                       </Button>
                     </div>
                   </div>
@@ -196,19 +216,19 @@ const News = () => {
           <Card className="border-none shadow-lg bg-deta-light-gradient">
             <CardContent className="p-12 text-center">
               <h2 className="text-3xl font-bold text-deta-green mb-4 arabic-heading">
-                اشترك في نشرتنا الإخبارية
+                {t('news.newsletter_title')}
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                احصل على آخر الأخبار والمستجدات من مجموعة ديتا مباشرة في بريدك الإلكتروني
+                {t('news.newsletter_description')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <input 
                   type="email" 
-                  placeholder="أدخل بريدك الإلكتروني"
+                  placeholder={t('news.email_placeholder')}
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deta-green"
                 />
                 <Button className="bg-deta-green hover:bg-deta-green/90 px-8">
-                  اشترك
+                  {t('news.subscribe')}
                 </Button>
               </div>
             </CardContent>

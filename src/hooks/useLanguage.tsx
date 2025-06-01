@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,6 +63,16 @@ const translations = {
     'site.location': 'الخرطوم، السودان',
     'site.company_name': 'مجموعة ديتا',
     'site.company_description': 'رائدة في مجالات الزراعة وتصنيع الأغذية وتطوير البرمجيات في السودان، ملتزمون بتقديم أفضل الخدمات والمنتجات.',
+    
+    // News translations
+    'news.title': 'الأخبار والمستجدات',
+    'news.description': 'تابعوا آخر أخبار مجموعة ديتا وإنجازاتها في مختلف المجالات',
+    'news.featured': 'الخبر المميز',
+    'news.all_news': 'جميع الأخبار',
+    'news.newsletter_title': 'اشترك في نشرتنا الإخبارية',
+    'news.newsletter_description': 'احصل على آخر الأخبار والمستجدات من مجموعة ديتا مباشرة في بريدك الإلكتروني',
+    'news.email_placeholder': 'أدخل بريدك الإلكتروني',
+    'news.subscribe': 'اشترك',
     
     // Hero section
     'hero.welcome': 'مرحباً بكم في',
@@ -298,6 +307,16 @@ const translations = {
     'site.company_name': 'Deta Group',
     'site.company_description': 'Leading company in agriculture, food manufacturing, and software development in Sudan, committed to delivering the best services and products.',
     
+    // News translations
+    'news.title': 'News & Updates',
+    'news.description': 'Follow the latest news and achievements of Deta Group across various fields',
+    'news.featured': 'Featured News',
+    'news.all_news': 'All News',
+    'news.newsletter_title': 'Subscribe to Our Newsletter',
+    'news.newsletter_description': 'Get the latest news and updates from Deta Group directly in your email',
+    'news.email_placeholder': 'Enter your email address',
+    'news.subscribe': 'Subscribe',
+    
     // Hero section
     'hero.welcome': 'Welcome to',
     'hero.description': 'Leading in agriculture, food manufacturing, and software development in Sudan, we strive for excellence and innovation in everything we do.',
@@ -493,6 +512,41 @@ const translations = {
   }
 };
 
+// دالة لتحديد اللغة الافتراضية حسب إعدادات المتصفح
+const getDefaultLanguageFromBrowser = (): string => {
+  const browserLang = navigator.language || navigator.languages?.[0];
+  console.log('Browser language:', browserLang);
+  
+  if (browserLang?.startsWith('ar')) {
+    return 'ar';
+  }
+  
+  // إذا كانت اللغة ليست عربية، استخدم الإنجليزية كافتراضية
+  return 'en';
+};
+
+// دالة لحفظ تفضيل اللغة
+const saveLanguagePreference = (languageCode: string) => {
+  try {
+    localStorage.setItem('preferred_language', languageCode);
+    console.log('Language preference saved:', languageCode);
+  } catch (error) {
+    console.error('Error saving language preference:', error);
+  }
+};
+
+// دالة لقراءة تفضيل اللغة المحفوظ
+const getStoredLanguagePreference = (): string | null => {
+  try {
+    const stored = localStorage.getItem('preferred_language');
+    console.log('Stored language preference:', stored);
+    return stored;
+  } catch (error) {
+    console.error('Error reading language preference:', error);
+    return null;
+  }
+};
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState('ar');
 
@@ -518,13 +572,38 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     }
   });
 
+  // تحديث دالة تغيير اللغة لحفظ التفضيل
+  const handleLanguageChange = (code: string) => {
+    console.log('Changing language to:', code);
+    setCurrentLanguage(code);
+    saveLanguagePreference(code);
+  };
+
   useEffect(() => {
     if (languages.length > 0) {
-      const defaultLang = languages.find(lang => lang.is_default) || languages[0];
-      if (!currentLanguage || currentLanguage !== defaultLang.code) {
-        console.log('Setting default language:', defaultLang.code);
-        setCurrentLanguage(defaultLang.code);
+      // أولاً: تحقق من التفضيل المحفوظ
+      const storedPreference = getStoredLanguagePreference();
+      
+      if (storedPreference && languages.some(lang => lang.code === storedPreference)) {
+        console.log('Using stored language preference:', storedPreference);
+        setCurrentLanguage(storedPreference);
+        return;
       }
+      
+      // ثانياً: استخدم إعدادات المتصفح
+      const browserDefault = getDefaultLanguageFromBrowser();
+      if (languages.some(lang => lang.code === browserDefault)) {
+        console.log('Using browser default language:', browserDefault);
+        setCurrentLanguage(browserDefault);
+        saveLanguagePreference(browserDefault);
+        return;
+      }
+      
+      // ثالثاً: استخدم اللغة الافتراضية من قاعدة البيانات
+      const defaultLang = languages.find(lang => lang.is_default) || languages[0];
+      console.log('Using database default language:', defaultLang.code);
+      setCurrentLanguage(defaultLang.code);
+      saveLanguagePreference(defaultLang.code);
     }
   }, [languages]);
 
@@ -547,7 +626,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   return (
     <LanguageContext.Provider value={{
       currentLanguage,
-      setCurrentLanguage,
+      setCurrentLanguage: handleLanguageChange,
       languages,
       isRTL,
       t,
