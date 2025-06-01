@@ -12,6 +12,12 @@ interface ProductTranslation {
   slug: string;
 }
 
+interface ProductTranslationInput {
+  name: string;
+  description?: string;
+  slug: string;
+}
+
 interface Product {
   id: string;
   category_id?: string;
@@ -85,7 +91,7 @@ export const useCreateMultilingualProduct = () => {
   return useMutation({
     mutationFn: async ({ productData, translations }: { 
       productData: any; 
-      translations: Record<string, ProductTranslation> 
+      translations: Record<string, ProductTranslationInput> 
     }) => {
       console.log('Creating product with data:', productData, translations);
       
@@ -141,7 +147,7 @@ export const useUpdateMultilingualProduct = () => {
     }: { 
       productId: string; 
       productData: any; 
-      translations: Record<string, ProductTranslation> 
+      translations: Record<string, ProductTranslationInput> 
     }) => {
       console.log('Updating product:', productId, productData, translations);
       
@@ -203,3 +209,5 @@ export const useDeleteProduct = () => {
     }
   });
 };
+
+export type { ProductTranslationInput };
