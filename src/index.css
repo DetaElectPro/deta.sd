@@ -189,6 +189,20 @@ html[dir="ltr"] {
   animation: spin 1s linear infinite;
 }
 
+/* Ticker animation - seamless continuous movement */
+@keyframes ticker-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-ticker-seamless {
+  animation: ticker-seamless 180s linear infinite;
+}
+
 /* Ticker animation - slower speed */
 @keyframes ticker {
   0% {
