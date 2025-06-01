@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
+import TickerTape from "@/components/TickerTape";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +26,9 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
+      {/* Ticker Tape */}
+      <TickerTape />
+      
       {/* Top Bar */}
       <div className="bg-deta-green text-white py-2">
         <div className="container mx-auto px-4">

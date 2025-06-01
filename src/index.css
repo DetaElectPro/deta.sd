@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
 @tailwind base;
@@ -122,6 +123,15 @@
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
+/* Enhanced gradient with better contrast */
+.bg-deta-dark-gradient {
+  background: linear-gradient(135deg, #1a3d0f 0%, var(--deta-green) 100%);
+}
+
+.bg-deta-hero-gradient {
+  background: linear-gradient(135deg, var(--deta-green) 0%, #1a3d0f 100%);
+}
+
 /* Hover effect for cards */
 .hover-scale {
   transition: transform 0.2s ease-in-out;
@@ -178,6 +188,29 @@ html[dir="ltr"] {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Ticker animation */
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 60s linear infinite;
+}
+
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ticker-content {
+  min-width: max-content;
 }
 
 /* Line clamp utility */
