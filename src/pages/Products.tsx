@@ -5,78 +5,79 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Wheat, Apple, Coffee, Package } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Products = () => {
+  const { t } = useLanguage();
+
   const productCategories = [
     {
       icon: <Wheat className="w-12 h-12 text-deta-gold" />,
-      title: "الحبوب والبقوليات",
-      description: "منتجات عالية الجودة من الحبوب والبقوليات المزروعة محلياً",
+      title: t('products.grains_legumes'),
+      description: t('products.grains_legumes_desc'),
       products: [
-        { name: "القمح", quality: "ممتاز", origin: "السودان" },
-        { name: "الذرة", quality: "عالي", origin: "السودان" },
-        { name: "الدخن", quality: "ممتاز", origin: "السودان" },
-        { name: "السمسم", quality: "فاخر", origin: "السودان" },
-        { name: "الفول السوداني", quality: "عالي", origin: "السودان" },
-        { name: "اللوبيا", quality: "ممتاز", origin: "السودان" }
+        { name: t('products.wheat'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.corn'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.millet'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.sesame'), quality: t('quality.premium'), origin: t('origin.sudan') },
+        { name: t('products.peanuts'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.cowpeas'), quality: t('quality.excellent'), origin: t('origin.sudan') }
       ]
     },
     {
       icon: <Apple className="w-12 h-12 text-deta-gold" />,
-      title: "الفواكه والخضروات",
-      description: "فواكه وخضروات طازجة ومعالجة بأحدث التقنيات",
+      title: t('products.fruits_vegetables'),
+      description: t('products.fruits_vegetables_desc'),
       products: [
-        { name: "التمر", quality: "فاخر", origin: "السودان" },
-        { name: "المانجو", quality: "ممتاز", origin: "السودان" },
-        { name: "الجوافة", quality: "عالي", origin: "السودان" },
-        { name: "البطاطس", quality: "ممتاز", origin: "السودان" },
-        { name: "البصل", quality: "عالي", origin: "السودان" },
-        { name: "الطماطم", quality: "ممتاز", origin: "السودان" }
+        { name: t('products.dates'), quality: t('quality.premium'), origin: t('origin.sudan') },
+        { name: t('products.mango'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.guava'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.potatoes'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.onions'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.tomatoes'), quality: t('quality.excellent'), origin: t('origin.sudan') }
       ]
     },
     {
       icon: <Coffee className="w-12 h-12 text-deta-gold" />,
-      title: "المشروبات والتوابل",
-      description: "مجموعة متنوعة من المشروبات الطبيعية والتوابل العطرية",
+      title: t('products.beverages_spices'),
+      description: t('products.beverages_spices_desc'),
       products: [
-        { name: "الكركديه", quality: "فاخر", origin: "السودان" },
-        { name: "العنب", quality: "ممتاز", origin: "السودان" },
-        { name: "الكمون", quality: "عالي", origin: "السودان" },
-        { name: "الكزبرة", quality: "ممتاز", origin: "السودان" },
-        { name: "الحلبة", quality: "عالي", origin: "السودان" },
-        { name: "القرفة", quality: "فاخر", origin: "السودان" }
+        { name: t('products.hibiscus'), quality: t('quality.premium'), origin: t('origin.sudan') },
+        { name: t('products.grapes'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.cumin'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.coriander'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.fenugreek'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.cinnamon'), quality: t('quality.premium'), origin: t('origin.sudan') }
       ]
     },
     {
       icon: <Package className="w-12 h-12 text-deta-gold" />,
-      title: "المنتجات المصنعة",
-      description: "منتجات غذائية مصنعة ومعبأة وفق أعلى معايير الجودة",
+      title: t('products.processed_products'),
+      description: t('products.processed_products_desc'),
       products: [
-        { name: "دقيق القمح", quality: "ممتاز", origin: "السودان" },
-        { name: "زيت السمسم", quality: "فاخر", origin: "السودان" },
-        { name: "زبدة الفول السوداني", quality: "عالي", origin: "السودان" },
-        { name: "عجينة التمر", quality: "ممتاز", origin: "السودان" },
-        { name: "التوابل المطحونة", quality: "عالي", origin: "السودان" },
-        { name: "الحبوب المنظفة", quality: "ممتاز", origin: "السودان" }
+        { name: t('products.wheat_flour'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.sesame_oil'), quality: t('quality.premium'), origin: t('origin.sudan') },
+        { name: t('products.peanut_butter'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.date_paste'), quality: t('quality.excellent'), origin: t('origin.sudan') },
+        { name: t('products.ground_spices'), quality: t('quality.high'), origin: t('origin.sudan') },
+        { name: t('products.cleaned_grains'), quality: t('quality.excellent'), origin: t('origin.sudan') }
       ]
     }
   ];
 
   const certifications = [
-    "ISO 22000 - إدارة سلامة الغذاء",
-    "HACCP - تحليل المخاطر ونقاط التحكم الحرجة",
-    "الشهادة العضوية المعتمدة",
-    "شهادة الجودة السودانية",
-    "شهادة التصدير الدولية"
+    t('certifications.iso_22000'),
+    t('certifications.haccp'),
+    t('certifications.organic'),
+    t('certifications.sudanese_quality'),
+    t('certifications.export')
   ];
 
   const getQualityColor = (quality: string) => {
-    switch (quality) {
-      case "فاخر": return "bg-deta-gold text-white";
-      case "ممتاز": return "bg-deta-green text-white";
-      case "عالي": return "bg-deta-green-light text-white";
-      default: return "bg-gray-500 text-white";
-    }
+    if (quality === t('quality.premium')) return "bg-deta-gold text-white";
+    if (quality === t('quality.excellent')) return "bg-deta-green text-white";
+    if (quality === t('quality.high')) return "bg-deta-green-light text-white";
+    return "bg-gray-500 text-white";
   };
 
   return (
@@ -86,9 +87,9 @@ const Products = () => {
       {/* Hero Section */}
       <section className="bg-deta-gradient py-20">
         <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">منتجاتنا</h1>
+          <h1 className="text-5xl font-bold mb-6 arabic-heading">{t('site.products')}</h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
-            نفتخر بتقديم مجموعة واسعة من المنتجات الزراعية والغذائية عالية الجودة من السودان إلى العالم
+            {t('products.hero_description')}
           </p>
         </div>
       </section>
@@ -97,9 +98,11 @@ const Products = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">فئات المنتجات</h2>
+            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
+              {t('products.categories')}
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              نقدم منتجات متنوعة تلبي احتياجات السوق المحلي والدولي
+              {t('products.categories_description')}
             </p>
           </div>
           
@@ -131,7 +134,7 @@ const Products = () => {
                               <Badge className={getQualityColor(product.quality)}>
                                 {product.quality}
                               </Badge>
-                              <p className="text-sm text-gray-600">المنشأ: {product.origin}</p>
+                              <p className="text-sm text-gray-600">{t('products.origin')}: {product.origin}</p>
                             </div>
                           </div>
                         ))}
@@ -150,14 +153,17 @@ const Products = () => {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-deta-green mb-6 arabic-heading">معايير الجودة</h2>
+              <h2 className="text-4xl font-bold text-deta-green mb-6 arabic-heading">
+                {t('products.quality_standards')}
+              </h2>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                نحن ملتزمون بأعلى معايير الجودة والسلامة في جميع منتجاتنا. 
-                نحصل على أفضل الشهادات العالمية والمحلية لضمان جودة منتجاتنا.
+                {t('products.quality_description')}
               </p>
               
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-deta-green arabic-heading">شهاداتنا</h3>
+                <h3 className="text-xl font-semibold text-deta-green arabic-heading">
+                  {t('products.our_certifications')}
+                </h3>
                 <div className="space-y-3">
                   {certifications.map((cert, index) => (
                     <div key={index} className="flex items-center gap-3">
@@ -187,18 +193,20 @@ const Products = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">أسواق التصدير</h2>
+            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
+              {t('products.export_markets')}
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              نصدر منتجاتنا إلى العديد من البلدان في المنطقة والعالم
+              {t('products.export_description')}
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              "دول الخليج العربي",
-              "شمال أفريقيا",
-              "شرق أفريقيا",
-              "أوروبا وآسيا"
+              t('markets.gulf_countries'),
+              t('markets.north_africa'),
+              t('markets.east_africa'),
+              t('markets.europe_asia')
             ].map((market, index) => (
               <Card key={index} className="text-center border-none shadow-lg hover-scale">
                 <CardContent className="p-6">
@@ -219,17 +227,17 @@ const Products = () => {
       <section className="py-20 bg-deta-gradient">
         <div className="container mx-auto px-4 text-center text-white">
           <h2 className="text-4xl font-bold mb-6 arabic-heading">
-            مهتمون بمنتجاتنا؟
+            {t('products.interested_cta')}
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            تواصلوا معنا للحصول على كتالوج شامل بمنتجاتنا أو لمناقشة احتياجاتكم
+            {t('products.cta_description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-white text-deta-green hover:bg-gray-100">
-              تحميل الكتالوج
+              {t('products.download_catalog')}
             </Button>
             <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-deta-green">
-              طلب عرض سعر
+              {t('products.request_quote')}
             </Button>
           </div>
         </div>

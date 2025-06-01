@@ -30,12 +30,16 @@ export const LanguageSelector = () => {
     <div className="flex items-center gap-2">
       <Globe className="h-4 w-4" />
       <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-        <SelectTrigger className="w-32">
+        <SelectTrigger className="w-32 bg-white border-gray-300 text-gray-900 hover:bg-gray-50">
           <SelectValue placeholder={t('language.switch')} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white border-gray-300 z-50">
           {languages.map((language) => (
-            <SelectItem key={language.code} value={language.code}>
+            <SelectItem 
+              key={language.code} 
+              value={language.code}
+              className="text-gray-900 hover:bg-gray-100"
+            >
               {language.native_name}
             </SelectItem>
           ))}

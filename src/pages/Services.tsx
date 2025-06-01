@@ -4,71 +4,72 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Leaf, Package, Code, Sprout, Shield, Zap, Database, Globe, ArrowLeft } from "lucide-react";
+import { 
+  Leaf, 
+  Package, 
+  Code, 
+  Users, 
+  Target, 
+  Award,
+  ArrowLeft,
+  CheckCircle 
+} from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Services = () => {
-  const mainServices = [
+  const { t } = useLanguage();
+
+  const services = [
     {
       icon: <Leaf className="w-16 h-16 text-deta-gold" />,
-      title: "الزراعة المستدامة",
-      description: "نقدم حلولاً زراعية متطورة ومستدامة تشمل الإنتاج النباتي والحيواني باستخدام أحدث التقنيات الزراعية والممارسات البيئية المسؤولة.",
+      title: t('services.agriculture'),
+      description: t('services.agriculture_desc'),
       features: [
-        "إنتاج المحاصيل الاستراتيجية",
-        "الزراعة العضوية المعتمدة",
-        "أنظمة الري الذكية",
-        "مكافحة الآفات البيولوجية",
-        "استشارات زراعية متخصصة"
-      ],
-      image: "agriculture"
+        t('services.agriculture_features.modern_farming'),
+        t('services.agriculture_features.organic_production'),
+        t('services.agriculture_features.irrigation_systems'),
+        t('services.agriculture_features.crop_consulting')
+      ]
     },
     {
       icon: <Package className="w-16 h-16 text-deta-gold" />,
-      title: "تصنيع الأغذية",
-      description: "نتخصص في معالجة وتصنيع المنتجات الغذائية بأعلى معايير الجودة والسلامة، من المواد الخام إلى المنتج النهائي الجاهز للاستهلاك.",
+      title: t('services.food_manufacturing'),
+      description: t('services.food_manufacturing_desc'),
       features: [
-        "معالجة الحبوب والبقوليات",
-        "تصنيع المنتجات الغذائية",
-        "التعبئة والتغليف المتطور",
-        "ضمان الجودة والسلامة",
-        "التوزيع والخدمات اللوجستية"
-      ],
-      image: "food"
+        t('services.food_features.quality_control'),
+        t('services.food_features.packaging'),
+        t('services.food_features.distribution'),
+        t('services.food_features.certifications')
+      ]
     },
     {
       icon: <Code className="w-16 h-16 text-deta-gold" />,
-      title: "تطوير البرمجيات",
-      description: "نطور حلولاً برمجية مبتكرة ومنصات رقمية متطورة تخدم احتياجات الأعمال المختلفة وتساهم في التحول الرقمي.",
+      title: t('services.software_development'),
+      description: t('services.software_development_desc'),
       features: [
-        "تطوير المواقع والتطبيقات",
-        "أنظمة إدارة المؤسسات",
-        "حلول الزراعة الذكية",
-        "منصات التجارة الإلكترونية",
-        "استشارات تقنية متخصصة"
-      ],
-      image: "software"
+        t('services.software_features.web_development'),
+        t('services.software_features.mobile_apps'),
+        t('services.software_features.erp_systems'),
+        t('services.software_features.consulting')
+      ]
     }
   ];
 
-  const additionalServices = [
+  const processSteps = [
     {
-      icon: <Sprout className="w-8 h-8 text-deta-green" />,
-      title: "الاستشارات الزراعية",
-      description: "خدمات استشارية متخصصة في جميع مجالات الزراعة"
+      icon: <Users className="w-12 h-12 text-deta-gold" />,
+      title: t('process.consultation'),
+      description: t('process.consultation_desc')
     },
     {
-      icon: <Shield className="w-8 h-8 text-deta-green" />,
-      title: "ضمان الجودة",
-      description: "أنظمة متطورة لضمان جودة المنتجات والخدمات"
+      icon: <Target className="w-12 h-12 text-deta-gold" />,
+      title: t('process.planning'),
+      description: t('process.planning_desc')
     },
     {
-      icon: <Zap className="w-8 h-8 text-deta-green" />,
-      title: "الطاقة المتجددة",
-      description: "حلول الطاقة الشمسية والمتجددة للمشاريع الزراعية"
-    },
-    {
-      icon: <Database className="w-8 h-8 text-deta-green" />,
-      title: "إدارة البيانات",
-      description: "أنظمة متطورة لجمع وتحليل البيانات الزراعية"
+      icon: <Award className="w-12 h-12 text-deta-gold" />,
+      title: t('process.execution'),
+      description: t('process.execution_desc')
     }
   ];
 
@@ -79,77 +80,69 @@ const Services = () => {
       {/* Hero Section */}
       <section className="bg-deta-gradient py-20">
         <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">خدماتنا</h1>
+          <h1 className="text-5xl font-bold mb-6 arabic-heading">{t('site.services')}</h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
-            نقدم مجموعة شاملة من الخدمات المتخصصة في الزراعة وتصنيع الأغذية وتطوير البرمجيات
+            {t('sections.services_description')}
           </p>
         </div>
       </section>
 
-      {/* Main Services */}
+      {/* Services Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="space-y-20">
-            {mainServices.map((service, index) => (
-              <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
-                  <div className="flex items-center gap-4 mb-6">
-                    {service.icon}
-                    <h2 className="text-4xl font-bold text-deta-green arabic-heading">{service.title}</h2>
-                  </div>
-                  <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <div className="space-y-3 mb-8">
-                    {service.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-deta-gold rounded-full"></div>
-                        <span className="text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <Button asChild className="bg-deta-green hover:bg-deta-green/90">
-                    <Link to="/contact">
-                      احصل على استشارة
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                    </Link>
-                  </Button>
-                </div>
-                
-                <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
-                  <div className="h-96 bg-gradient-to-br from-deta-green to-deta-green-light rounded-2xl shadow-lg flex items-center justify-center">
-                    <Globe className="w-32 h-32 text-white/30" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Services */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">خدمات إضافية</h2>
+            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
+              {t('sections.our_services')}
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              مجموعة من الخدمات المساندة التي تكمل عروضنا الرئيسية
+              {t('services.detailed_description')}
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {additionalServices.map((service, index) => (
-              <Card key={index} className="border-none shadow-lg hover-scale">
-                <CardContent className="p-6 text-center">
-                  <div className="mb-4 flex justify-center">
-                    {service.icon}
+          <div className="space-y-20">
+            {services.map((service, index) => (
+              <Card key={index} className="border-none shadow-lg overflow-hidden">
+                <CardContent className="p-0">
+                  <div className={`grid lg:grid-cols-2 gap-0 ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+                    <div className={`p-12 ${index % 2 === 1 ? 'lg:col-start-2' : ''}`}>
+                      <div className="flex items-center gap-4 mb-6">
+                        {service.icon}
+                        <h3 className="text-3xl font-bold text-deta-green arabic-heading">
+                          {service.title}
+                        </h3>
+                      </div>
+                      <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                        {service.description}
+                      </p>
+                      
+                      <div className="space-y-4 mb-8">
+                        {service.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-center gap-3">
+                            <CheckCircle className="w-5 h-5 text-deta-gold" />
+                            <span className="text-gray-700">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <Button asChild className="bg-deta-green hover:bg-deta-green/90">
+                        <Link to="/contact">
+                          {t('buttons.request_service')}
+                          <ArrowLeft className="w-4 h-4 mr-2" />
+                        </Link>
+                      </Button>
+                    </div>
+                    
+                    <div className={`bg-deta-light-gradient ${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
+                      <div className="h-full min-h-[400px] bg-gradient-to-br from-deta-green/10 to-deta-gold/10 flex items-center justify-center">
+                        <div className="text-center p-8">
+                          {service.icon}
+                          <h4 className="text-2xl font-bold text-deta-green mt-4 arabic-heading">
+                            {service.title}
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-deta-green mb-3 arabic-heading">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {service.description}
-                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -158,29 +151,32 @@ const Services = () => {
       </section>
 
       {/* Process Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">كيف نعمل</h2>
+            <h2 className="text-4xl font-bold text-deta-green mb-4 arabic-heading">
+              {t('process.our_process')}
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              نتبع منهجية علمية ومدروسة في تقديم خدماتنا
+              {t('process.description')}
             </p>
           </div>
           
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { step: "1", title: "الاستشارة", description: "نبدأ بفهم احتياجاتكم ومتطلباتكم" },
-              { step: "2", title: "التخطيط", description: "نضع خطة مفصلة ومدروسة للمشروع" },
-              { step: "3", title: "التنفيذ", description: "ننفذ المشروع بأعلى معايير الجودة" },
-              { step: "4", title: "المتابعة", description: "نقدم الدعم والمتابعة المستمرة" }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-deta-green rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 arabic-heading">
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-bold text-deta-green mb-2 arabic-heading">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {processSteps.map((step, index) => (
+              <Card key={index} className="text-center border-none shadow-lg hover-scale">
+                <CardContent className="p-8">
+                  <div className="w-20 h-20 bg-deta-green rounded-full flex items-center justify-center mx-auto mb-6">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-deta-green mb-4 arabic-heading">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {step.description}
+                  </p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
@@ -190,14 +186,14 @@ const Services = () => {
       <section className="py-20 bg-deta-gradient">
         <div className="container mx-auto px-4 text-center text-white">
           <h2 className="text-4xl font-bold mb-6 arabic-heading">
-            هل تحتاجون لخدماتنا؟
+            {t('cta.ready_to_start')}
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            تواصلوا معنا اليوم للحصول على استشارة مجانية ومناقشة كيف يمكننا مساعدتكم
+            {t('cta.description')}
           </p>
           <Button asChild size="lg" className="bg-white text-deta-green hover:bg-gray-100">
             <Link to="/contact">
-              احصل على استشارة مجانية
+              {t('cta.start_project')}
               <ArrowLeft className="w-4 h-4 mr-2" />
             </Link>
           </Button>
