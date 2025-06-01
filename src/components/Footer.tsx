@@ -1,8 +1,11 @@
 
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Phone, Mail, MapPin } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-deta-green text-white">
       <div className="container mx-auto px-4 py-12">
@@ -13,38 +16,38 @@ const Footer = () => {
               <div className="w-10 h-10 bg-deta-gold rounded-lg flex items-center justify-center">
                 <span className="text-deta-green font-bold">D</span>
               </div>
-              <h3 className="text-xl font-bold arabic-heading">مجموعة ديتا</h3>
+              <h3 className="text-xl font-bold arabic-heading">{t('site.company_name')}</h3>
             </div>
             <p className="text-gray-300 leading-relaxed">
-              رائدة في مجالات الزراعة وتصنيع الأغذية وتطوير البرمجيات في السودان، ملتزمون بتقديم أفضل الخدمات والمنتجات.
+              {t('site.company_description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 arabic-heading">روابط سريعة</h4>
+            <h4 className="text-lg font-semibold mb-4 arabic-heading">{t('footer.quick_links')}</h4>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-300 hover:text-deta-gold transition-colors">الرئيسية</Link></li>
-              <li><Link to="/about" className="text-gray-300 hover:text-deta-gold transition-colors">من نحن</Link></li>
-              <li><Link to="/services" className="text-gray-300 hover:text-deta-gold transition-colors">خدماتنا</Link></li>
-              <li><Link to="/products" className="text-gray-300 hover:text-deta-gold transition-colors">منتجاتنا</Link></li>
+              <li><Link to="/" className="text-gray-300 hover:text-deta-gold transition-colors">{t('site.home')}</Link></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-deta-gold transition-colors">{t('site.about')}</Link></li>
+              <li><Link to="/services" className="text-gray-300 hover:text-deta-gold transition-colors">{t('site.services')}</Link></li>
+              <li><Link to="/products" className="text-gray-300 hover:text-deta-gold transition-colors">{t('site.products')}</Link></li>
             </ul>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 arabic-heading">خدماتنا</h4>
+            <h4 className="text-lg font-semibold mb-4 arabic-heading">{t('site.services')}</h4>
             <ul className="space-y-2">
-              <li className="text-gray-300">الزراعة المستدامة</li>
-              <li className="text-gray-300">تصنيع الأغذية</li>
-              <li className="text-gray-300">تطوير البرمجيات</li>
-              <li className="text-gray-300">الاستشارات الزراعية</li>
+              <li className="text-gray-300">{t('services.agriculture')}</li>
+              <li className="text-gray-300">{t('services.food_manufacturing')}</li>
+              <li className="text-gray-300">{t('services.software_development')}</li>
+              <li className="text-gray-300">{t('services.consulting')}</li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 arabic-heading">تواصل معنا</h4>
+            <h4 className="text-lg font-semibold mb-4 arabic-heading">{t('footer.contact_us')}</h4>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-deta-gold" />
@@ -56,7 +59,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-deta-gold" />
-                <span className="text-gray-300">الخرطوم، السودان</span>
+                <span className="text-gray-300">{t('site.location')}</span>
               </div>
             </div>
             
@@ -80,7 +83,7 @@ const Footer = () => {
 
         <div className="border-t border-deta-green-light mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © 2024 مجموعة ديتا. جميع الحقوق محفوظة.
+            {t('footer.copyright')}
           </p>
         </div>
       </div>

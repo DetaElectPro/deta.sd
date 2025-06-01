@@ -4,18 +4,21 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone, Mail, MapPin } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { LanguageSelector } from "@/components/admin/LanguageSelector";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useLanguage();
 
   const navigation = [
-    { name: "الرئيسية", href: "/" },
-    { name: "من نحن", href: "/about" },
-    { name: "خدماتنا", href: "/services" },
-    { name: "منتجاتنا", href: "/products" },
-    { name: "الأخبار", href: "/news" },
-    { name: "اتصل بنا", href: "/contact" },
+    { name: t('site.home'), href: "/" },
+    { name: t('site.about'), href: "/about" },
+    { name: t('site.services'), href: "/services" },
+    { name: t('site.products'), href: "/products" },
+    { name: t('site.news'), href: "/news" },
+    { name: t('site.contact'), href: "/contact" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -36,9 +39,12 @@ const Header = () => {
                 <span>info@detagroup.sd</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              <span>الخرطوم، السودان</span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>{t('site.location')}</span>
+              </div>
+              <LanguageSelector />
             </div>
           </div>
         </div>
@@ -53,7 +59,7 @@ const Header = () => {
               <span className="text-white font-bold text-xl">D</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-deta-green arabic-heading">مجموعة ديتا</h1>
+              <h1 className="text-2xl font-bold text-deta-green arabic-heading">{t('site.company_name')}</h1>
               <p className="text-sm text-gray-600">Deta Group</p>
             </div>
           </Link>
@@ -84,6 +90,9 @@ const Header = () => {
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col gap-6 mt-8">
+                <div className="pb-4 border-b">
+                  <LanguageSelector />
+                </div>
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
