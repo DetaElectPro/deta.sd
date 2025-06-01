@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -6,99 +7,64 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useLanguage } from "@/hooks/useLanguage";
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  price: string;
-  category: string;
-  isNew: boolean;
-}
+import { useMultilingualProducts } from "@/hooks/useMultilingualProducts";
+import { Loader2 } from "lucide-react";
 
 const Products = () => {
   usePageTracking();
   const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  
+  const { data: products = [], isLoading, error } = useMultilingualProducts();
 
-  const products: Product[] = [
-    {
-      id: "1",
-      name: "Product 1",
-      description: "This is a description for Product 1.",
-      image: "/placeholder-image.jpg",
-      price: "$19.99",
-      category: "agriculture",
-      isNew: true,
-    },
-    {
-      id: "2",
-      name: "Product 2",
-      description: "This is a description for Product 2.",
-      image: "/placeholder-image.jpg",
-      price: "$29.99",
-      category: "manufacturing",
-      isNew: false,
-    },
-    {
-      id: "3",
-      name: "Product 3",
-      description: "This is a description for Product 3.",
-      image: "/placeholder-image.jpg",
-      price: "$39.99",
-      category: "technology",
-      isNew: true,
-    },
-    {
-      id: "4",
-      name: "Product 4",
-      description: "This is a description for Product 4.",
-      image: "/placeholder-image.jpg",
-      price: "$49.99",
-      category: "agriculture",
-      isNew: false,
-    },
-    {
-      id: "5",
-      name: "Product 5",
-      description: "This is a description for Product 5.",
-      image: "/placeholder-image.jpg",
-      price: "$59.99",
-      category: "manufacturing",
-      isNew: true,
-    },
-    {
-      id: "6",
-      name: "Product 6",
-      description: "This is a description for Product 6.",
-      image: "/placeholder-image.jpg",
-      price: "$69.99",
-      category: "technology",
-      isNew: false,
-    },
-  ];
-
-  const categories: Category[] = [
-    { id: "agriculture", name: t("categories.agriculture") },
-    { id: "manufacturing", name: t("categories.manufacturing") },
-    { id: "technology", name: t("categories.technology") },
-  ];
+  // استخراج الفئات الفريدة من المنتجات
+  const categories = Array.from(
+    new Map(
+      products
+        .filter(product => product.categories)
+        .map(product => [
+          product.categories.id,
+          {
+            id: product.categories.id,
+            name: product.categories.name || product.categories.slug
+          }
+        ])
+    ).values()
+  );
 
   const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
+    ? products.filter((product) => product.category_id === selectedCategory)
     : products;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-red-500">حدث خطأ في تحميل المنتجات</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section - Fixed gradient background */}
+      {/* Hero Section */}
       <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
         <div className="container mx-auto px-4 text-center text-white">
           <h1 className="text-5xl font-bold mb-6 arabic-heading">
@@ -111,73 +77,96 @@ const Products = () => {
       </section>
 
       {/* Categories Filter */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
+      {categories.length > 0 && (
+        <section className="py-12 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-center gap-4">
               <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category.id)}
+                variant={selectedCategory === null ? "default" : "outline"}
+                onClick={() => setSelectedCategory(null)}
                 className={`${
-                  selectedCategory === category.id 
+                  selectedCategory === null 
                     ? "bg-deta-green text-white" 
                     : "border-deta-green text-deta-green hover:bg-deta-green hover:text-white"
                 }`}
               >
-                {category.name}
+                {t('products.all_categories')}
               </Button>
-            ))}
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`${
+                    selectedCategory === category.id 
+                      ? "bg-deta-green text-white" 
+                      : "border-deta-green text-deta-green hover:bg-deta-green hover:text-white"
+                  }`}
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Products Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="border-none shadow-lg hover-scale overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
-                    {product.image && (
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge className="bg-deta-gold text-white">
-                        {categories.find(c => c.id === product.category)?.name}
-                      </Badge>
-                      {product.isNew && (
-                        <Badge className="bg-green-500 text-white">
-                          {t('products.new')}
-                        </Badge>
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-lg">{t('products.no_products')}</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProducts.map((product) => (
+                <Card key={product.id} className="border-none shadow-lg hover-scale overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
+                      {product.image_url && (
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
                       )}
                     </div>
-                    <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                      {product.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-deta-green">
-                        {product.price}
-                      </span>
-                      <Button size="sm" className="bg-deta-green hover:bg-deta-green/90">
-                        {t('buttons.view_details')}
-                      </Button>
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-3">
+                        {product.categories && (
+                          <Badge className="bg-deta-gold text-white">
+                            {product.categories.name}
+                          </Badge>
+                        )}
+                        {product.is_new && (
+                          <Badge className="bg-green-500 text-white">
+                            {t('products.new')}
+                          </Badge>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                        {product.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        {product.price && (
+                          <span className="text-lg font-bold text-deta-green">
+                            ${product.price}
+                          </span>
+                        )}
+                        <Button size="sm" className="bg-deta-green hover:bg-deta-green/90">
+                          {t('buttons.view_details')}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

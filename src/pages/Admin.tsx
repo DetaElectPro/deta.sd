@@ -8,6 +8,7 @@ import { UsersManager } from '@/components/admin/UsersManager';
 import { MediaManager } from '@/components/admin/MediaManager';
 import { SiteSettingsManager } from '@/components/admin/SiteSettingsManager';
 import { AnalyticsView } from '@/components/admin/AnalyticsView';
+import ProductsManager from '@/components/admin/ProductsManager';
 
 const Admin = () => {
   return (
@@ -16,6 +17,7 @@ const Admin = () => {
         <Route index element={<AdminDashboard />} />
         <Route path="content" element={<MultilingualContentManager />} />
         <Route path="categories" element={<CategoriesManager />} />
+        <Route path="products" element={<ProductsManager />} />
         <Route path="users" element={<UsersManager />} />
         <Route path="media" element={<MediaManager />} />
         <Route path="settings" element={<SiteSettingsManager />} />
