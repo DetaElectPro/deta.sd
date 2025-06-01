@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
 @tailwind base;
@@ -190,7 +189,7 @@ html[dir="ltr"] {
   animation: spin 1s linear infinite;
 }
 
-/* Ticker animation */
+/* Ticker animation - slower speed */
 @keyframes ticker {
   0% {
     transform: translateX(100%);
@@ -202,6 +201,10 @@ html[dir="ltr"] {
 
 .animate-ticker {
   animation: ticker 60s linear infinite;
+}
+
+.animate-ticker-slow {
+  animation: ticker 120s linear infinite;
 }
 
 .ticker-wrapper {
