@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
@@ -41,7 +40,7 @@ const TickerTape = () => {
           price: data.bitcoin?.usd || 0,
           change: data.bitcoin?.usd_24h_change || 0,
           changePercent: data.bitcoin?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         },
         {
           symbol: 'ETH',
@@ -49,7 +48,7 @@ const TickerTape = () => {
           price: data.ethereum?.usd || 0,
           change: data.ethereum?.usd_24h_change || 0,
           changePercent: data.ethereum?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         },
         {
           symbol: 'ADA',
@@ -57,7 +56,7 @@ const TickerTape = () => {
           price: data.cardano?.usd || 0,
           change: data.cardano?.usd_24h_change || 0,
           changePercent: data.cardano?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         },
         {
           symbol: 'SOL',
@@ -65,7 +64,7 @@ const TickerTape = () => {
           price: data.solana?.usd || 0,
           change: data.solana?.usd_24h_change || 0,
           changePercent: data.solana?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         },
         {
           symbol: 'DOGE',
@@ -73,7 +72,7 @@ const TickerTape = () => {
           price: data.dogecoin?.usd || 0,
           change: data.dogecoin?.usd_24h_change || 0,
           changePercent: data.dogecoin?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         },
         {
           symbol: 'XRP',
@@ -81,7 +80,7 @@ const TickerTape = () => {
           price: data.ripple?.usd || 0,
           change: data.ripple?.usd_24h_change || 0,
           changePercent: data.ripple?.usd_24h_change || 0,
-          type: 'crypto'
+          type: 'crypto' as const
         }
       ].filter(item => item.price > 0); // Only include items with valid prices
 
@@ -120,7 +119,7 @@ const TickerTape = () => {
           price: 1 / (data.rates.EUR || 1),
           change: (Math.random() - 0.5) * 0.02, // Simulated change as historical data requires paid APIs
           changePercent: (Math.random() - 0.5) * 2,
-          type: 'forex'
+          type: 'forex' as const
         },
         {
           symbol: 'GBP/USD',
@@ -128,7 +127,7 @@ const TickerTape = () => {
           price: 1 / (data.rates.GBP || 1),
           change: (Math.random() - 0.5) * 0.02,
           changePercent: (Math.random() - 0.5) * 2,
-          type: 'forex'
+          type: 'forex' as const
         },
         {
           symbol: 'USD/JPY',
@@ -136,7 +135,7 @@ const TickerTape = () => {
           price: data.rates.JPY || 0,
           change: (Math.random() - 0.5) * 2,
           changePercent: (Math.random() - 0.5) * 2,
-          type: 'forex'
+          type: 'forex' as const
         },
         {
           symbol: 'USD/CAD',
@@ -144,7 +143,7 @@ const TickerTape = () => {
           price: data.rates.CAD || 0,
           change: (Math.random() - 0.5) * 0.02,
           changePercent: (Math.random() - 0.5) * 1.5,
-          type: 'forex'
+          type: 'forex' as const
         }
       ].filter(item => item.price > 0);
 
@@ -193,7 +192,7 @@ const TickerTape = () => {
                 price: meta.regularMarketPrice,
                 change: meta.regularMarketChange || 0,
                 changePercent: meta.regularMarketChangePercent || 0,
-                type: 'stock'
+                type: 'stock' as const
               });
             }
           }
