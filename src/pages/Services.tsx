@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePageTracking } from "@/hooks/usePageTracking";
-import { Agriculture, Factory, Code, Consulting, ShieldCheck, Users, Lightbulb, TrendingUp } from 'lucide-react';
+import { Wheat, Factory, Code, Users, ShieldCheck, Lightbulb, TrendingUp } from 'lucide-react';
 
 const Services = () => {
   usePageTracking();
@@ -15,7 +15,7 @@ const Services = () => {
     {
       title: t('services.agriculture'),
       description: t('services.agriculture_description'),
-      icon: Agriculture,
+      icon: Wheat,
       features: [
         t('services.agriculture_feature1'),
         t('services.agriculture_feature2'),
@@ -45,7 +45,7 @@ const Services = () => {
     {
       title: t('services.consulting'),
       description: t('services.consulting_description'),
-      icon: Consulting,
+      icon: Users,
       features: [
         t('services.consulting_feature1'),
         t('services.consulting_feature2'),
