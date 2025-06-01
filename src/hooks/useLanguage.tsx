@@ -1,11 +1,24 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Language {
+  code: string;
+  name: string;
+  native_name: string;
+  is_default: boolean;
+  is_rtl: boolean;
+}
 
 interface LanguageContextType {
   currentLanguage: string;
   setLanguage: (lang: string) => void;
+  setCurrentLanguage: (lang: string) => void;
+  languages: Language[];
   t: (key: string) => string;
   isRTL: boolean;
+  isLoading: boolean;
 }
 
 const translations = {
@@ -40,7 +53,19 @@ const translations = {
     'footer.quick_links': 'روابط سريعة',
     'footer.contact_info': 'معلومات التواصل',
     'footer.follow_us': 'تابعنا',
-    'footer.rights': 'جميع الحقوق محفوظة'
+    'footer.rights': 'جميع الحقوق محفوظة',
+    'language.switch': 'تغيير اللغة',
+    'admin.content': 'إدارة المحتوى',
+    'content.edit_article': 'تعديل المقال',
+    'content.add_article': 'إضافة مقال جديد',
+    'content.save': 'حفظ',
+    'content.cancel': 'إلغاء',
+    'content.author': 'الكاتب',
+    'content.category': 'الفئة',
+    'content.title': 'العنوان',
+    'content.excerpt': 'المقطع التعريفي',
+    'content.content': 'المحتوى',
+    'content.add_new': 'إضافة جديد'
   },
   en: {
     'nav.home': 'Home',
@@ -73,7 +98,19 @@ const translations = {
     'footer.quick_links': 'Quick Links',
     'footer.contact_info': 'Contact Information',
     'footer.follow_us': 'Follow Us',
-    'footer.rights': 'All rights reserved'
+    'footer.rights': 'All rights reserved',
+    'language.switch': 'Switch Language',
+    'admin.content': 'Content Management',
+    'content.edit_article': 'Edit Article',
+    'content.add_article': 'Add New Article',
+    'content.save': 'Save',
+    'content.cancel': 'Cancel',
+    'content.author': 'Author',
+    'content.category': 'Category',
+    'content.title': 'Title',
+    'content.excerpt': 'Excerpt',
+    'content.content': 'Content',
+    'content.add_new': 'Add New'
   }
 };
 
@@ -82,20 +119,38 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState<string>('ar');
 
+  // Fetch languages from database
+  const { data: languages = [], isLoading } = useQuery({
+    queryKey: ['languages'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('languages')
+        .select('*')
+        .order('is_default', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching languages:', error);
+        return [];
+      }
+      
+      return data || [];
+    }
+  });
+
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') || 'ar';
     setCurrentLanguage(savedLanguage);
     
-    // Set document direction and language
+    // Set document direction and language - fix: use documentElement.lang
     document.dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
-    document.lang = savedLanguage;
+    document.documentElement.lang = savedLanguage;
   }, []);
 
   const setLanguage = (lang: string) => {
     setCurrentLanguage(lang);
     localStorage.setItem('language', lang);
     document.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.lang = lang;
+    document.documentElement.lang = lang;
   };
 
   const t = (key: string): string => {
@@ -106,7 +161,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isRTL = currentLanguage === 'ar';
 
   return (
-    <LanguageContext.Provider value={{ currentLanguage, setLanguage, t, isRTL }}>
+    <LanguageContext.Provider value={{ 
+      currentLanguage, 
+      setLanguage, 
+      setCurrentLanguage: setLanguage,
+      languages,
+      t, 
+      isRTL,
+      isLoading
+    }}>
       {children}
     </LanguageContext.Provider>
   );
