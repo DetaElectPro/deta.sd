@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Leaf, Package, Code, Users, Award, Globe } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 const Index = () => {
   const { t } = useLanguage();
@@ -32,10 +33,10 @@ const Index = () => {
   ];
 
   const stats = [
-    { number: "15+", label: t('stats.years_experience') },
-    { number: "200+", label: t('stats.employees') },
-    { number: "50+", label: t('stats.projects') },
-    { number: "10+", label: t('stats.subsidiaries') }
+    { number: 15, suffix: "+", label: t('stats.years_experience') },
+    { number: 200, suffix: "+", label: t('stats.employees') },
+    { number: 50, suffix: "+", label: t('stats.projects') },
+    { number: 10, suffix: "+", label: t('stats.subsidiaries') }
   ];
 
   return (
@@ -125,9 +126,12 @@ const Index = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-5xl font-bold text-deta-gold mb-2 arabic-heading">
-                  {stat.number}
-                </div>
+                <AnimatedCounter
+                  end={stat.number}
+                  suffix={stat.suffix}
+                  duration={2500 + (index * 200)}
+                  className="text-5xl font-bold text-deta-gold mb-2 arabic-heading"
+                />
                 <div className="text-lg text-gray-300">
                   {stat.label}
                 </div>
