@@ -29,7 +29,7 @@ const orderSchema = z.object({
 type OrderFormData = z.infer<typeof orderSchema>;
 
 export const OrderForm = () => {
-  const { language } = useLanguage();
+  const { currentLanguage } = useLanguage();
   const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState<string>('');
   const [showPorts, setShowPorts] = useState(false);
@@ -104,7 +104,7 @@ export const OrderForm = () => {
     }
   };
 
-  const isRTL = language === 'ar';
+  const isRTL = currentLanguage === 'ar';
 
   return (
     <Card className="w-full max-w-2xl mx-auto">

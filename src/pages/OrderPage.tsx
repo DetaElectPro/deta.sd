@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { OrderForm } from '@/components/OrderForm';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const OrderPage = () => {
-  const { language } = useLanguage();
-  const isRTL = language === 'ar';
+  const { t, currentLanguage } = useLanguage();
+  const isRTL = currentLanguage === 'ar';
 
   return (
     <div className={`min-h-screen flex flex-col ${isRTL ? 'rtl' : 'ltr'}`}>
