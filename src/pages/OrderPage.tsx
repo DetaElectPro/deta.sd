@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { OrderForm } from '@/components/OrderForm';
+import OrderForm from '@/components/OrderForm';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const OrderPage = () => {
