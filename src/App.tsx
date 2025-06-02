@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,7 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import OrderPage from "./pages/OrderPage";
+import OrderTracking from "./pages/OrderTracking";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -38,6 +38,7 @@ const App = () => (
               <Route path="/news" element={<News />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/order" element={<OrderPage />} />
+              <Route path="/track-order" element={<OrderTracking />} />
               <Route path="/auth" element={<Auth />} />
               <Route 
                 path="/admin/*" 

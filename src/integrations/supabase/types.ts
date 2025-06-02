@@ -349,6 +349,41 @@ export type Database = {
           },
         ]
       }
+      order_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          order_id: string
+          sender_name: string
+          sender_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          order_id: string
+          sender_name: string
+          sender_type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          order_id?: string
+          sender_name?: string
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           company_name: string | null
@@ -359,6 +394,7 @@ export type Database = {
           customer_phone: string
           delivery_method_id: string | null
           id: string
+          language_code: string | null
           notes: string | null
           port_id: string | null
           status: string | null
@@ -375,6 +411,7 @@ export type Database = {
           customer_phone: string
           delivery_method_id?: string | null
           id?: string
+          language_code?: string | null
           notes?: string | null
           port_id?: string | null
           status?: string | null
@@ -391,6 +428,7 @@ export type Database = {
           customer_phone?: string
           delivery_method_id?: string | null
           id?: string
+          language_code?: string | null
           notes?: string | null
           port_id?: string | null
           status?: string | null

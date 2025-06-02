@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Eye, Edit, Trash2 } from 'lucide-react';
+import { Loader2, Eye, Edit, Trash2, MessageCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import OrderMessagesDialog from './OrderMessagesDialog';
 
 interface Order {
   id: string;
@@ -33,6 +33,8 @@ const OrdersManager = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [messagesDialogOpen, setMessagesDialogOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string>('');
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders', statusFilter, searchTerm],
@@ -134,6 +136,11 @@ const OrdersManager = () => {
     }
   };
 
+  const openMessagesDialog = (orderId: string) => {
+    setSelectedOrderId(orderId);
+    setMessagesDialogOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -214,6 +221,14 @@ const OrdersManager = () => {
                 </div>
 
                 <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openMessagesDialog(order.id)}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                  </Button>
+                  
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
