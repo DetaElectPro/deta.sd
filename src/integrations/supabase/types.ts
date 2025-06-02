@@ -180,6 +180,60 @@ export type Database = {
           },
         ]
       }
+      countries: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_local: boolean | null
+          name_ar: string
+          name_en: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          is_local?: boolean | null
+          name_ar: string
+          name_en: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_local?: boolean | null
+          name_ar?: string
+          name_en?: string
+        }
+        Relationships: []
+      }
+      delivery_methods: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_local: boolean | null
+          name_ar: string
+          name_en: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          is_local?: boolean | null
+          name_ar: string
+          name_en: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_local?: boolean | null
+          name_ar?: string
+          name_en?: string
+        }
+        Relationships: []
+      }
       languages: {
         Row: {
           code: string
@@ -240,6 +294,141 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          product_id: string | null
+          quantity: number
+          total_price: number | null
+          unit_id: string | null
+          unit_price: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          quantity: number
+          total_price?: number | null
+          unit_id?: string | null
+          unit_price?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          quantity?: number
+          total_price?: number | null
+          unit_id?: string | null
+          unit_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          company_name: string | null
+          country_id: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          delivery_method_id: string | null
+          id: string
+          notes: string | null
+          port_id: string | null
+          status: string | null
+          sudan_city_id: string | null
+          total_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          company_name?: string | null
+          country_id?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          delivery_method_id?: string | null
+          id?: string
+          notes?: string | null
+          port_id?: string | null
+          status?: string | null
+          sudan_city_id?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string | null
+          country_id?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          delivery_method_id?: string | null
+          id?: string
+          notes?: string | null
+          port_id?: string | null
+          status?: string | null
+          sudan_city_id?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_delivery_method_id_fkey"
+            columns: ["delivery_method_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_port_id_fkey"
+            columns: ["port_id"]
+            isOneToOne: false
+            referencedRelation: "ports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_sudan_city_id_fkey"
+            columns: ["sudan_city_id"]
+            isOneToOne: false
+            referencedRelation: "sudan_cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       page_views: {
         Row: {
           created_at: string
@@ -269,6 +458,47 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      ports: {
+        Row: {
+          code: string
+          country_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          port_type: string | null
+        }
+        Insert: {
+          code: string
+          country_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          port_type?: string | null
+        }
+        Update: {
+          code?: string
+          country_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          port_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ports_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_translations: {
         Row: {
@@ -322,31 +552,46 @@ export type Database = {
         Row: {
           category_id: string | null
           created_at: string
+          export_only: boolean | null
           id: string
           image_url: string | null
+          is_available: boolean | null
           is_featured: boolean | null
           is_new: boolean | null
+          min_order_quantity: number | null
           price: number | null
+          price_per_unit: number | null
+          unit_id: string | null
           updated_at: string
         }
         Insert: {
           category_id?: string | null
           created_at?: string
+          export_only?: boolean | null
           id?: string
           image_url?: string | null
+          is_available?: boolean | null
           is_featured?: boolean | null
           is_new?: boolean | null
+          min_order_quantity?: number | null
           price?: number | null
+          price_per_unit?: number | null
+          unit_id?: string | null
           updated_at?: string
         }
         Update: {
           category_id?: string | null
           created_at?: string
+          export_only?: boolean | null
           id?: string
           image_url?: string | null
+          is_available?: boolean | null
           is_featured?: boolean | null
           is_new?: boolean | null
+          min_order_quantity?: number | null
           price?: number | null
+          price_per_unit?: number | null
+          unit_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -355,6 +600,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -451,6 +703,60 @@ export type Database = {
           type?: string | null
           updated_at?: string
           value?: string | null
+        }
+        Relationships: []
+      }
+      sudan_cities: {
+        Row: {
+          created_at: string
+          id: string
+          is_capital: boolean | null
+          name_ar: string
+          name_en: string
+          state_ar: string
+          state_en: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_capital?: boolean | null
+          name_ar: string
+          name_en: string
+          state_ar: string
+          state_en: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_capital?: boolean | null
+          name_ar?: string
+          name_en?: string
+          state_ar?: string
+          state_en?: string
+        }
+        Relationships: []
+      }
+      units: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name_ar: string
+          name_en: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name_ar: string
+          name_en: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_en?: string
         }
         Relationships: []
       }
