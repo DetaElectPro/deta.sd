@@ -1,8 +1,15 @@
+
+User-agent: *
+Allow: /
+
+# Specific bot permissions
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +17,19 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: WhatsApp
 Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block admin and authentication pages
+Disallow: /admin
+Disallow: /auth
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://detagroup.com/sitemap.xml
+
+# Host preference
+Host: detagroup.com

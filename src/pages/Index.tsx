@@ -1,6 +1,6 @@
-
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -41,6 +41,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Deta Group - مجموعة ديتا | الصفحة الرئيسية"
+        description="مجموعة ديتا - الشركة الرائدة في السودان للزراعة الحديثة، تصنيع الأغذية عالية الجودة، وتطوير حلول البرمجيات المبتكرة. أكثر من 15 عام من الخبرة و200+ موظف متخصص."
+        keywords="ديتا, مجموعة ديتا, الزراعة السودان, تصنيع الأغذية, البرمجيات السودان, الخرطوم, شركة رائدة, زراعة حديثة, أغذية عضوية, تطوير برمجيات"
+        url="https://detagroup.com/"
+        type="website"
+      />
       <Header />
       
       {/* Hero Section */}
