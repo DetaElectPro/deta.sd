@@ -9,6 +9,7 @@ import { MediaManager } from '@/components/admin/MediaManager';
 import { SiteSettingsManager } from '@/components/admin/SiteSettingsManager';
 import { AnalyticsView } from '@/components/admin/AnalyticsView';
 import ProductsManager from '@/components/admin/ProductsManager';
+import OrdersManager from '@/components/admin/OrdersManager';
 
 const Admin = () => {
   return (
@@ -18,6 +19,7 @@ const Admin = () => {
         <Route path="content" element={<MultilingualContentManager />} />
         <Route path="categories" element={<CategoriesManager />} />
         <Route path="products" element={<ProductsManager />} />
+        <Route path="orders" element={<OrdersManager />} />
         <Route path="users" element={<UsersManager />} />
         <Route path="media" element={<MediaManager />} />
         <Route path="settings" element={<SiteSettingsManager />} />

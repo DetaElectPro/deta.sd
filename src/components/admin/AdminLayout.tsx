@@ -18,7 +18,9 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
-  Globe
+  Globe,
+  Package,
+  ShoppingCart
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -35,14 +37,16 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   console.log('AdminLayout render:', { userProfile, currentPath: location.pathname });
 
   const navigation = [
-    { name: t('admin.dashboard'), href: '/admin', icon: LayoutDashboard },
-    { name: t('admin.content'), href: '/admin/content', icon: FileText },
-    { name: t('admin.categories'), href: '/admin/categories', icon: Tag },
-    { name: t('admin.users'), href: '/admin/users', icon: Users },
-    { name: t('admin.languages'), href: '/admin/languages', icon: Globe },
-    { name: t('admin.media'), href: '/admin/media', icon: Image },
-    { name: t('admin.settings'), href: '/admin/settings', icon: Settings },
-    { name: t('admin.analytics'), href: '/admin/analytics', icon: BarChart3 },
+    { name: isRTL ? 'لوحة التحكم' : 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: isRTL ? 'المحتوى' : 'Content', href: '/admin/content', icon: FileText },
+    { name: isRTL ? 'الفئات' : 'Categories', href: '/admin/categories', icon: Tag },
+    { name: isRTL ? 'المنتجات' : 'Products', href: '/admin/products', icon: Package },
+    { name: isRTL ? 'الطلبات' : 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    { name: isRTL ? 'المستخدمون' : 'Users', href: '/admin/users', icon: Users },
+    { name: isRTL ? 'اللغات' : 'Languages', href: '/admin/languages', icon: Globe },
+    { name: isRTL ? 'الوسائط' : 'Media', href: '/admin/media', icon: Image },
+    { name: isRTL ? 'الإعدادات' : 'Settings', href: '/admin/settings', icon: Settings },
+    { name: isRTL ? 'التحليلات' : 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   ];
 
   const handleSignOut = async () => {
@@ -74,7 +78,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         <div className={`flex items-center justify-between h-16 px-4 border-b ${sidebarCollapsed ? 'px-2' : 'px-6'}`}>
           {!sidebarCollapsed && (
             <h1 className="text-xl font-bold text-deta-green arabic-heading">
-              {t('site.title')}
+              {isRTL ? 'ديتا' : 'DETA'}
             </h1>
           )}
           <div className="flex items-center gap-2">
@@ -160,7 +164,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         <div className="bg-white shadow-sm border-b lg:hidden">
           <div className="flex items-center justify-between h-16 px-4">
             <h1 className="text-lg font-medium text-gray-900 arabic-heading">
-              {t('site.title')}
+              {isRTL ? 'ديتا' : 'DETA'}
             </h1>
             <Button
               variant="ghost"

@@ -9,6 +9,7 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Products from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
 import Services from "./pages/Services";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/services" element={<Services />} />
               <Route path="/news" element={<News />} />
               <Route path="/contact" element={<Contact />} />

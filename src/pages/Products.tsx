@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +13,8 @@ import { Loader2 } from "lucide-react";
 
 const Products = () => {
   usePageTracking();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const isRTL = currentLanguage === 'ar';
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
   const { data: products = [], isLoading, error } = useMultilingualProducts();
@@ -61,17 +63,17 @@ const Products = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen ${isRTL ? 'rtl' : 'ltr'}`}>
       <Header />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
         <div className="container mx-auto px-4 text-center text-white">
           <h1 className="text-5xl font-bold mb-6 arabic-heading">
-            {t('products.title')}
+            {isRTL ? 'منتجاتنا' : 'Our Products'}
           </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
-            {t('products.description')}
+            {isRTL ? 'اكتشف مجموعة واسعة من المنتجات عالية الجودة' : 'Discover our wide range of high-quality products'}
           </p>
         </div>
       </section>
@@ -90,7 +92,7 @@ const Products = () => {
                     : "border-deta-green text-deta-green hover:bg-deta-green hover:text-white"
                 }`}
               >
-                {t('products.all_categories')}
+                {isRTL ? 'جميع الفئات' : 'All Categories'}
               </Button>
               {categories.map((category) => (
                 <Button
@@ -116,22 +118,24 @@ const Products = () => {
         <div className="container mx-auto px-4">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">{t('products.no_products')}</p>
+              <p className="text-gray-500 text-lg">{isRTL ? 'لا توجد منتجات' : 'No products found'}</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProducts.map((product) => (
                 <Card key={product.id} className="border-none shadow-lg hover-scale overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
-                      {product.image_url && (
-                        <img 
-                          src={product.image_url} 
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
+                    <Link to={`/products/${product.id}`}>
+                      <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
+                        {product.image_url && (
+                          <img 
+                            src={product.image_url} 
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                      </div>
+                    </Link>
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-3">
                         {product.categories && (
@@ -141,13 +145,15 @@ const Products = () => {
                         )}
                         {product.is_new && (
                           <Badge className="bg-green-500 text-white">
-                            {t('products.new')}
+                            {isRTL ? 'جديد' : 'New'}
                           </Badge>
                         )}
                       </div>
-                      <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading">
-                        {product.name}
-                      </h3>
+                      <Link to={`/products/${product.id}`}>
+                        <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading hover:underline">
+                          {product.name}
+                        </h3>
+                      </Link>
                       <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
                         {product.description}
                       </p>
@@ -157,9 +163,11 @@ const Products = () => {
                             ${product.price}
                           </span>
                         )}
-                        <Button size="sm" className="bg-deta-green hover:bg-deta-green/90">
-                          {t('buttons.view_details')}
-                        </Button>
+                        <Link to={`/products/${product.id}`}>
+                          <Button size="sm" className="bg-deta-green hover:bg-deta-green/90">
+                            {isRTL ? 'عرض التفاصيل' : 'View Details'}
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </CardContent>
@@ -176,14 +184,16 @@ const Products = () => {
           <Card className="border-none shadow-lg bg-gradient-to-r from-deta-green to-deta-green-light">
             <CardContent className="p-12 text-center text-white">
               <h2 className="text-3xl font-bold mb-4 arabic-heading">
-                {t('products.interested')}
+                {isRTL ? 'مهتم بمنتجاتنا؟' : 'Interested in our products?'}
               </h2>
               <p className="text-lg mb-8 max-w-2xl mx-auto">
-                {t('products.contact_text')}
+                {isRTL ? 'تواصل معنا للحصول على عرض أسعار مخصص' : 'Contact us for a custom quote'}
               </p>
-              <Button size="lg" variant="outline" className="bg-white text-deta-green border-white hover:bg-gray-100">
-                {t('buttons.contact_us')}
-              </Button>
+              <Link to="/contact">
+                <Button size="lg" variant="outline" className="bg-white text-deta-green border-white hover:bg-gray-100">
+                  {isRTL ? 'تواصل معنا' : 'Contact Us'}
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
