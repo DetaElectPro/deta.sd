@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
-      setIsScrolled(scrollTop > 0);
+      setIsScrolled(scrollTop > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -37,13 +36,13 @@ const Header = () => {
 
   return (
     <header className="relative">
-      {/* Ticker Tape - Hidden on scroll */}
-      <div className={`transition-all duration-300 ${isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto opacity-100'}`}>
+      {/* Ticker Tape - Hidden after significant scroll */}
+      <div className={`transition-all duration-500 ${isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto opacity-100'}`}>
         <TickerTape />
       </div>
       
-      {/* Top Bar - Hidden on scroll */}
-      <div className={`bg-deta-green text-white transition-all duration-300 ${isScrolled ? 'h-0 py-0 overflow-hidden opacity-0' : 'py-2 opacity-100'}`}>
+      {/* Top Bar - Hidden after significant scroll */}
+      <div className={`bg-deta-green text-white transition-all duration-500 ${isScrolled ? 'h-0 py-0 overflow-hidden opacity-0' : 'py-2 opacity-100'}`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center gap-6">
@@ -68,7 +67,7 @@ const Header = () => {
       </div>
 
       {/* Main Header - Always sticky */}
-      <div className={`bg-white shadow-lg transition-all duration-300 ${isScrolled ? 'fixed top-0 left-0 right-0 z-50' : 'relative'}`}>
+      <div className={`bg-white shadow-lg transition-all duration-500 ${isScrolled ? 'fixed top-0 left-0 right-0 z-50' : 'relative'}`}>
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
