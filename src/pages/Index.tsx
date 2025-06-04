@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -50,9 +51,10 @@ const Index = () => {
       />
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative bg-deta-gradient min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-black/20"></div>
+      {/* Hero Section with Animated Background */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        <AnimatedBackground />
+        
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white animate-fade-in">
