@@ -15,7 +15,6 @@ import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import OrderPage from "./pages/OrderPage";
 import OrderTracking from "./pages/OrderTracking";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -37,7 +36,6 @@ const App = () => (
               <Route path="/services" element={<Services />} />
               <Route path="/news" element={<News />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/order" element={<OrderPage />} />
               <Route path="/track-order" element={<OrderTracking />} />
               <Route path="/auth" element={<Auth />} />
               <Route 
