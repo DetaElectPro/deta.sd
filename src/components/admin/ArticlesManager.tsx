@@ -9,7 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ImageUploader } from '@/components/admin/ImageUploader';
+import { Pencil, Plus, Image as ImageIcon, Link } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const ArticlesManager = () => {
@@ -20,6 +22,7 @@ export const ArticlesManager = () => {
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<any>(null);
+  const [imageUploadMethod, setImageUploadMethod] = useState<'upload' | 'url'>('upload');
   const [formData, setFormData] = useState({
     title: '',
     excerpt: '',
@@ -28,7 +31,8 @@ export const ArticlesManager = () => {
     author: '',
     slug: '',
     is_featured: false,
-    image_url: ''
+    image_url: '',
+    image_path: ''
   });
 
   const categories = ['الزراعة', 'التصنيع', 'التكنولوجيا', 'الشراكات', 'المعارض', 'الجودة'];
@@ -73,9 +77,11 @@ export const ArticlesManager = () => {
       author: '',
       slug: '',
       is_featured: false,
-      image_url: ''
+      image_url: '',
+      image_path: ''
     });
     setEditingArticle(null);
+    setImageUploadMethod('upload');
   };
 
   const handleEdit = (article: any) => {
@@ -88,8 +94,11 @@ export const ArticlesManager = () => {
       author: article.author || '',
       slug: article.slug || '',
       is_featured: article.is_featured || false,
-      image_url: article.image_url || ''
+      image_url: article.image_url || '',
+      image_path: article.image_path || ''
     });
+    // Set upload method based on whether we have an image_url
+    setImageUploadMethod(article.image_url && !article.image_path ? 'url' : 'upload');
     setIsDialogOpen(true);
   };
 
@@ -99,6 +108,22 @@ export const ArticlesManager = () => {
       .replace(/[^a-z0-9\u0600-\u06FF]/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
+  };
+
+  const handleImageUpload = (url: string, path: string) => {
+    setFormData({
+      ...formData,
+      image_url: url,
+      image_path: path
+    });
+  };
+
+  const handleImageUrlChange = (url: string) => {
+    setFormData({
+      ...formData,
+      image_url: url,
+      image_path: '' // Clear path when manually entering URL
+    });
   };
 
   if (isLoading) {
@@ -202,14 +227,55 @@ export const ArticlesManager = () => {
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="image_url">رابط الصورة</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
+              <div className="space-y-4">
+                <Label>صورة المقال</Label>
+                <Tabs value={imageUploadMethod} onValueChange={(value) => setImageUploadMethod(value as 'upload' | 'url')}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload" className="flex items-center gap-2">
+                      <ImageIcon className="h-4 w-4" />
+                      رفع صورة
+                    </TabsTrigger>
+                    <TabsTrigger value="url" className="flex items-center gap-2">
+                      <Link className="h-4 w-4" />
+                      رابط خارجي
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="upload" className="space-y-4">
+                    <ImageUploader
+                      onUploadComplete={handleImageUpload}
+                      currentImageUrl={formData.image_url}
+                      bucket="media"
+                      folder="articles"
+                      maxSizeInMB={10}
+                      disabled={createArticle.isPending || updateArticle.isPending}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="url" className="space-y-4">
+                    <div>
+                      <Label htmlFor="image_url">رابط الصورة</Label>
+                      <Input
+                        id="image_url"
+                        value={formData.image_url}
+                        onChange={(e) => handleImageUrlChange(e.target.value)}
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+                    {formData.image_url && (
+                      <div className="mt-2">
+                        <img
+                          src={formData.image_url}
+                          alt="معاينة الصورة"
+                          className="max-w-full h-32 object-cover rounded-md border"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -238,11 +304,11 @@ export const ArticlesManager = () => {
         {articles?.map((article) => (
           <Card key={article.id}>
             <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
                   <CardTitle className="text-lg">{article.title}</CardTitle>
                   <p className="text-sm text-gray-600 mt-1">
-                    {article.category} • {article.author} • 
+                    {article.category} • {article.author} •
                     {new Date(article.published_at).toLocaleDateString('ar-SA')}
                   </p>
                   {article.is_featured && (
@@ -251,6 +317,18 @@ export const ArticlesManager = () => {
                     </span>
                   )}
                 </div>
+                {article.image_url && (
+                  <div className="flex-shrink-0">
+                    <img
+                      src={article.image_url}
+                      alt={article.title}
+                      className="w-16 h-16 object-cover rounded-md border"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm" onClick={() => handleEdit(article)}>
                     <Pencil className="h-4 w-4" />
