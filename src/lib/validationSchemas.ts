@@ -56,3 +56,47 @@ export const newsletterSchema = z.object({
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 export type NewsletterData = z.infer<typeof newsletterSchema>;
+
+// Order form validation schema
+export const orderFormSchema = z.object({
+  customerName: z
+    .string()
+    .min(1, "الاسم مطلوب")
+    .max(100, "الاسم يجب ألا يتجاوز 100 حرف")
+    .regex(/^[\u0600-\u06FFa-zA-Z\s]+$/, "الاسم يجب أن يحتوي على أحرف عربية أو إنجليزية فقط"),
+
+  customerEmail: z
+    .string()
+    .min(1, "البريد الإلكتروني مطلوب")
+    .email("يرجى إدخال بريد إلكتروني صحيح")
+    .max(100, "البريد الإلكتروني يجب ألا يتجاوز 100 حرف"),
+
+  customerPhone: z
+    .string()
+    .min(1, "رقم الهاتف مطلوب")
+    .regex(/^[\+]?[0-9\s\-\(\)]{7,15}$/, "يرجى إدخال رقم هاتف صحيح"),
+
+  countryId: z
+    .string()
+    .min(1, "يرجى اختيار الدولة"),
+
+  cityId: z
+    .string()
+    .min(1, "يرجى اختيار المدينة"),
+
+  portId: z
+    .string()
+    .optional(),
+
+  companyName: z
+    .string()
+    .max(100, "اسم الشركة يجب ألا يتجاوز 100 حرف")
+    .optional(),
+
+  notes: z
+    .string()
+    .max(1000, "الملاحظات يجب ألا تتجاوز 1000 حرف")
+    .optional()
+});
+
+export type OrderFormData = z.infer<typeof orderFormSchema>;

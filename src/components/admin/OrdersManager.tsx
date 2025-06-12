@@ -46,7 +46,7 @@ const OrdersManager = () => {
           countries(name_ar, name_en),
           delivery_methods(name_ar, name_en),
           ports(name_ar, name_en),
-          cities(name_ar, name_en)
+          cities!city_id(name_ar, name_en)
         `)
         .order('created_at', { ascending: false });
 
@@ -234,7 +234,7 @@ const OrdersManager = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setSelectedOrder(order)}
+                        onClick={() => setSelectedOrder(order as unknown as Order)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -321,6 +321,13 @@ const OrdersManager = () => {
           <p className="text-gray-500">لا توجد طلبات</p>
         </div>
       )}
+
+      {/* Messages Dialog */}
+      <OrderMessagesDialog
+        orderId={selectedOrderId}
+        isOpen={messagesDialogOpen}
+        onClose={() => setMessagesDialogOpen(false)}
+      />
     </div>
   );
 };

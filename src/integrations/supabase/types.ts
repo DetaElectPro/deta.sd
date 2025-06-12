@@ -438,7 +438,7 @@ export type Database = {
           notes: string | null
           port_id: string | null
           status: string | null
-          sudan_city_id: string | null
+          city_id: string | null
           total_amount: number | null
           updated_at: string
         }
@@ -456,7 +456,7 @@ export type Database = {
           notes?: string | null
           port_id?: string | null
           status?: string | null
-          sudan_city_id?: string | null
+          city_id?: string | null
           total_amount?: number | null
           updated_at?: string
         }
@@ -474,7 +474,7 @@ export type Database = {
           notes?: string | null
           port_id?: string | null
           status?: string | null
-          sudan_city_id?: string | null
+          city_id?: string | null
           total_amount?: number | null
           updated_at?: string
         }
@@ -508,8 +508,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "orders_sudan_city_id_fkey"
-            columns: ["sudan_city_id"]
+            foreignKeyName: "orders_city_id_fkey"
+            columns: ["city_id"]
             isOneToOne: false
             referencedRelation: "cities"
             referencedColumns: ["id"]

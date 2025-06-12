@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,11 +44,30 @@ const OrderTracking = () => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
   const [orderNumber, setOrderNumber] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [foundOrder, setFoundOrder] = useState<Order | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [customerName, setCustomerName] = useState('');
+
+  // Auto-fill from URL parameters
+  useEffect(() => {
+    const urlOrderId = searchParams.get('id');
+    const urlEmail = searchParams.get('email');
+
+    if (urlOrderId) {
+      setOrderNumber(urlOrderId);
+    }
+    if (urlEmail) {
+      setCustomerEmail(urlEmail);
+    }
+
+    // Auto-search if both parameters are present
+    if (urlOrderId && urlEmail) {
+      searchOrderWithParams(urlOrderId, urlEmail);
+    }
+  }, [searchParams]);
 
   const { data: messages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['order-messages', foundOrder?.id],
@@ -65,6 +85,42 @@ const OrderTracking = () => {
     },
     enabled: !!foundOrder?.id
   });
+
+  const searchOrderWithParams = async (orderId: string, email: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          countries(name_ar, name_en),
+          delivery_methods(name_ar, name_en),
+          ports(name_ar, name_en),
+          cities!city_id(name_ar, name_en)
+        `)
+        .eq('id', orderId)
+        .eq('customer_email', email)
+        .single();
+
+      if (error || !data) {
+        toast({
+          title: isRTL ? "لم يتم العثور على الطلب" : "Order not found",
+          description: isRTL ? "تأكد من صحة رقم الطلب والبريد الإلكتروني" : "Please check your order number and email",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setFoundOrder(data);
+      setCustomerName(data.customer_name);
+    } catch (error) {
+      console.error('Error searching order:', error);
+      toast({
+        title: isRTL ? "خطأ في البحث" : "Search error",
+        description: isRTL ? "حدث خطأ أثناء البحث عن الطلب" : "An error occurred while searching for the order",
+        variant: "destructive"
+      });
+    }
+  };
 
   const searchOrder = async () => {
     if (!orderNumber || !customerEmail) {

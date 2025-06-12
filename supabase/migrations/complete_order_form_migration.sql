@@ -722,3 +722,134 @@ SELECT '🔗 تم ربط جميع العلاقات بشكل صحيح' as relatio
 -- حذف الدوال المساعدة
 DROP FUNCTION IF EXISTS table_exists(text);
 DROP FUNCTION IF EXISTS column_exists(text, text);
+
+
+-- إضافة البيانات الأساسية للدول وطرق التوصيل
+-- تاريخ: 31 ديسمبر 2024
+
+-- إضافة الدول الأساسية
+INSERT INTO countries (code, name_ar, name_en, is_local) VALUES
+('SD', 'السودان', 'Sudan', true),
+('EG', 'مصر', 'Egypt', false),
+('SA', 'السعودية', 'Saudi Arabia', false),
+('AE', 'الإمارات العربية المتحدة', 'United Arab Emirates', false),
+('QA', 'قطر', 'Qatar', false),
+('KW', 'الكويت', 'Kuwait', false),
+('BH', 'البحرين', 'Bahrain', false),
+('OM', 'عمان', 'Oman', false),
+('JO', 'الأردن', 'Jordan', false),
+('LB', 'لبنان', 'Lebanon', false),
+('GB', 'بريطانيا', 'United Kingdom', false),
+('CA', 'كندا', 'Canada', false),
+('FR', 'فرنسا', 'France', false),
+('AU', 'أستراليا', 'Australia', false),
+('US', 'الولايات المتحدة الأمريكية', 'United States', false)
+ON CONFLICT (code) DO UPDATE SET
+name_ar = EXCLUDED.name_ar,
+name_en = EXCLUDED.name_en,
+is_local = EXCLUDED.is_local;
+
+-- إضافة طرق التوصيل
+INSERT INTO delivery_methods (code, name_ar, name_en, is_local) VALUES
+('LAND', 'شحن بري', 'Land Transport', false),
+('SEA', 'شحن بحري', 'Sea Transport', false),
+('AIR', 'شحن جوي', 'Air Transport', false),
+('LOCAL', 'توصيل محلي', 'Local Delivery', true)
+ON CONFLICT (code) DO UPDATE SET
+name_ar = EXCLUDED.name_ar,
+name_en = EXCLUDED.name_en,
+is_local = EXCLUDED.is_local;
+
+-- إضافة بعض المدن الأساسية
+DO $$
+DECLARE
+    sudan_id uuid;
+    egypt_id uuid;
+    saudi_id uuid;
+BEGIN
+    -- الحصول على معرفات الدول
+    SELECT id INTO sudan_id FROM countries WHERE code = 'SD';
+    SELECT id INTO egypt_id FROM countries WHERE code = 'EG';
+    SELECT id INTO saudi_id FROM countries WHERE code = 'SA';
+
+    -- إضافة المدن السودانية
+    IF sudan_id IS NOT NULL THEN
+        INSERT INTO cities (name_ar, name_en, state_ar, state_en, country_id, is_capital) VALUES
+        ('الخرطوم', 'Khartoum', 'الخرطوم', 'Khartoum', sudan_id, true),
+        ('أم درمان', 'Omdurman', 'الخرطوم', 'Khartoum', sudan_id, false),
+        ('بحري', 'Bahri', 'الخرطوم', 'Khartoum', sudan_id, false),
+        ('بورتسودان', 'Port Sudan', 'البحر الأحمر', 'Red Sea', sudan_id, false),
+        ('كسلا', 'Kassala', 'كسلا', 'Kassala', sudan_id, false)
+        ON CONFLICT (name_en, COALESCE(country_id::text, 'null')) DO NOTHING;
+    END IF;
+
+    -- إضافة المدن المصرية
+    IF egypt_id IS NOT NULL THEN
+        INSERT INTO cities (name_ar, name_en, state_ar, state_en, country_id, is_capital) VALUES
+        ('القاهرة', 'Cairo', 'القاهرة', 'Cairo', egypt_id, true),
+        ('الإسكندرية', 'Alexandria', 'الإسكندرية', 'Alexandria', egypt_id, false),
+        ('الجيزة', 'Giza', 'الجيزة', 'Giza', egypt_id, false)
+        ON CONFLICT (name_en, COALESCE(country_id::text, 'null')) DO NOTHING;
+    END IF;
+
+    -- إضافة المدن السعودية
+    IF saudi_id IS NOT NULL THEN
+        INSERT INTO cities (name_ar, name_en, state_ar, state_en, country_id, is_capital) VALUES
+        ('الرياض', 'Riyadh', 'الرياض', 'Riyadh', saudi_id, true),
+        ('جدة', 'Jeddah', 'مكة المكرمة', 'Makkah', saudi_id, false),
+        ('الدمام', 'Dammam', 'المنطقة الشرقية', 'Eastern Province', saudi_id, false)
+        ON CONFLICT (name_en, COALESCE(country_id::text, 'null')) DO NOTHING;
+    END IF;
+END $$;
+
+-- إضافة بعض المواني الأساسية
+DO $$
+DECLARE
+    sudan_id uuid;
+    egypt_id uuid;
+    saudi_id uuid;
+BEGIN
+    -- الحصول على معرفات الدول
+    SELECT id INTO sudan_id FROM countries WHERE code = 'SD';
+    SELECT id INTO egypt_id FROM countries WHERE code = 'EG';
+    SELECT id INTO saudi_id FROM countries WHERE code = 'SA';
+
+    -- إضافة المواني السودانية
+    IF sudan_id IS NOT NULL THEN
+        INSERT INTO ports (code, name_ar, name_en, port_type, country_id, is_active) VALUES
+        ('SDPSD', 'ميناء بورتسودان', 'Port Sudan', 'sea', sudan_id, true),
+        ('SDKRT', 'مطار الخرطوم الدولي', 'Khartoum International Airport', 'air', sudan_id, true)
+        ON CONFLICT (code) DO UPDATE SET
+        name_ar = EXCLUDED.name_ar,
+        name_en = EXCLUDED.name_en,
+        port_type = EXCLUDED.port_type,
+        country_id = EXCLUDED.country_id,
+        is_active = EXCLUDED.is_active;
+    END IF;
+
+    -- إضافة المواني المصرية
+    IF egypt_id IS NOT NULL THEN
+        INSERT INTO ports (code, name_ar, name_en, port_type, country_id, is_active) VALUES
+        ('EGALEX', 'ميناء الإسكندرية', 'Alexandria Port', 'sea', egypt_id, true),
+        ('EGCAI', 'مطار القاهرة الدولي', 'Cairo International Airport', 'air', egypt_id, true)
+        ON CONFLICT (code) DO UPDATE SET
+        name_ar = EXCLUDED.name_ar,
+        name_en = EXCLUDED.name_en,
+        port_type = EXCLUDED.port_type,
+        country_id = EXCLUDED.country_id,
+        is_active = EXCLUDED.is_active;
+    END IF;
+
+    -- إضافة المواني السعودية
+    IF saudi_id IS NOT NULL THEN
+        INSERT INTO ports (code, name_ar, name_en, port_type, country_id, is_active) VALUES
+        ('SAJEDH', 'ميناء جدة الإسلامي', 'Jeddah Islamic Port', 'sea', saudi_id, true),
+        ('SARUH', 'مطار الملك خالد الدولي', 'King Khalid International Airport', 'air', saudi_id, true)
+        ON CONFLICT (code) DO UPDATE SET
+        name_ar = EXCLUDED.name_ar,
+        name_en = EXCLUDED.name_en,
+        port_type = EXCLUDED.port_type,
+        country_id = EXCLUDED.country_id,
+        is_active = EXCLUDED.is_active;
+    END IF;
+END $$;
