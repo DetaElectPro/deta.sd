@@ -11,6 +11,7 @@ import {
   Settings,
   BarChart3,
   Image,
+  Images,
   LogOut,
   Menu,
   X,
@@ -45,6 +46,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { name: isRTL ? 'المستخدمون' : 'Users', href: '/admin/users', icon: Users },
     { name: isRTL ? 'اللغات' : 'Languages', href: '/admin/languages', icon: Globe },
     { name: isRTL ? 'الوسائط' : 'Media', href: '/admin/media', icon: Image },
+    { name: isRTL ? 'صور الخلفية' : 'Background Images', href: '/admin/background-images', icon: Images },
     { name: isRTL ? 'الإعدادات' : 'Settings', href: '/admin/settings', icon: Settings },
     { name: isRTL ? 'التحليلات' : 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   ];

@@ -6,6 +6,7 @@ import { MultilingualContentManager } from '@/components/admin/MultilingualConte
 import { CategoriesManager } from '@/components/admin/CategoriesManager';
 import { UsersManager } from '@/components/admin/UsersManager';
 import { MediaManager } from '@/components/admin/MediaManager';
+import { BackgroundImagesManager } from '@/components/admin/BackgroundImagesManager';
 import { SiteSettingsManager } from '@/components/admin/SiteSettingsManager';
 import { AnalyticsView } from '@/components/admin/AnalyticsView';
 import ProductsManager from '@/components/admin/ProductsManager';
@@ -22,6 +23,7 @@ const Admin = () => {
         <Route path="orders" element={<OrdersManager />} />
         <Route path="users" element={<UsersManager />} />
         <Route path="media" element={<MediaManager />} />
+        <Route path="background-images" element={<BackgroundImagesManager />} />
         <Route path="settings" element={<SiteSettingsManager />} />
         <Route path="analytics" element={<AnalyticsView />} />
       </Routes>

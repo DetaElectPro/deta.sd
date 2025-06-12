@@ -264,6 +264,42 @@ export type Database = {
         }
         Relationships: []
       }
+      background_images: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          file_path: string | null
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          file_path?: string | null
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          file_path?: string | null
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       media: {
         Row: {
           created_at: string

@@ -1,16 +1,23 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useBackgroundImages } from '@/hooks/useBackgroundImages';
 
 const AnimatedBackground = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { data: backgroundImagesData } = useBackgroundImages();
 
-  // مجموعة من الصور المتعلقة بالزراعة والأعمال
-  const backgroundImages = [
-    'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2832&q=80', // زراعة حديثة
-    'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80', // تكنولوجيا زراعية
-    'https://images.unsplash.com/photo-1606836591695-4d58a1b335f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80', // صناعة الأغذية
-    'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2826&q=80', // مجال التكنولوجيا
+  // الصور الافتراضية في حالة عدم وجود بيانات من قاعدة البيانات
+  const defaultImages = [
+    'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2832&q=80',
+    'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80',
+    'https://images.unsplash.com/photo-1606836591695-4d58a1b335f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80',
+    'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2826&q=80',
   ];
+
+  // استخدام الصور من قاعدة البيانات أو الصور الافتراضية
+  const backgroundImages = backgroundImagesData && backgroundImagesData.length > 0
+    ? backgroundImagesData.map(img => img.url)
+    : defaultImages;
 
   useEffect(() => {
     const interval = setInterval(() => {
