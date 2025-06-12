@@ -1,37 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
+import { useCountries, usePorts, useCitiesByCountry, useDeliveryMethods } from '@/hooks/useCountries';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+import { SearchableSelect } from "@/components/ui/searchable-select"
 import { Textarea } from "@/components/ui/textarea"
 
-interface Country {
-  id: string;
-  name_ar: string;
-  name_en: string;
-}
 
-interface DeliveryMethod {
-  id: string;
-  name_ar: string;
-  name_en: string;
-}
-
-interface Port {
-  id: string;
-  name_ar: string;
-  name_en: string;
-}
-
-interface SudanCity {
-  id: string;
-  name_ar: string;
-  name_en: string;
-}
 
 const OrderForm = () => {
   const { currentLanguage, isRTL } = useLanguage();
@@ -43,99 +23,73 @@ const OrderForm = () => {
     companyName: ''
   });
   const [notes, setNotes] = useState('');
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [deliveryMethods, setDeliveryMethods] = useState<DeliveryMethod[]>([]);
-  const [ports, setPorts] = useState<Port[]>([]);
-  const [sudanCities, setSudanCities] = useState<SudanCity[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState<DeliveryMethod | null>(null);
-  const [selectedPort, setSelectedPort] = useState<Port | null>(null);
-  const [selectedSudanCity, setSelectedSudanCity] = useState<SudanCity | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState<string>('');
+  const [selectedPort, setSelectedPort] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
 
+  // استخدام hooks للبيانات
+  const { data: countries = [] } = useCountries();
+  const { data: deliveryMethods = [] } = useDeliveryMethods();
+  const { data: cities = [] } = useCitiesByCountry(selectedCountry || undefined);
+
+  // تحديد نوع الميناء بناءً على طريقة التوصيل
+  const getPortType = (deliveryMethodCode: string) => {
+    switch (deliveryMethodCode) {
+      case 'SEA': return 'sea';
+      case 'AIR': return 'air';
+      case 'LAND': return 'land';
+      default: return undefined;
+    }
+  };
+
+  const selectedDeliveryMethodData = deliveryMethods.find(dm => dm.id === selectedDeliveryMethod);
+  const portType = selectedDeliveryMethodData ? getPortType(selectedDeliveryMethodData.code) : undefined;
+  const { data: ports = [] } = usePorts(selectedCountry || undefined, portType);
+
+  // إعادة تعيين الاختيارات عند تغيير الدولة
   useEffect(() => {
-    const fetchCountries = async () => {
-      const { data, error } = await supabase
-        .from('countries')
-        .select('*')
-        .order('name_en', { ascending: true });
+    if (selectedCountry) {
+      setSelectedPort('');
+      setSelectedCity('');
+    }
+  }, [selectedCountry]);
 
-      if (error) {
-        console.error('Error fetching countries:', error);
-      } else {
-        setCountries(data || []);
-      }
-    };
-
-    const fetchDeliveryMethods = async () => {
-      const { data, error } = await supabase
-        .from('delivery_methods')
-        .select('*')
-        .order('name_en', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching delivery methods:', error);
-      } else {
-        setDeliveryMethods(data || []);
-      }
-    };
-
-    const fetchPorts = async () => {
-      const { data, error } = await supabase
-        .from('ports')
-        .select('*')
-        .order('name_en', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching ports:', error);
-      } else {
-        setPorts(data || []);
-      }
-    };
-
-    const fetchSudanCities = async () => {
-      const { data, error } = await supabase
-        .from('sudan_cities')
-        .select('*')
-        .order('name_en', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching Sudan cities:', error);
-      } else {
-        setSudanCities(data || []);
-      }
-    };
-
-    fetchCountries();
-    fetchDeliveryMethods();
-    fetchPorts();
-    fetchSudanCities();
-  }, []);
+  // إعادة تعيين الميناء عند تغيير طريقة التوصيل
+  useEffect(() => {
+    if (selectedDeliveryMethod) {
+      setSelectedPort('');
+    }
+  }, [selectedDeliveryMethod]);
 
   const submitOrder = useMutation({
     mutationFn: async (orderData: any) => {
       console.log('Submitting order:', orderData);
-      
+
       // Add language to order data
       const orderWithLanguage = {
         ...orderData,
         language_code: currentLanguage
       };
-      
+
       const { data, error } = await supabase
         .from('orders')
         .insert([orderWithLanguage])
         .select()
         .single();
-      
+
       if (error) {
         console.error('Supabase error:', error);
         throw error;
       }
-      
+
       console.log('Order created:', data);
-      
+
       // Send confirmation email
       try {
+        const selectedCountryData = countries.find(c => c.id === selectedCountry);
+        const selectedDeliveryMethodData = deliveryMethods.find(dm => dm.id === selectedDeliveryMethod);
+
         const emailData = {
           orderId: data.id,
           customerName: orderData.customer_name,
@@ -144,10 +98,10 @@ const OrderForm = () => {
           companyName: orderData.company_name,
           notes: orderData.notes,
           language: currentLanguage,
-          country: selectedCountry?.name_ar || selectedCountry?.name_en,
-          deliveryMethod: selectedDeliveryMethod?.name_ar || selectedDeliveryMethod?.name_en
+          country: selectedCountryData ? (isRTL ? selectedCountryData.name_ar : selectedCountryData.name_en) : '',
+          deliveryMethod: selectedDeliveryMethodData ? (isRTL ? selectedDeliveryMethodData.name_ar : selectedDeliveryMethodData.name_en) : ''
         };
-        
+
         await fetch('/functions/v1/send-order-confirmation', {
           method: 'POST',
           headers: {
@@ -155,21 +109,21 @@ const OrderForm = () => {
           },
           body: JSON.stringify(emailData)
         });
-        
+
         console.log('Confirmation email sent');
       } catch (emailError) {
         console.error('Error sending confirmation email:', emailError);
         // Don't fail the order if email fails
       }
-      
+
       return data;
     },
     onSuccess: (data) => {
       console.log('Order submitted successfully:', data);
       toast({
         title: isRTL ? "تم إرسال الطلب بنجاح" : "Order submitted successfully",
-        description: isRTL ? 
-          `رقم الطلب: ${data.id}. سيتم التواصل معك قريباً.` : 
+        description: isRTL ?
+          `رقم الطلب: ${data.id}. سيتم التواصل معك قريباً.` :
           `Order ID: ${data.id}. We will contact you soon.`
       });
       // Reset form
@@ -179,10 +133,10 @@ const OrderForm = () => {
         phone: '',
         companyName: ''
       });
-      setSelectedCountry(null);
-      setSelectedDeliveryMethod(null);
-      setSelectedPort(null);
-      setSelectedSudanCity(null);
+      setSelectedCountry('');
+      setSelectedDeliveryMethod('');
+      setSelectedPort('');
+      setSelectedCity('');
       setNotes('');
     },
     onError: (error) => {
@@ -212,10 +166,10 @@ const OrderForm = () => {
       customer_email: customerInfo.email,
       customer_phone: customerInfo.phone,
       company_name: customerInfo.companyName,
-      country_id: selectedCountry?.id,
-      delivery_method_id: selectedDeliveryMethod?.id,
-      port_id: selectedPort?.id,
-      sudan_city_id: selectedSudanCity?.id,
+      country_id: selectedCountry || null,
+      delivery_method_id: selectedDeliveryMethod || null,
+      port_id: selectedPort || null,
+      city_id: selectedCity || null,
       notes: notes
     };
 
@@ -263,79 +217,80 @@ const OrderForm = () => {
 
       <div>
         <Label htmlFor="country">{isRTL ? "الدولة" : "Country"}</Label>
-        <Select onValueChange={(value) => {
-          const country = countries.find(c => c.id === value);
-          setSelectedCountry(country || null);
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={isRTL ? "اختر دولة" : "Select a country"} />
-          </SelectTrigger>
-          <SelectContent>
-            {countries.map(country => (
-              <SelectItem key={country.id} value={country.id}>
-                {isRTL ? country.name_ar : country.name_en}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          options={countries.map(country => ({
+            value: country.id,
+            label: isRTL ? country.name_ar : country.name_en,
+            searchText: `${country.name_ar} ${country.name_en} ${country.code}`
+          }))}
+          value={selectedCountry}
+          onValueChange={setSelectedCountry}
+          placeholder={isRTL ? "اختر دولة..." : "Select a country..."}
+          searchPlaceholder={isRTL ? "البحث عن دولة..." : "Search for country..."}
+          emptyText={isRTL ? "لا توجد دول" : "No countries found"}
+        />
       </div>
 
       <div>
         <Label htmlFor="deliveryMethod">{isRTL ? "طريقة التوصيل" : "Delivery Method"}</Label>
-        <Select onValueChange={(value) => {
-          const method = deliveryMethods.find(m => m.id === value);
-          setSelectedDeliveryMethod(method || null);
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={isRTL ? "اختر طريقة التوصيل" : "Select a delivery method"} />
-          </SelectTrigger>
-          <SelectContent>
-            {deliveryMethods.map(method => (
-              <SelectItem key={method.id} value={method.id}>
-                {isRTL ? method.name_ar : method.name_en}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          options={deliveryMethods.map(method => ({
+            value: method.id,
+            label: isRTL ? method.name_ar : method.name_en,
+            searchText: `${method.name_ar} ${method.name_en} ${method.code}`
+          }))}
+          value={selectedDeliveryMethod}
+          onValueChange={setSelectedDeliveryMethod}
+          placeholder={isRTL ? "اختر طريقة التوصيل..." : "Select delivery method..."}
+          searchPlaceholder={isRTL ? "البحث عن طريقة التوصيل..." : "Search for delivery method..."}
+          emptyText={isRTL ? "لا توجد طرق توصيل" : "No delivery methods found"}
+        />
       </div>
 
-      <div>
-        <Label htmlFor="port">{isRTL ? "الميناء" : "Port"}</Label>
-        <Select onValueChange={(value) => {
-          const port = ports.find(p => p.id === value);
-          setSelectedPort(port || null);
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={isRTL ? "اختر ميناء" : "Select a port"} />
-          </SelectTrigger>
-          <SelectContent>
-            {ports.map(port => (
-              <SelectItem key={port.id} value={port.id}>
-                {isRTL ? port.name_ar : port.name_en}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {selectedDeliveryMethod && ports.length > 0 && (
+        <div>
+          <Label htmlFor="port">
+            {isRTL ?
+              (portType === 'sea' ? "الميناء البحري" :
+               portType === 'air' ? "المطار" :
+               portType === 'land' ? "المنفذ البري" : "الميناء") :
+              (portType === 'sea' ? "Sea Port" :
+               portType === 'air' ? "Airport" :
+               portType === 'land' ? "Land Border" : "Port")
+            }
+          </Label>
+          <SearchableSelect
+            options={ports.map(port => ({
+              value: port.id,
+              label: isRTL ? port.name_ar : port.name_en,
+              searchText: `${port.name_ar} ${port.name_en} ${port.code} ${port.countries?.name_ar || ''} ${port.countries?.name_en || ''}`
+            }))}
+            value={selectedPort}
+            onValueChange={setSelectedPort}
+            placeholder={isRTL ? "اختر ميناء..." : "Select a port..."}
+            searchPlaceholder={isRTL ? "البحث عن ميناء..." : "Search for port..."}
+            emptyText={isRTL ? "لا توجد مواني" : "No ports found"}
+          />
+        </div>
+      )}
 
-      <div>
-        <Label htmlFor="sudanCity">{isRTL ? "المدينة في السودان" : "City in Sudan"}</Label>
-        <Select onValueChange={(value) => {
-          const city = sudanCities.find(city => city.id === value);
-          setSelectedSudanCity(city || null);
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={isRTL ? "اختر مدينة" : "Select a city"} />
-          </SelectTrigger>
-          <SelectContent>
-            {sudanCities.map(city => (
-              <SelectItem key={city.id} value={city.id}>
-                {isRTL ? city.name_ar : city.name_en}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {selectedCountry && cities.length > 0 && (
+        <div>
+          <Label htmlFor="city">{isRTL ? "المدينة" : "City"}</Label>
+          <SearchableSelect
+            options={cities.map(city => ({
+              value: city.id,
+              label: isRTL ? city.name_ar : city.name_en,
+              searchText: `${city.name_ar} ${city.name_en} ${city.state_ar} ${city.state_en}`
+            }))}
+            value={selectedCity}
+            onValueChange={setSelectedCity}
+            placeholder={isRTL ? "اختر مدينة..." : "Select a city..."}
+            searchPlaceholder={isRTL ? "البحث عن مدينة..." : "Search for city..."}
+            emptyText={isRTL ? "لا توجد مدن" : "No cities found"}
+          />
+        </div>
+      )}
 
       <div>
         <Label htmlFor="notes">{isRTL ? "ملاحظات" : "Notes"}</Label>

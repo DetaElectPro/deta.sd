@@ -23,7 +23,7 @@ interface Order {
   countries?: { name_ar: string; name_en: string };
   delivery_methods?: { name_ar: string; name_en: string };
   ports?: { name_ar: string; name_en: string };
-  sudan_cities?: { name_ar: string; name_en: string };
+  cities?: { name_ar: string; name_en: string };
   notes?: string;
 }
 
@@ -46,7 +46,7 @@ const OrdersManager = () => {
           countries(name_ar, name_en),
           delivery_methods(name_ar, name_en),
           ports(name_ar, name_en),
-          sudan_cities(name_ar, name_en)
+          cities(name_ar, name_en)
         `)
         .order('created_at', { ascending: false });
 

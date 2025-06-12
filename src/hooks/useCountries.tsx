@@ -21,9 +21,9 @@ export const useCountries = () => {
   });
 };
 
-export const usePorts = (countryId?: string) => {
+export const usePorts = (countryId?: string, portType?: string) => {
   return useQuery({
-    queryKey: ['ports', countryId],
+    queryKey: ['ports', countryId, portType],
     queryFn: async () => {
       let query = supabase
         .from('ports')
@@ -35,41 +35,79 @@ export const usePorts = (countryId?: string) => {
             code
           )
         `)
+        .eq('is_active', true)
         .order('name_ar');
-      
+
       if (countryId) {
         query = query.eq('country_id', countryId);
       }
-      
+
+      if (portType) {
+        query = query.eq('port_type', portType);
+      }
+
       const { data, error } = await query;
-      
+
       if (error) {
         console.error('Error fetching ports:', error);
         throw error;
       }
-      
+
       return data;
     },
-    enabled: !countryId || !!countryId,
+    enabled: true,
   });
 };
 
-export const useSudanCities = () => {
+export const useCities = () => {
   return useQuery({
-    queryKey: ['sudan-cities'],
+    queryKey: ['cities'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('sudan_cities')
+        .from('cities')
         .select('*')
         .order('name_ar');
-      
+
       if (error) {
-        console.error('Error fetching Sudan cities:', error);
+        console.error('Error fetching cities:', error);
         throw error;
       }
-      
+
       return data;
     },
+  });
+};
+
+export const useCitiesByCountry = (countryId?: string) => {
+  return useQuery({
+    queryKey: ['cities-by-country', countryId],
+    queryFn: async () => {
+      let query = supabase
+        .from('cities')
+        .select(`
+          *,
+          countries (
+            name_ar,
+            name_en,
+            code
+          )
+        `)
+        .order('name_ar');
+
+      if (countryId) {
+        query = query.eq('country_id', countryId);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching cities:', error);
+        throw error;
+      }
+
+      return data;
+    },
+    enabled: true,
   });
 };
 

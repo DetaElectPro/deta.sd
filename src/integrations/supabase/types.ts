@@ -425,6 +425,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          city_id: string | null
           company_name: string | null
           country_id: string | null
           created_at: string
@@ -442,6 +443,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          city_id?: string | null
           company_name?: string | null
           country_id?: string | null
           created_at?: string
@@ -459,6 +461,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          city_id?: string | null
           company_name?: string | null
           country_id?: string | null
           created_at?: string
@@ -476,6 +479,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_orders_city_id"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_country_id_fkey"
             columns: ["country_id"]
@@ -501,7 +511,7 @@ export type Database = {
             foreignKeyName: "orders_sudan_city_id_fkey"
             columns: ["sudan_city_id"]
             isOneToOne: false
-            referencedRelation: "sudan_cities"
+            referencedRelation: "cities"
             referencedColumns: ["id"]
           },
         ]
@@ -783,8 +793,9 @@ export type Database = {
         }
         Relationships: []
       }
-      sudan_cities: {
+      cities: {
         Row: {
+          country_id: string | null
           created_at: string
           id: string
           is_capital: boolean | null
@@ -794,6 +805,7 @@ export type Database = {
           state_en: string
         }
         Insert: {
+          country_id?: string | null
           created_at?: string
           id?: string
           is_capital?: boolean | null
@@ -803,6 +815,7 @@ export type Database = {
           state_en: string
         }
         Update: {
+          country_id?: string | null
           created_at?: string
           id?: string
           is_capital?: boolean | null
@@ -811,7 +824,15 @@ export type Database = {
           state_ar?: string
           state_en?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_cities_country_id"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       units: {
         Row: {
