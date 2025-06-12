@@ -140,7 +140,7 @@ const OrderTracking = () => {
           countries(name_ar, name_en),
           delivery_methods(name_ar, name_en),
           ports(name_ar, name_en),
-          cities(name_ar, name_en)
+          cities!city_id(name_ar, name_en)
         `)
         .eq('id', orderNumber)
         .eq('customer_email', customerEmail)

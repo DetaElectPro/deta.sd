@@ -438,12 +438,10 @@ export type Database = {
           notes: string | null
           port_id: string | null
           status: string | null
-          city_id: string | null
           total_amount: number | null
           updated_at: string
         }
         Insert: {
-          city_id?: string | null
           company_name?: string | null
           country_id?: string | null
           created_at?: string
@@ -461,7 +459,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          city_id?: string | null
           company_name?: string | null
           country_id?: string | null
           created_at?: string

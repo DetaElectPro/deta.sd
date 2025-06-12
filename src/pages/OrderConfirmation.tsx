@@ -43,7 +43,7 @@ const OrderConfirmation = () => {
         .select(`
           *,
           countries(name_ar, name_en),
-          cities(name_ar, name_en),
+          cities!city_id(name_ar, name_en),
           ports(name_ar, name_en)
         `)
         .eq('id', orderId)
