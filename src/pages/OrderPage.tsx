@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,7 @@ import { orderFormSchema, OrderFormData } from '@/lib/validationSchemas';
 import { Loader2, Package, User, Mail, Phone, MapPin, Building, FileText } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Form,
   FormControl,
@@ -27,12 +28,22 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
+interface ProductWithTranslation {
+  id: string;
+  product_translations: {
+    name: string;
+  }[];
+}
+
 const OrderPage = () => {
   usePageTracking();
   const { isRTL, currentLanguage } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedCountryId, setSelectedCountryId] = useState<string>('');
+  const [productDetails, setProductDetails] = useState<{ id: string; name: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const form = useForm<OrderFormData>({
     resolver: zodResolver(orderFormSchema),
@@ -44,9 +55,72 @@ const OrderPage = () => {
       cityId: '',
       portId: '',
       companyName: '',
-      notes: ''
+      notes: '',
+      productId: '',
+      productName: ''
     }
   });
+
+  // Fetch product details when component mounts
+  useEffect(() => {
+    const productId = searchParams.get('product');
+    
+    if (!productId) {
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: isRTL ? 'لم يتم تحديد المنتج' : 'No product specified',
+        variant: 'destructive',
+      });
+      navigate('/');
+      return;
+    }
+
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            id,
+            product_translations!inner(
+              name
+            )
+          `)
+          .eq('id', productId)
+          .eq('product_translations.language_code', currentLanguage)
+          .single();
+        
+        if (error || !data) {
+          throw new Error('Product not found');
+        }
+
+        const productWithTranslation = data as ProductWithTranslation;
+        if (!productWithTranslation.product_translations?.[0]) {
+          throw new Error('Product translation not found');
+        }
+
+        const productData = {
+          id: productWithTranslation.id,
+          name: productWithTranslation.product_translations[0].name
+        };
+
+        setProductDetails(productData);
+        form.setValue('productId', productData.id);
+        form.setValue('productName', productData.name);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        toast({
+          title: isRTL ? 'خطأ' : 'Error',
+          description: isRTL ? 'لم يتم العثور على المنتج' : 'Product not found',
+          variant: 'destructive',
+        });
+        navigate('/');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [searchParams, form, navigate, toast, isRTL, currentLanguage]);
 
   // Fetch data
   const { data: countries = [], isLoading: countriesLoading } = useCountries();
@@ -102,248 +176,266 @@ const OrderPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Customer Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <User className="h-5 w-5" />
-                      {isRTL ? 'معلومات العميل' : 'Customer Information'}
-                    </h3>
-                    
-                    <FormField
-                      control={form.control}
-                      name="customerName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <User className="h-4 w-4" />
-                            {isRTL ? 'الاسم الكامل' : 'Full Name'}
-                          </FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder={isRTL ? 'أدخل اسمك الكامل' : 'Enter your full name'} 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="customerEmail"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <Mail className="h-4 w-4" />
-                            {isRTL ? 'البريد الإلكتروني' : 'Email Address'}
-                          </FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="email"
-                              placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'} 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="customerPhone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <Phone className="h-4 w-4" />
-                            {isRTL ? 'رقم الهاتف' : 'Phone Number'}
-                          </FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder={isRTL ? 'أدخل رقم هاتفك' : 'Enter your phone number'} 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="companyName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <Building className="h-4 w-4" />
-                            {isRTL ? 'اسم الشركة (اختياري)' : 'Company Name (Optional)'}
-                          </FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder={isRTL ? 'أدخل اسم الشركة' : 'Enter company name'} 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Location Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <MapPin className="h-5 w-5" />
-                      {isRTL ? 'معلومات الموقع' : 'Location Information'}
-                    </h3>
-
-                    <FormField
-                      control={form.control}
-                      name="countryId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{isRTL ? 'الدولة' : 'Country'}</FormLabel>
-                          <Select onValueChange={handleCountryChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={isRTL ? 'اختر الدولة' : 'Select country'} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {countriesLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                </SelectItem>
-                              ) : (
-                                countries.map((country) => (
-                                  <SelectItem key={country.id} value={country.id}>
-                                    {isRTL ? country.name_ar : country.name_en}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="cityId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{isRTL ? 'المدينة' : 'City'}</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountryId}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={isRTL ? 'اختر المدينة' : 'Select city'} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {citiesLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                </SelectItem>
-                              ) : cities.length === 0 ? (
-                                <SelectItem value="no-cities" disabled>
-                                  {isRTL ? 'لا توجد مدن متاحة' : 'No cities available'}
-                                </SelectItem>
-                              ) : (
-                                cities.map((city) => (
-                                  <SelectItem key={city.id} value={city.id}>
-                                    {isRTL ? city.name_ar : city.name_en}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="portId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{isRTL ? 'الميناء/المطار (اختياري)' : 'Port/Airport (Optional)'}</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountryId}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={isRTL ? 'اختر الميناء أو المطار' : 'Select port or airport'} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {portsLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                </SelectItem>
-                              ) : ports.length === 0 ? (
-                                <SelectItem value="no-ports" disabled>
-                                  {isRTL ? 'لا توجد مواني متاحة' : 'No ports available'}
-                                </SelectItem>
-                              ) : (
-                                ports.map((port) => (
-                                  <SelectItem key={port.id} value={port.id}>
-                                    {isRTL ? port.name_ar : port.name_en} ({port.port_type})
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Notes */}
-                  <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center gap-2">
-                          <FileText className="h-4 w-4" />
-                          {isRTL ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder={isRTL ? 'أضف أي ملاحظات إضافية' : 'Add any additional notes'} 
-                            rows={4}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+              {isLoading ? (
+                <div className="flex justify-center p-4">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+              ) : (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Product Information */}
+                    {productDetails && (
+                      <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 className="font-medium mb-2">
+                          {isRTL ? 'تفاصيل المنتج' : 'Product Details'}
+                        </h3>
+                        <p className="text-gray-700">
+                          {productDetails.name}
+                        </p>
+                      </div>
                     )}
-                  />
 
-                  {/* Submit Button */}
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-deta-green hover:bg-deta-green/90" 
-                    disabled={orderSubmission.isPending}
-                  >
-                    {orderSubmission.isPending ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        {isRTL ? 'جاري الإرسال...' : 'Submitting...'}
-                      </>
-                    ) : (
-                      <>
-                        <Package className="h-4 w-4 mr-2" />
-                        {isRTL ? 'إرسال الطلب' : 'Submit Order'}
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </Form>
+                    {/* Customer Information */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <User className="h-5 w-5" />
+                        {isRTL ? 'معلومات العميل' : 'Customer Information'}
+                      </h3>
+                      
+                      <FormField
+                        control={form.control}
+                        name="customerName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <User className="h-4 w-4" />
+                              {isRTL ? 'الاسم الكامل' : 'Full Name'}
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder={isRTL ? 'أدخل اسمك الكامل' : 'Enter your full name'} 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="customerEmail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Mail className="h-4 w-4" />
+                              {isRTL ? 'البريد الإلكتروني' : 'Email Address'}
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="email"
+                                placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'} 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="customerPhone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Phone className="h-4 w-4" />
+                              {isRTL ? 'رقم الهاتف' : 'Phone Number'}
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder={isRTL ? 'أدخل رقم هاتفك' : 'Enter your phone number'} 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="companyName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Building className="h-4 w-4" />
+                              {isRTL ? 'اسم الشركة (اختياري)' : 'Company Name (Optional)'}
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder={isRTL ? 'أدخل اسم الشركة' : 'Enter company name'} 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Location Information */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <MapPin className="h-5 w-5" />
+                        {isRTL ? 'معلومات الموقع' : 'Location Information'}
+                      </h3>
+
+                      <FormField
+                        control={form.control}
+                        name="countryId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{isRTL ? 'الدولة' : 'Country'}</FormLabel>
+                            <Select onValueChange={handleCountryChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={isRTL ? 'اختر الدولة' : 'Select country'} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {countriesLoading ? (
+                                  <SelectItem value="loading" disabled>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  </SelectItem>
+                                ) : (
+                                  countries.map((country) => (
+                                    <SelectItem key={country.id} value={country.id}>
+                                      {isRTL ? country.name_ar : country.name_en}
+                                    </SelectItem>
+                                  ))
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="cityId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{isRTL ? 'المدينة' : 'City'}</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountryId}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={isRTL ? 'اختر المدينة' : 'Select city'} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {citiesLoading ? (
+                                  <SelectItem value="loading" disabled>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  </SelectItem>
+                                ) : cities.length === 0 ? (
+                                  <SelectItem value="no-cities" disabled>
+                                    {isRTL ? 'لا توجد مدن متاحة' : 'No cities available'}
+                                  </SelectItem>
+                                ) : (
+                                  cities.map((city) => (
+                                    <SelectItem key={city.id} value={city.id}>
+                                      {isRTL ? city.name_ar : city.name_en}
+                                    </SelectItem>
+                                  ))
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="portId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{isRTL ? 'الميناء/المطار (اختياري)' : 'Port/Airport (Optional)'}</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountryId}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={isRTL ? 'اختر الميناء أو المطار' : 'Select port or airport'} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {portsLoading ? (
+                                  <SelectItem value="loading" disabled>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  </SelectItem>
+                                ) : ports.length === 0 ? (
+                                  <SelectItem value="no-ports" disabled>
+                                    {isRTL ? 'لا توجد مواني متاحة' : 'No ports available'}
+                                  </SelectItem>
+                                ) : (
+                                  ports.map((port) => (
+                                    <SelectItem key={port.id} value={port.id}>
+                                      {isRTL ? port.name_ar : port.name_en} ({port.port_type})
+                                    </SelectItem>
+                                  ))
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Notes */}
+                    <FormField
+                      control={form.control}
+                      name="notes"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <FileText className="h-4 w-4" />
+                            {isRTL ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder={isRTL ? 'أضف أي ملاحظات إضافية' : 'Add any additional notes'} 
+                              rows={4}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Submit Button */}
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-deta-green hover:bg-deta-green/90" 
+                      disabled={orderSubmission.isPending}
+                    >
+                      {orderSubmission.isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          {isRTL ? 'جاري الإرسال...' : 'Submitting...'}
+                        </>
+                      ) : (
+                        <>
+                          <Package className="h-4 w-4 mr-2" />
+                          {isRTL ? 'إرسال الطلب' : 'Submit Order'}
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              )}
             </CardContent>
           </Card>
         </div>

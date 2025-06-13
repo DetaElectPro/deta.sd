@@ -9,7 +9,8 @@ export interface OrderSubmissionData extends OrderFormData {
 export const useOrderSubmission = () => {
   return useMutation({
     mutationFn: async (orderData: OrderSubmissionData) => {
-      const { data, error } = await supabase
+      // First, create the order
+      const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
           customer_name: orderData.customerName,
@@ -26,8 +27,22 @@ export const useOrderSubmission = () => {
         .select()
         .single();
 
-      if (error) throw error;
-      return data;
+      if (orderError) throw orderError;
+
+      // Then, create the order item
+      const { data: orderItem, error: orderItemError } = await supabase
+        .from('order_items')
+        .insert({
+          order_id: order.id,
+          product_id: orderData.productId,
+          quantity: 1, // Default quantity, you can make this configurable if needed
+        })
+        .select()
+        .single();
+
+      if (orderItemError) throw orderItemError;
+
+      return order;
     }
   });
 };

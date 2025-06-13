@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 // Contact form validation schema
@@ -74,6 +73,7 @@ export const orderFormSchema = z.object({
   customerPhone: z
     .string()
     .min(1, "رقم الهاتف مطلوب")
+    .max(20, "رقم الهاتف يجب ألا يتجاوز 20 رقم")
     .regex(/^[\+]?[0-9\s\-\(\)]{7,15}$/, "يرجى إدخال رقم هاتف صحيح"),
 
   countryId: z
@@ -96,7 +96,15 @@ export const orderFormSchema = z.object({
   notes: z
     .string()
     .max(1000, "الملاحظات يجب ألا تتجاوز 1000 حرف")
-    .optional()
+    .optional(),
+
+  productId: z
+    .string()
+    .min(1, "معرف المنتج مطلوب"),
+
+  productName: z
+    .string()
+    .min(1, "اسم المنتج مطلوب")
 });
 
 export type OrderFormData = z.infer<typeof orderFormSchema>;
