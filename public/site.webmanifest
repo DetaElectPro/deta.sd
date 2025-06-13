@@ -3,7 +3,7 @@
   "name": "Deta Group - مجموعة ديتا",
   "short_name": "Deta Group",
   "description": "مجموعة ديتا - رائدة في الزراعة وتصنيع الأغذية وتطوير البرمجيات في السودان",
-  "start_url": "/",
+  "start_url": "/deta.sd/",
   "display": "standalone",
   "background_color": "#1e5b3a",
   "theme_color": "#1e5b3a",
@@ -12,12 +12,12 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "/favicon-16x16.png",
+      "src": "/deta.sd/favicon-16x16.png",
       "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "/favicon-32x32.png",
+      "src": "/deta.sd/favicon-32x32.png",
       "sizes": "32x32",
       "type": "image/png"
     },

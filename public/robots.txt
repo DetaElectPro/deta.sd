@@ -29,7 +29,7 @@ Disallow: /auth
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://detagroup.com/sitemap.xml
+Sitemap: https://deta.sd/sitemap.xml
 
 # Host preference
-Host: detagroup.com
+Host: deta.sd
