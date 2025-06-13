@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Eye, Edit, Trash2, MessageCircle } from 'lucide-react';
+import { Loader2, Eye, Edit, Trash2, MessageCircle, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import OrderMessagesDialog from './OrderMessagesDialog';
 
@@ -221,6 +222,16 @@ const OrdersManager = () => {
                 </div>
 
                 <div className="flex gap-2">
+                  <Link to={`/admin/orders/${order.id}`}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      title="عرض التفاصيل الكاملة"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </Link>
+
                   <Button
                     variant="outline"
                     size="sm"

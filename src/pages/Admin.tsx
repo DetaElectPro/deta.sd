@@ -11,6 +11,7 @@ import { SiteSettingsManager } from '@/components/admin/SiteSettingsManager';
 import { AnalyticsView } from '@/components/admin/AnalyticsView';
 import ProductsManager from '@/components/admin/ProductsManager';
 import OrdersManager from '@/components/admin/OrdersManager';
+import OrderDetailsView from '@/components/admin/OrderDetailsView';
 
 const Admin = () => {
   return (
@@ -21,6 +22,7 @@ const Admin = () => {
         <Route path="categories" element={<CategoriesManager />} />
         <Route path="products" element={<ProductsManager />} />
         <Route path="orders" element={<OrdersManager />} />
+        <Route path="orders/:id" element={<OrderDetailsView />} />
         <Route path="users" element={<UsersManager />} />
         <Route path="media" element={<MediaManager />} />
         <Route path="background-images" element={<BackgroundImagesManager />} />
