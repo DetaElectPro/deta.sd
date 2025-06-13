@@ -5,10 +5,17 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/deta.sd/', // Add this line for GitHub Pages
+  base: '/deta.sd/',
   server: {
     host: "::",
     port: 8080,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
   plugins: [
     react(),
