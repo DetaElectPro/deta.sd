@@ -1,0 +1,53 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://deta.sd/</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en" />
+  </url>
+  <url>
+    <loc>https://deta.sd/about</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en/about" />
+  </url>
+  <url>
+    <loc>https://deta.sd/services</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en/services" />
+  </url>
+  <url>
+    <loc>https://deta.sd/products</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/products" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en/products" />
+  </url>
+  <url>
+    <loc>https://deta.sd/news</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/news" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en/news" />
+  </url>
+  <url>
+    <loc>https://deta.sd/contact</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://deta.sd/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deta.sd/en/contact" />
+  </url>
+</urlset>
