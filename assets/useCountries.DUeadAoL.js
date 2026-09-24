@@ -1,0 +1,1 @@
+import{u as s}from"./data.BXqlF9SM.js";import{s as t}from"./index.i9wpllDo.js";const a=()=>s({queryKey:["countries"],queryFn:async()=>{const{data:e,error:r}=await t.from("countries").select("*").order("name_ar",{ascending:!0});if(r)throw r;return e}});export{a as u};
