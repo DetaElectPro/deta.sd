@@ -5,12 +5,31 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Leaf, Package, Code, Users, Award, Globe } from "lucide-react";
+import { ArrowLeft, ChevronDown, Leaf, Package, Code, Users, Award, Globe } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReveal } from "@/hooks/useReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import TrustStrip from "@/components/home/TrustStrip";
+import ProcessTimeline from "@/components/home/ProcessTimeline";
+import MarketsStrip from "@/components/home/MarketsStrip";
+import QualityCards from "@/components/home/QualityCards";
+import NewsPreview from "@/components/home/NewsPreview";
+import FaqAccordion from "@/components/home/FaqAccordion";
+import WhatsAppFloat from "@/components/home/WhatsAppFloat";
+
+const ABOUT_IMAGES = [
+  "https://dnnhupnkzbixkgqgcrnc.supabase.co/storage/v1/object/public/background-images/hero/slide-1.jpg",
+  "https://dnnhupnkzbixkgqgcrnc.supabase.co/storage/v1/object/public/background-images/hero/slide-3.jpg",
+  "https://dnnhupnkzbixkgqgcrnc.supabase.co/storage/v1/object/public/background-images/hero/slide-4.jpg",
+  "https://dnnhupnkzbixkgqgcrnc.supabase.co/storage/v1/object/public/background-images/hero/slide-5.jpg",
+];
 
 const Index = () => {
   const { t } = useLanguage();
+  const servicesRef = useReveal<HTMLDivElement>();
+  const statsRef = useReveal<HTMLDivElement>();
+  const aboutRef = useReveal<HTMLDivElement>();
+  const ctaRef = useReveal<HTMLDivElement>();
 
   const services = [
     {
@@ -69,9 +88,12 @@ const Index = () => {
               <p className="mb-8 max-w-xl text-base leading-relaxed text-white/85 sm:text-xl">
                 {t('hero.description')}
               </p>
-              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                 <Button asChild size="lg" className="rounded-full bg-deta-gold px-7 font-bold text-palm-950 shadow-lift hover:bg-deta-gold-light">
                   <Link to="/about">{t('hero.learn_more')}</Link>
+                </Button>
+                <Button asChild size="lg" className="rounded-full bg-white px-7 font-bold text-deta-green shadow-lift hover:bg-sand-100">
+                  <Link to="/order">{t('home.hero.quote_cta')}</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="rounded-full border-white/40 bg-white/10 text-white backdrop-blur hover:bg-white hover:text-deta-green">
                   <Link to="/contact">{t('hero.contact_us')}</Link>
@@ -93,11 +115,21 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        <a
+          href="#trust"
+          className="absolute inset-x-0 bottom-5 z-10 mx-auto flex w-fit flex-col items-center gap-1 text-xs text-white/70 transition-colors hover:text-white sm:text-sm"
+        >
+          <span>{t('home.hero.scroll')}</span>
+          <ChevronDown className="h-5 w-5 animate-bounce" />
+        </a>
       </section>
+
+      <TrustStrip />
 
       {/* Services Section */}
       <section className="bg-sand-50 py-14 sm:py-20">
-        <div className="container mx-auto px-4">
+        <div ref={servicesRef} className="reveal container mx-auto px-4">
           <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
             <p className="mb-3 inline-block rounded-full bg-deta-green/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-deta-green sm:text-sm" aria-hidden="true">
               <span className="h-px w-6 bg-deta-green/40" />
@@ -137,9 +169,13 @@ const Index = () => {
         </div>
       </section>
 
+      <ProcessTimeline />
+
+      <MarketsStrip />
+
       {/* Stats Section */}
       <section className="border-y border-deta-gold/20 bg-palm-950 py-14 sm:py-20">
-        <div className="container mx-auto px-4">
+        <div ref={statsRef} className="reveal container mx-auto px-4">
           <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
             <h2 className="mb-3 text-2xl font-extrabold text-white arabic-heading sm:text-3xl lg:text-4xl">{t('sections.achievements')}</h2>
             <div className="mx-auto mb-4 h-1 w-16 rounded-full bg-deta-gold" aria-hidden="true" />
@@ -166,7 +202,7 @@ const Index = () => {
 
       {/* About Preview Section */}
       <section className="bg-white py-14 sm:py-20">
-        <div className="container mx-auto px-4">
+        <div ref={aboutRef} className="reveal container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
               <h2 className="mb-5 text-2xl font-extrabold text-deta-green arabic-heading sm:text-3xl lg:text-4xl">{t('sections.who_we_are')}</h2>
@@ -203,23 +239,49 @@ const Index = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <div className="h-44 rounded-3xl bg-gradient-to-br from-deta-green to-palm-800 shadow-soft sm:h-48"></div>
-                <div className="h-28 rounded-3xl bg-gradient-to-br from-deta-gold to-deta-gold-light shadow-soft sm:h-32"></div>
+                <img
+                  src={ABOUT_IMAGES[0]}
+                  alt={t('home.about.img_alt')}
+                  loading="lazy"
+                  className="h-44 w-full rounded-3xl object-cover shadow-soft sm:h-48"
+                />
+                <img
+                  src={ABOUT_IMAGES[1]}
+                  alt={t('home.about.img_alt')}
+                  loading="lazy"
+                  className="h-28 w-full rounded-3xl object-cover shadow-soft sm:h-32"
+                />
               </div>
               <div className="mt-8 space-y-4">
-                <div className="h-28 rounded-3xl bg-gradient-to-br from-deta-brown to-deta-brown-light shadow-soft sm:h-32"></div>
-                <div className="h-44 rounded-3xl bg-gradient-to-br from-deta-green-light to-deta-green shadow-soft sm:h-48"></div>
+                <img
+                  src={ABOUT_IMAGES[2]}
+                  alt={t('home.about.img_alt')}
+                  loading="lazy"
+                  className="h-28 w-full rounded-3xl object-cover shadow-soft sm:h-32"
+                />
+                <img
+                  src={ABOUT_IMAGES[3]}
+                  alt={t('home.about.img_alt')}
+                  loading="lazy"
+                  className="h-44 w-full rounded-3xl object-cover shadow-soft sm:h-48"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      <QualityCards />
+
+      <NewsPreview />
+
+      <FaqAccordion />
+
       {/* CTA Section */}
       <section className="relative overflow-hidden bg-sand-100 py-14 sm:py-20">
         <div className="absolute -top-20 start-1/4 h-56 w-56 rounded-full bg-deta-gold/20 blur-3xl" aria-hidden="true" />
         <div className="absolute -bottom-24 end-1/4 h-56 w-56 rounded-full bg-deta-green/15 blur-3xl" aria-hidden="true" />
-        <div className="container relative mx-auto px-4 text-center">
+        <div ref={ctaRef} className="reveal container relative mx-auto px-4 text-center">
           <h2 className="mx-auto mb-5 max-w-2xl text-2xl font-extrabold text-deta-green arabic-heading sm:text-3xl lg:text-4xl">
             {t('cta.ready_to_start')}
           </h2>
@@ -236,6 +298,7 @@ const Index = () => {
       </section>
 
       <Footer />
+      <WhatsAppFloat />
     </div>
   );
 };
