@@ -34,8 +34,6 @@ export const useMultilingualArticles = () => {
   return useQuery({
     queryKey: ['multilingual_articles', currentLanguage],
     queryFn: async () => {
-      console.log('Fetching articles for language:', currentLanguage);
-      
       const { data: articles, error } = await supabase
         .from('articles')
         .select(`
@@ -64,8 +62,6 @@ export const useMultilingualArticles = () => {
         throw error;
       }
       
-      console.log('Fetched articles:', articles);
-      
       return articles?.map(article => ({
         ...article,
         title: article.article_translations?.[0]?.title || '',
@@ -86,8 +82,6 @@ export const useCreateMultilingualArticle = () => {
       articleData: any; 
       translations: Record<string, ArticleTranslation> 
     }) => {
-      console.log('Creating article with data:', articleData, translations);
-      
       // إنشاء المقال الأساسي
       const { data: article, error: articleError } = await supabase
         .from('articles')
@@ -99,8 +93,6 @@ export const useCreateMultilingualArticle = () => {
         console.error('Error creating article:', articleError);
         throw articleError;
       }
-      
-      console.log('Created article:', article);
       
       // إنشاء الترجمات
       const translationPromises = Object.entries(translations).map(([langCode, translation]) => {
@@ -119,8 +111,7 @@ export const useCreateMultilingualArticle = () => {
         return null;
       }).filter(Boolean);
       
-      const results = await Promise.all(translationPromises);
-      console.log('Translation results:', results);
+      await Promise.all(translationPromises);
       
       return article;
     },
@@ -143,8 +134,6 @@ export const useUpdateMultilingualArticle = () => {
       articleData: any; 
       translations: Record<string, ArticleTranslation> 
     }) => {
-      console.log('Updating article:', articleId, articleData, translations);
-      
       // تحديث المقال الأساسي
       const { error: articleError } = await supabase
         .from('articles')

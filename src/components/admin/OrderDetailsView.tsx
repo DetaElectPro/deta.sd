@@ -50,7 +50,7 @@ const OrderDetailsView = () => {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
+        <span className="ms-2">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
       </div>
     );
   }
@@ -71,38 +71,38 @@ const OrderDetailsView = () => {
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6 min-w-0" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap gap-4 items-center justify-between">
+        <div className="flex flex-wrap items-center gap-4 min-w-0">
           <Link to="/admin/orders">
             <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <ArrowLeft className="h-4 w-4 me-2" />
               {isRTL ? 'العودة' : 'Back'}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold truncate">
             {isRTL ? 'تفاصيل الطلب' : 'Order Details'}
           </h1>
         </div>
-        <Badge className={`text-white ${getStatusColor(order.status)}`}>
+        <Badge className={`text-white shrink-0 ${getStatusColor(order.status)}`}>
           {getStatusText(order.status)}
         </Badge>
       </div>
 
       {/* Order Info */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Package className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <Package className="h-5 w-5 shrink-0" />
             {isRTL ? 'معلومات الطلب' : 'Order Information'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <p className="font-medium">{isRTL ? 'رقم الطلب:' : 'Order ID:'}</p>
-              <p className="text-gray-600 font-mono text-sm">{order.id}</p>
+              <p className="text-gray-600 font-mono text-sm break-all">{order.id}</p>
             </div>
             <div>
               <p className="font-medium">{isRTL ? 'تاريخ الطلب:' : 'Order Date:'}</p>
@@ -127,42 +127,42 @@ const OrderDetailsView = () => {
       </Card>
 
       {/* Customer Information */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <User className="h-5 w-5 shrink-0" />
             {isRTL ? 'معلومات العميل' : 'Customer Information'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-gray-500" />
-              <div>
+            <div className="flex items-center gap-2 min-w-0">
+              <User className="h-4 w-4 shrink-0 text-gray-500" />
+              <div className="min-w-0">
                 <p className="font-medium">{isRTL ? 'الاسم:' : 'Name:'}</p>
-                <p className="text-gray-600">{order.customer_name}</p>
+                <p className="text-gray-600 truncate">{order.customer_name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-gray-500" />
-              <div>
+            <div className="flex items-center gap-2 min-w-0">
+              <Mail className="h-4 w-4 shrink-0 text-gray-500" />
+              <div className="min-w-0">
                 <p className="font-medium">{isRTL ? 'البريد الإلكتروني:' : 'Email:'}</p>
-                <p className="text-gray-600">{order.customer_email}</p>
+                <p className="text-gray-600 truncate break-all max-w-full">{order.customer_email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-gray-500" />
-              <div>
+            <div className="flex items-center gap-2 min-w-0">
+              <Phone className="h-4 w-4 shrink-0 text-gray-500" />
+              <div className="min-w-0">
                 <p className="font-medium">{isRTL ? 'الهاتف:' : 'Phone:'}</p>
-                <p className="text-gray-600">{order.customer_phone}</p>
+                <p className="text-gray-600 truncate" dir="ltr">{order.customer_phone}</p>
               </div>
             </div>
             {order.company_name && (
-              <div className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-gray-500" />
-                <div>
+              <div className="flex items-center gap-2 min-w-0">
+                <Building className="h-4 w-4 shrink-0 text-gray-500" />
+                <div className="min-w-0">
                   <p className="font-medium">{isRTL ? 'الشركة:' : 'Company:'}</p>
-                  <p className="text-gray-600">{order.company_name}</p>
+                  <p className="text-gray-600 truncate">{order.company_name}</p>
                 </div>
               </div>
             )}
@@ -171,10 +171,10 @@ const OrderDetailsView = () => {
       </Card>
 
       {/* Location Information */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <MapPin className="h-5 w-5 shrink-0" />
             {isRTL ? 'معلومات الموقع' : 'Location Information'}
           </CardTitle>
         </CardHeader>
@@ -218,26 +218,26 @@ const OrderDetailsView = () => {
 
       {/* Order Items */}
       {order.order_items && order.order_items.length > 0 && (
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+              <ShoppingCart className="h-5 w-5 shrink-0" />
               {isRTL ? 'المنتجات المطلوبة' : 'Ordered Products'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0">
               {order.order_items.map((item, index) => (
-                <div key={item.id} className="border rounded-lg p-4">
-                  <div className="flex items-start gap-4">
+                <div key={item.id} className="border rounded-lg p-4 overflow-hidden">
+                  <div className="flex flex-wrap items-start gap-4">
                     {item.product.image_url && (
                       <img
                         src={item.product.image_url}
                         alt={item.product.name}
-                        className="w-16 h-16 object-cover rounded-lg"
+                        className="w-16 h-16 shrink-0 object-cover rounded-lg"
                       />
                     )}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg">{item.product.name}</h3>
                       {item.product.description && (
                         <p className="text-gray-600 text-sm mt-1">{item.product.description}</p>
@@ -276,24 +276,24 @@ const OrderDetailsView = () => {
 
       {/* Notes */}
       {order.notes && (
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+              <FileText className="h-5 w-5 shrink-0" />
               {isRTL ? 'ملاحظات العميل' : 'Customer Notes'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700 whitespace-pre-wrap">{order.notes}</p>
+            <p className="text-gray-700 whitespace-pre-wrap break-words">{order.notes}</p>
           </CardContent>
         </Card>
       )}
 
       {/* Actions */}
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         <Link to={`/track-order?id=${order.id}&email=${order.customer_email}`} target="_blank">
           <Button variant="outline">
-            <Package className="h-4 w-4 mr-2" />
+            <Package className="h-4 w-4 me-2" />
             {isRTL ? 'فتح صفحة التتبع' : 'Open Tracking Page'}
           </Button>
         </Link>

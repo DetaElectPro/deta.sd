@@ -28,8 +28,6 @@ const SecureNewsletterSignup = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log("Secure newsletter signup:", data);
-      
       toast({
         title: "تم الاشتراك بنجاح",
         description: "شكراً لاشتراككم في نشرتنا الإخبارية",
@@ -49,25 +47,26 @@ const SecureNewsletterSignup = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-3 sm:gap-4" noValidate={false}>
       <div className="flex-1">
         <Input
           type="email"
           placeholder="أدخل بريدك الإلكتروني"
           {...register("email")}
           maxLength={100}
-          className={errors.email ? "border-red-500" : ""}
+          aria-invalid={errors.email ? true : undefined}
+          className={`rounded-full bg-white/95 border-white/40 text-slate-900 placeholder:text-slate-400 focus-visible:ring-deta-gold ${errors.email ? "border-red-500" : ""}`}
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          <p className="text-red-500 text-sm mt-1 text-start">{errors.email.message}</p>
         )}
       </div>
       <Button 
         type="submit" 
-        className="bg-deta-gold hover:bg-deta-gold/90 text-deta-green"
+        className="bg-deta-gold hover:bg-deta-gold/90 text-emerald-950 font-semibold rounded-full px-6 shrink-0"
         disabled={isSubmitting}
       >
-        <Mail className="w-4 h-4 ml-2" />
+        <Mail className="w-4 h-4 me-2" />
         {isSubmitting ? "جاري الاشتراك..." : "اشترك"}
       </Button>
     </form>

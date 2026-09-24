@@ -11,9 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Loader2, Package, MessageCircle, Send } from 'lucide-react';
+import { Loader2, Package, MessageCircle, Send, Radar } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 
 interface Order {
   id: string;
@@ -216,49 +217,70 @@ const OrderTracking = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-500';
-      case 'confirmed': return 'bg-blue-500';
-      case 'shipped': return 'bg-purple-500';
-      case 'delivered': return 'bg-green-500';
-      case 'cancelled': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'pending': return 'bg-amber-500 hover:bg-amber-600';
+      case 'confirmed': return 'bg-blue-500 hover:bg-blue-600';
+      case 'shipped': return 'bg-purple-500 hover:bg-purple-600';
+      case 'delivered': return 'bg-emerald-500 hover:bg-emerald-600';
+      case 'cancelled': return 'bg-red-500 hover:bg-red-600';
+      default: return 'bg-slate-500 hover:bg-slate-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-slate-50" dir={isRTL ? 'rtl' : 'ltr'}>
+      <SEO
+        title="تتبع الطلب | مجموعة ديتا"
+        description="تتبع حالة طلبك من مجموعة ديتا برقم الطلب والبريد الإلكتروني."
+        url="https://deta.sd/track-order"
+        canonical="https://deta.sd/track-order"
+        noindex
+      />
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-8 text-deta-green arabic-heading">
-            {isRTL ? 'تتبع الطلب' : 'Order Tracking'}
+      {/* Page band */}
+      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-950 via-deta-green to-deta-green-light py-10 sm:py-14">
+        <div aria-hidden="true" className="absolute -top-20 -start-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative container mx-auto px-4 text-center text-white">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-medium sm:text-sm">
+            <Radar className="h-4 w-4" />
+            {t('tracking.title')}
+          </span>
+          <h1 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold arabic-heading">
+            {t('tracking.title')}
           </h1>
+          <p className="mt-2 text-sm sm:text-base text-white/85 max-w-xl mx-auto">
+            {t('tracking.subtitle')}
+          </p>
+        </div>
+      </section>
 
+      <main className="container mx-auto px-4 py-8 sm:py-10">
+        <div className="max-w-4xl mx-auto">
           {!foundOrder ? (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
+            <Card className="mb-8 rounded-3xl border border-slate-100 shadow-lg overflow-hidden">
+              <CardHeader className="border-b border-slate-100 pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl text-slate-900">
+                  <Package className="h-5 w-5 shrink-0 text-deta-green" />
                   {isRTL ? 'البحث عن الطلب' : 'Find Your Order'}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-5">
                 <div>
                   <Label htmlFor="orderNumber">
-                    {isRTL ? 'رقم الطلب' : 'Order Number'}
+                    {t('tracking.orderId')}
                   </Label>
                   <Input
                     id="orderNumber"
                     value={orderNumber}
                     onChange={(e) => setOrderNumber(e.target.value)}
                     placeholder={isRTL ? 'أدخل رقم الطلب' : 'Enter order number'}
+                    className="mt-1.5 rounded-xl"
                   />
                 </div>
                 
                 <div>
                   <Label htmlFor="email">
-                    {isRTL ? 'البريد الإلكتروني' : 'Email Address'}
+                    {t('tracking.email')}
                   </Label>
                   <Input
                     id="email"
@@ -266,88 +288,89 @@ const OrderTracking = () => {
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
+                    className="mt-1.5 rounded-xl"
                   />
                 </div>
                 
-                <Button onClick={searchOrder} className="w-full">
-                  {isRTL ? 'البحث عن الطلب' : 'Search Order'}
+                <Button onClick={searchOrder} className="w-full rounded-full bg-deta-green hover:bg-deta-green/90 shadow-md">
+                  {t('tracking.track')}
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               {/* Order Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+              <Card className="rounded-3xl border border-slate-100 shadow-sm">
+                <CardHeader className="border-b border-slate-100 pb-4">
+                  <CardTitle className="flex items-center justify-between gap-3 text-lg sm:text-xl text-slate-900">
                     <span>{isRTL ? 'تفاصيل الطلب' : 'Order Details'}</span>
-                    <Badge className={`text-white ${getStatusColor(foundOrder.status)}`}>
+                    <Badge className={`text-white rounded-full shrink-0 ${getStatusColor(foundOrder.status)}`}>
                       {getStatusText(foundOrder.status)}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="font-medium">{isRTL ? 'رقم الطلب:' : 'Order Number:'}</p>
-                      <p className="text-gray-600">{foundOrder.id}</p>
+                    <div className="rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium text-sm text-slate-900">{isRTL ? 'رقم الطلب:' : 'Order Number:'}</p>
+                      <p className="text-slate-600 text-sm font-mono break-all">{foundOrder.id}</p>
                     </div>
-                    <div>
-                      <p className="font-medium">{isRTL ? 'اسم العميل:' : 'Customer Name:'}</p>
-                      <p className="text-gray-600">{foundOrder.customer_name}</p>
+                    <div className="rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium text-sm text-slate-900">{isRTL ? 'اسم العميل:' : 'Customer Name:'}</p>
+                      <p className="text-slate-600 text-sm break-words">{foundOrder.customer_name}</p>
                     </div>
-                    <div>
-                      <p className="font-medium">{isRTL ? 'رقم الهاتف:' : 'Phone Number:'}</p>
-                      <p className="text-gray-600">{foundOrder.customer_phone}</p>
+                    <div className="rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium text-sm text-slate-900">{isRTL ? 'رقم الهاتف:' : 'Phone Number:'}</p>
+                      <p className="text-slate-600 text-sm" dir="ltr">{foundOrder.customer_phone}</p>
                     </div>
-                    <div>
-                      <p className="font-medium">{isRTL ? 'تاريخ الطلب:' : 'Order Date:'}</p>
-                      <p className="text-gray-600">
+                    <div className="rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium text-sm text-slate-900">{isRTL ? 'تاريخ الطلب:' : 'Order Date:'}</p>
+                      <p className="text-slate-600 text-sm">
                         {new Date(foundOrder.created_at).toLocaleDateString(isRTL ? 'ar' : 'en')}
                       </p>
                     </div>
                     {foundOrder.company_name && (
-                      <div>
-                        <p className="font-medium">{isRTL ? 'اسم الشركة:' : 'Company Name:'}</p>
-                        <p className="text-gray-600">{foundOrder.company_name}</p>
+                      <div className="rounded-2xl border border-slate-100 p-3">
+                        <p className="font-medium text-sm text-slate-900">{isRTL ? 'اسم الشركة:' : 'Company Name:'}</p>
+                        <p className="text-slate-600 text-sm break-words">{foundOrder.company_name}</p>
                       </div>
                     )}
                     {foundOrder.countries && (
-                      <div>
-                        <p className="font-medium">{isRTL ? 'الدولة:' : 'Country:'}</p>
-                        <p className="text-gray-600">
+                      <div className="rounded-2xl border border-slate-100 p-3">
+                        <p className="font-medium text-sm text-slate-900">{isRTL ? 'الدولة:' : 'Country:'}</p>
+                        <p className="text-slate-600 text-sm">
                           {isRTL ? foundOrder.countries.name_ar : foundOrder.countries.name_en}
                         </p>
                       </div>
                     )}
                   </div>
                   {foundOrder.notes && (
-                    <div className="mt-4">
-                      <p className="font-medium">{isRTL ? 'ملاحظات:' : 'Notes:'}</p>
-                      <p className="text-gray-600 mt-1">{foundOrder.notes}</p>
+                    <div className="mt-4 rounded-2xl bg-slate-50 border border-slate-100 p-3">
+                      <p className="font-medium text-sm text-slate-900">{isRTL ? 'ملاحظات:' : 'Notes:'}</p>
+                      <p className="text-slate-600 text-sm mt-1">{foundOrder.notes}</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
 
               {/* Messages */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5" />
-                    {isRTL ? 'التواصل مع الدعم' : 'Communication'}
+              <Card className="rounded-3xl border border-slate-100 shadow-sm">
+                <CardHeader className="border-b border-slate-100 pb-4">
+                  <CardTitle className="flex items-center gap-2 text-lg sm:text-xl text-slate-900">
+                    <MessageCircle className="h-5 w-5 shrink-0 text-deta-green" />
+                    {t('tracking.messages')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-5">
                   <div className="space-y-4">
                     {/* Messages List */}
-                    <div className="max-h-96 overflow-y-auto space-y-3">
+                    <div className="max-h-96 overflow-y-auto space-y-3 rounded-2xl bg-slate-50/60 border border-slate-100 p-3 sm:p-4">
                       {messagesLoading ? (
                         <div className="text-center py-4">
-                          <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                          <Loader2 className="h-6 w-6 animate-spin mx-auto text-deta-green" />
                         </div>
                       ) : messages.length === 0 ? (
-                        <p className="text-gray-500 text-center py-4">
+                        <p className="text-slate-500 text-center py-4 text-sm">
                           {isRTL ? 'لا توجد رسائل بعد' : 'No messages yet'}
                         </p>
                       ) : (
@@ -360,22 +383,22 @@ const OrderTracking = () => {
                             }`}
                           >
                             <div
-                              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                              className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm ${
                                 message.sender_type === 'customer'
-                                  ? 'bg-blue-500 text-white'
-                                  : 'bg-gray-200 text-gray-800'
+                                  ? 'bg-deta-green text-white'
+                                  : 'bg-white border border-slate-200 text-slate-800'
                               }`}
                             >
-                              <p className="text-sm font-medium mb-1">
+                              <p className="text-xs sm:text-sm font-medium mb-1">
                                 {message.sender_name}
-                                <span className="text-xs opacity-75 ml-2">
+                                <span className="text-xs opacity-75 ms-2">
                                   {new Date(message.created_at).toLocaleTimeString(
                                     isRTL ? 'ar' : 'en',
                                     { hour: '2-digit', minute: '2-digit' }
                                   )}
                                 </span>
                               </p>
-                              <p>{message.message}</p>
+                              <p className="text-sm break-words">{message.message}</p>
                             </div>
                           </div>
                         ))
@@ -383,25 +406,25 @@ const OrderTracking = () => {
                     </div>
 
                     {/* Send Message */}
-                    <div className="border-t pt-4">
+                    <div className="border-t border-slate-100 pt-4">
                       <div className="flex gap-2">
                         <Textarea
                           value={newMessage}
                           onChange={(e) => setNewMessage(e.target.value)}
                           placeholder={isRTL ? 'اكتب رسالتك...' : 'Type your message...'}
-                          className="flex-1"
+                          className="flex-1 rounded-2xl"
                           rows={2}
                         />
                         <Button
                           onClick={() => sendMessage.mutate()}
                           disabled={!newMessage.trim() || sendMessage.isPending}
                           size="sm"
-                          className="self-end"
+                          className="self-end rounded-full bg-deta-green hover:bg-deta-green/90 h-10 w-10 p-0 shrink-0"
                         >
                           {sendMessage.isPending ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
-                            <Send className="h-4 w-4" />
+                            <Send className="h-4 w-4 rtl:rotate-180" />
                           )}
                         </Button>
                       </div>
@@ -417,7 +440,7 @@ const OrderTracking = () => {
                   setCustomerEmail('');
                 }}
                 variant="outline"
-                className="w-full"
+                className="w-full rounded-full"
               >
                 {isRTL ? 'البحث عن طلب آخر' : 'Search Another Order'}
               </Button>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,9 +16,10 @@ import { useCities } from '@/hooks/useCities';
 import { usePorts } from '@/hooks/usePorts';
 import { useOrderSubmission } from '@/hooks/useOrderSubmission';
 import { orderFormSchema, OrderFormData } from '@/lib/validationSchemas';
-import { Loader2, Package, User, Mail, Phone, MapPin, Building, FileText } from 'lucide-react';
+import { Loader2, Package, User, Mail, Phone, MapPin, Building, FileText, ClipboardList } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Form,
@@ -163,42 +165,60 @@ const OrderPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
+      <SEO
+        title="إنشاء طلب | مجموعة ديتا"
+        description="أنشئ طلب استيراد جديد من منتجات مجموعة ديتا بسهولة وأمان."
+        url="https://deta.sd/order"
+        canonical="https://deta.sd/order"
+        noindex
+      />
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      {/* Page band */}
+      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-950 via-deta-green to-deta-green-light py-10 sm:py-14">
+        <div aria-hidden="true" className="absolute -top-20 -start-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative container mx-auto px-4 text-center text-white">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-medium sm:text-sm">
+            <ClipboardList className="h-4 w-4" />
+            {isRTL ? 'استلام طلب جديد' : 'New Order Request'}
+          </span>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-8 sm:py-10">
         <div className="max-w-2xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-center">
-                <Package className="h-6 w-6" />
+          <Card className="rounded-3xl border border-slate-100 shadow-lg overflow-hidden">
+            <CardHeader className="bg-white border-b border-slate-100 pb-5">
+              <CardTitle className="flex items-center justify-center gap-2 text-center text-xl sm:text-2xl text-deta-green">
+                <Package className="h-6 w-6 shrink-0" />
                 {isRTL ? 'استلام طلب جديد' : 'New Order Request'}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-5 sm:p-8">
               {isLoading ? (
                 <div className="flex justify-center p-4">
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <Loader2 className="h-6 w-6 animate-spin text-deta-green" />
                 </div>
               ) : (
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Product Information */}
                     {productDetails && (
-                      <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                        <h3 className="font-medium mb-2">
+                      <div className="bg-deta-green/5 border border-deta-green/15 p-4 rounded-2xl mb-6">
+                        <h3 className="font-medium mb-1 text-deta-green text-sm sm:text-base">
                           {isRTL ? 'تفاصيل المنتج' : 'Product Details'}
                         </h3>
-                        <p className="text-gray-700">
+                        <p className="text-slate-700 text-sm sm:text-base">
                           {productDetails.name}
                         </p>
                       </div>
                     )}
 
                     {/* Customer Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <User className="h-5 w-5" />
+                    <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 sm:p-5">
+                      <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 text-slate-900">
+                        <User className="h-5 w-5 shrink-0 text-deta-green" />
                         {isRTL ? 'معلومات العميل' : 'Customer Information'}
                       </h3>
                       
@@ -208,7 +228,7 @@ const OrderPage = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
-                              <User className="h-4 w-4" />
+                              <User className="h-4 w-4 shrink-0" />
                               {isRTL ? 'الاسم الكامل' : 'Full Name'}
                             </FormLabel>
                             <FormControl>
@@ -228,7 +248,7 @@ const OrderPage = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
-                              <Mail className="h-4 w-4" />
+                              <Mail className="h-4 w-4 shrink-0" />
                               {isRTL ? 'البريد الإلكتروني' : 'Email Address'}
                             </FormLabel>
                             <FormControl>
@@ -249,7 +269,7 @@ const OrderPage = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
-                              <Phone className="h-4 w-4" />
+                              <Phone className="h-4 w-4 shrink-0" />
                               {isRTL ? 'رقم الهاتف' : 'Phone Number'}
                             </FormLabel>
                             <FormControl>
@@ -269,7 +289,7 @@ const OrderPage = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
-                              <Building className="h-4 w-4" />
+                              <Building className="h-4 w-4 shrink-0" />
                               {isRTL ? 'اسم الشركة (اختياري)' : 'Company Name (Optional)'}
                             </FormLabel>
                             <FormControl>
@@ -285,9 +305,9 @@ const OrderPage = () => {
                     </div>
 
                     {/* Location Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <MapPin className="h-5 w-5" />
+                    <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 sm:p-5">
+                      <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 text-slate-900">
+                        <MapPin className="h-5 w-5 shrink-0 text-deta-green" />
                         {isRTL ? 'معلومات الموقع' : 'Location Information'}
                       </h3>
 
@@ -400,7 +420,7 @@ const OrderPage = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center gap-2">
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-4 w-4 shrink-0" />
                             {isRTL ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}
                           </FormLabel>
                           <FormControl>
@@ -418,17 +438,17 @@ const OrderPage = () => {
                     {/* Submit Button */}
                     <Button 
                       type="submit" 
-                      className="w-full bg-deta-green hover:bg-deta-green/90" 
+                      className="w-full bg-deta-green hover:bg-deta-green/90 rounded-full py-3 shadow-md" 
                       disabled={orderSubmission.isPending}
                     >
                       {orderSubmission.isPending ? (
                         <>
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          <Loader2 className="h-4 w-4 animate-spin me-2" />
                           {isRTL ? 'جاري الإرسال...' : 'Submitting...'}
                         </>
                       ) : (
                         <>
-                          <Package className="h-4 w-4 mr-2" />
+                          <Package className="h-4 w-4 me-2" />
                           {isRTL ? 'إرسال الطلب' : 'Submit Order'}
                         </>
                       )}

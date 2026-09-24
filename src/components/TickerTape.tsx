@@ -240,7 +240,6 @@ const TickerTape = () => {
 
   const fetchAllData = async () => {
     setIsLoading(true);
-    console.log('Fetching comprehensive market data...');
     
     try {
       const [currencyData, commodityData, stockData, cryptoData] = await Promise.allSettled([
@@ -255,28 +254,23 @@ const TickerTape = () => {
       // Process currency data
       if (currencyData.status === 'fulfilled') {
         allData.push(...currencyData.value);
-        console.log(`Loaded ${currencyData.value.length} currency items`);
       }
 
       // Process commodity data
       if (commodityData.status === 'fulfilled') {
         allData.push(...commodityData.value);
-        console.log(`Loaded ${commodityData.value.length} commodity items`);
       }
 
       // Process stock data
       if (stockData.status === 'fulfilled') {
         allData.push(...stockData.value);
-        console.log(`Loaded ${stockData.value.length} stock items`);
       }
 
       // Process crypto data
       if (cryptoData.status === 'fulfilled') {
         allData.push(...cryptoData.value);
-        console.log(`Loaded ${cryptoData.value.length} crypto items`);
       }
 
-      console.log(`Total items loaded: ${allData.length}`);
       setTickerData(allData);
       
     } catch (error) {
@@ -335,9 +329,9 @@ const TickerTape = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-deta-green text-white py-3 overflow-hidden">
-        <div className="animate-pulse text-center">
-          <span className="text-sm">جاري تحميل الأسعار المباشرة...</span>
+      <div className="border-b border-deta-gold/25 bg-palm-950 py-2.5 text-white sm:py-3">
+        <div className="animate-pulse px-4 text-center">
+          <span className="text-xs sm:text-sm">جاري تحميل الأسعار المباشرة...</span>
         </div>
       </div>
     );
@@ -345,37 +339,37 @@ const TickerTape = () => {
 
   if (tickerData.length === 0) {
     return (
-      <div className="bg-deta-green text-white py-3 overflow-hidden">
-        <div className="text-center">
-          <span className="text-sm">الأسعار غير متاحة حالياً - جاري المحاولة...</span>
+      <div className="border-b border-deta-gold/25 bg-palm-950 py-2.5 text-white sm:py-3">
+        <div className="px-4 text-center">
+          <span className="text-xs text-white/80 sm:text-sm">الأسعار غير متاحة حالياً - جاري المحاولة...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-deta-green text-white py-3 overflow-hidden relative">
+    <div className="relative overflow-hidden border-b border-deta-gold/25 bg-palm-950 py-2.5 text-white sm:py-3">
       <div className="ticker-wrapper">
-        <div className="ticker-content flex gap-12 animate-ticker-seamless">
+        <div className="ticker-content flex items-center gap-8 animate-ticker-seamless sm:gap-12">
           {/* تكرار البيانات 3 مرات لضمان العرض المتتابع بلا توقف */}
           {[...tickerData, ...tickerData, ...tickerData].map((item, index) => (
-            <div key={`${item.symbol}-${index}`} className="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
-              <span className={`text-sm font-medium ${getTypeColor(item.type)}`}>
+            <div key={`${item.symbol}-${index}`} className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-white/5 px-3 py-1 ring-1 ring-white/10 sm:gap-3 sm:px-4">
+              <span className={`text-xs font-semibold sm:text-sm ${getTypeColor(item.type)}`}>
                 {getTypeIcon(item.type)}
               </span>
-              <span className="text-sm font-bold">{item.symbol}</span>
-              <span className="text-sm font-mono">${formatPrice(item.price, item.symbol)}</span>
-              <div className={`flex items-center gap-1 text-xs ${
+              <span className="text-xs font-bold sm:text-sm" dir="ltr">{item.symbol}</span>
+              <span className="font-mono text-xs text-white/90 sm:text-sm" dir="ltr">${formatPrice(item.price, item.symbol)}</span>
+              <div className={`flex items-center gap-1 text-[11px] sm:text-xs ${
                 item.change >= 0 ? 'text-green-400' : 'text-red-400'
               }`}>
-                {item.change >= 0 ? 
-                  <TrendingUp className="w-3 h-3" /> : 
-                  <TrendingDown className="w-3 h-3" />
+                {item.change >= 0 ?
+                  <TrendingUp className="h-3 w-3" /> :
+                  <TrendingDown className="h-3 w-3" />
                 }
-                <span>{item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}</span>
-                <span>({item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%)</span>
+                <span dir="ltr">{item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}</span>
+                <span dir="ltr">({item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%)</span>
               </div>
-              <span className="text-xs text-gray-300 mr-2">{item.name}</span>
+              <span className="hidden text-[11px] text-white/60 me-1 min-[420px]:inline sm:text-xs">{item.name}</span>
             </div>
           ))}
         </div>

@@ -114,10 +114,10 @@ export const UsersManager = () => {
 
   if (editingUser) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-6 min-w-0">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
           <h2 className="text-2xl font-bold arabic-heading">تعديل المستخدم</h2>
-          <div className="space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button onClick={handleSave} className="bg-deta-green hover:bg-deta-green/90">
               حفظ
             </Button>
@@ -170,20 +170,20 @@ export const UsersManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap gap-4 items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة المستخدمين</h1>
       </div>
 
       {/* أدوات البحث */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-4">
-          <div className="relative">
-            <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
+          <div className="relative min-w-0">
+            <Search className="absolute start-3 top-3 h-4 w-4 text-gray-400" />
             <Input
               placeholder="البحث عن المستخدمين..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pr-10"
+              className="ps-10"
             />
           </div>
         </CardContent>
@@ -235,16 +235,16 @@ export const UsersManager = () => {
       {/* قائمة المستخدمين */}
       <div className="grid gap-4">
         {filteredUsers?.map((user) => (
-          <Card key={user.id} className="hover:shadow-md transition-shadow">
+          <Card key={user.id} className="overflow-hidden hover:shadow-md transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0 flex-1">
+                  <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-full flex items-center justify-center">
                     <User className="h-6 w-6 text-gray-600" />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">{user.full_name || 'غير محدد'}</h3>
-                    <p className="text-gray-600">{user.email}</p>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold truncate">{user.full_name || 'غير محدد'}</h3>
+                    <p className="text-gray-600 truncate break-all max-w-full">{user.email}</p>
                     <div className="flex items-center gap-2 mt-1">
                       {getRoleBadge(user.role)}
                       <span className="text-sm text-gray-500">
@@ -254,7 +254,7 @@ export const UsersManager = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"

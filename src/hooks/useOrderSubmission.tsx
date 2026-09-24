@@ -29,7 +29,7 @@ export const useOrderSubmission = () => {
 
       if (orderError) throw orderError;
 
-      // Then, create the order item
+      // Then, create the order item; on failure, roll back the created order
       const { data: orderItem, error: orderItemError } = await supabase
         .from('order_items')
         .insert({
@@ -40,7 +40,10 @@ export const useOrderSubmission = () => {
         .select()
         .single();
 
-      if (orderItemError) throw orderItemError;
+      if (orderItemError) {
+        await supabase.from('orders').delete().eq('id', order.id);
+        throw new Error('فشل حفظ بنود الطلب - Order items failed, order rolled back');
+      }
 
       return order;
     }

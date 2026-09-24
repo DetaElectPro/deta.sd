@@ -182,7 +182,95 @@ const translations = {
     'content.title': 'العنوان',
     'content.excerpt': 'المقطع التعريفي',
     'content.content': 'المحتوى',
-    'content.add_new': 'إضافة جديد'
+    'content.add_new': 'إضافة جديد',
+
+    // News
+    'news.title': 'الأخبار',
+    'news.featured': 'أخبار مميزة',
+    'news.readMore': 'اقرأ المزيد',
+    'news.publishedOn': 'نُشر بتاريخ',
+    'news.noArticles': 'لا توجد مقالات متاحة حالياً',
+
+    // Contact
+    'contact.title': 'اتصل بنا',
+    'contact.subtitle': 'نسعد بتواصلك معنا، أرسل رسالتك وسنرد عليك قريباً',
+    'contact.name': 'الاسم',
+    'contact.email': 'البريد الإلكتروني',
+    'contact.subject': 'الموضوع',
+    'contact.message': 'الرسالة',
+    'contact.send': 'إرسال',
+    'contact.success': 'تم إرسال رسالتك بنجاح، شكراً لتواصلك معنا',
+    'contact.firstName': 'الاسم الأول',
+    'contact.lastName': 'اسم العائلة',
+    'contact.company': 'الشركة',
+    'contact.phone': 'رقم الهاتف',
+
+    // Order
+    'order.title': 'طلب منتج',
+    'order.subtitle': 'املأ النموذج التالي وسنتواصل معك لتأكيد طلبك',
+    'order.customerName': 'اسم العميل',
+    'order.customerEmail': 'البريد الإلكتروني للعميل',
+    'order.customerPhone': 'رقم هاتف العميل',
+    'order.country': 'الدولة',
+    'order.city': 'المدينة',
+    'order.port': 'ميناء الوصول',
+    'order.companyName': 'اسم الشركة',
+    'order.notes': 'ملاحظات إضافية',
+    'order.product': 'المنتج',
+    'order.submit': 'إرسال الطلب',
+    'order.success': 'تم استلام طلبك بنجاح وسنتواصل معك قريباً',
+    'order.quantity': 'الكمية',
+    'order.total': 'الإجمالي',
+
+    // Auth
+    'auth.login': 'تسجيل الدخول',
+    'auth.register': 'إنشاء حساب',
+    'auth.email': 'البريد الإلكتروني',
+    'auth.password': 'كلمة المرور',
+    'auth.fullName': 'الاسم الكامل',
+    'auth.signIn': 'دخول',
+    'auth.signUp': 'اشتراك',
+    'auth.logout': 'تسجيل الخروج',
+    'auth.noAccount': 'ليس لديك حساب؟',
+    'auth.haveAccount': 'لديك حساب بالفعل؟',
+
+    // Tracking
+    'tracking.title': 'تتبع الطلب',
+    'tracking.subtitle': 'أدخل بيانات طلبك لمتابعة حالته',
+    'tracking.orderId': 'رقم الطلب',
+    'tracking.email': 'البريد الإلكتروني',
+    'tracking.track': 'تتبع',
+    'tracking.notFound': 'لم يتم العثور على الطلب، تحقق من البيانات المدخلة',
+    'tracking.status': 'الحالة',
+    'tracking.messages': 'الرسائل',
+    'tracking.sendMessage': 'إرسال رسالة',
+
+    // Common
+    'common.loading': 'جارٍ التحميل...',
+    'common.error': 'حدث خطأ، يرجى المحاولة لاحقاً',
+    'common.retry': 'إعادة المحاولة',
+    'common.noData': 'لا توجد بيانات متاحة',
+    'common.save': 'حفظ',
+    'common.cancel': 'إلغاء',
+    'common.delete': 'حذف',
+    'common.edit': 'تعديل',
+    'common.add': 'إضافة',
+    'common.search': 'بحث',
+    'common.close': 'إغلاق',
+
+    // Admin
+    'admin.dashboard': 'لوحة التحكم',
+    'admin.orders': 'الطلبات',
+    'admin.products': 'المنتجات',
+    'admin.articles': 'المقالات',
+    'admin.users': 'المستخدمون',
+    'admin.settings': 'الإعدادات',
+    'admin.media': 'الوسائط',
+    'admin.logout': 'تسجيل الخروج',
+    'admin.totalOrders': 'إجمالي الطلبات',
+    'admin.totalProducts': 'إجمالي المنتجات',
+    'admin.totalArticles': 'إجمالي المقالات',
+    'admin.totalUsers': 'إجمالي المستخدمين'
   },
   en: {
     // Site Info
@@ -344,7 +432,95 @@ const translations = {
     'content.title': 'Title',
     'content.excerpt': 'Excerpt',
     'content.content': 'Content',
-    'content.add_new': 'Add New'
+    'content.add_new': 'Add New',
+
+    // News
+    'news.title': 'News',
+    'news.featured': 'Featured News',
+    'news.readMore': 'Read More',
+    'news.publishedOn': 'Published on',
+    'news.noArticles': 'No articles available',
+
+    // Contact
+    'contact.title': 'Contact Us',
+    'contact.subtitle': 'We would love to hear from you. Send us a message and we will get back to you soon',
+    'contact.name': 'Name',
+    'contact.email': 'Email',
+    'contact.subject': 'Subject',
+    'contact.message': 'Message',
+    'contact.send': 'Send',
+    'contact.success': 'Your message has been sent successfully. Thank you for contacting us',
+    'contact.firstName': 'First Name',
+    'contact.lastName': 'Last Name',
+    'contact.company': 'Company',
+    'contact.phone': 'Phone Number',
+
+    // Order
+    'order.title': 'Order a Product',
+    'order.subtitle': 'Fill in the form below and we will contact you to confirm your order',
+    'order.customerName': 'Customer Name',
+    'order.customerEmail': 'Customer Email',
+    'order.customerPhone': 'Customer Phone',
+    'order.country': 'Country',
+    'order.city': 'City',
+    'order.port': 'Destination Port',
+    'order.companyName': 'Company Name',
+    'order.notes': 'Additional Notes',
+    'order.product': 'Product',
+    'order.submit': 'Submit Order',
+    'order.success': 'Your order has been received successfully and we will contact you soon',
+    'order.quantity': 'Quantity',
+    'order.total': 'Total',
+
+    // Auth
+    'auth.login': 'Login',
+    'auth.register': 'Register',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.fullName': 'Full Name',
+    'auth.signIn': 'Sign In',
+    'auth.signUp': 'Sign Up',
+    'auth.logout': 'Logout',
+    'auth.noAccount': "Don't have an account?",
+    'auth.haveAccount': 'Already have an account?',
+
+    // Tracking
+    'tracking.title': 'Track Order',
+    'tracking.subtitle': 'Enter your order details to track its status',
+    'tracking.orderId': 'Order ID',
+    'tracking.email': 'Email',
+    'tracking.track': 'Track',
+    'tracking.notFound': 'Order not found. Please check the entered details',
+    'tracking.status': 'Status',
+    'tracking.messages': 'Messages',
+    'tracking.sendMessage': 'Send Message',
+
+    // Common
+    'common.loading': 'Loading...',
+    'common.error': 'An error occurred. Please try again later',
+    'common.retry': 'Retry',
+    'common.noData': 'No data available',
+    'common.save': 'Save',
+    'common.cancel': 'Cancel',
+    'common.delete': 'Delete',
+    'common.edit': 'Edit',
+    'common.add': 'Add',
+    'common.search': 'Search',
+    'common.close': 'Close',
+
+    // Admin
+    'admin.dashboard': 'Dashboard',
+    'admin.orders': 'Orders',
+    'admin.products': 'Products',
+    'admin.articles': 'Articles',
+    'admin.users': 'Users',
+    'admin.settings': 'Settings',
+    'admin.media': 'Media',
+    'admin.logout': 'Logout',
+    'admin.totalOrders': 'Total Orders',
+    'admin.totalProducts': 'Total Products',
+    'admin.totalArticles': 'Total Articles',
+    'admin.totalUsers': 'Total Users'
   }
 };
 

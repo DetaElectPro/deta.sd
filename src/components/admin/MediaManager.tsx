@@ -106,16 +106,16 @@ export const MediaManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap gap-4 justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة الوسائط</h1>
         <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Upload className="h-4 w-4 ml-2" />
+              <Upload className="h-4 w-4 me-2" />
               رفع ملف
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto overflow-x-hidden">
             <DialogHeader>
               <DialogTitle>رفع ملف جديد</DialogTitle>
             </DialogHeader>
@@ -156,7 +156,7 @@ export const MediaManager = () => {
                 </select>
               </div>
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-wrap justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsUploadOpen(false)}>
                   إلغاء
                 </Button>
@@ -171,21 +171,21 @@ export const MediaManager = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {media?.map((file) => (
-          <Card key={file.id} className="overflow-hidden">
+          <Card key={file.id} className="overflow-hidden min-w-0">
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
                   {getFileIcon(file.type)}
-                  <div>
+                  <div className="min-w-0">
                     <CardTitle className="text-sm font-medium truncate">
                       {file.name}
                     </CardTitle>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 truncate">
                       {file.type} • {formatFileSize(file.size_bytes)}
                     </p>
                   </div>
                 </div>
-                <div className="flex space-x-1">
+                <div className="flex gap-1 shrink-0">
                   <Button
                     size="sm"
                     variant="outline"
@@ -231,8 +231,8 @@ export const MediaManager = () => {
                   <FileText className="h-12 w-12 text-gray-400" />
                 </div>
               )}
-              <div className="mt-2">
-                <p className="text-xs text-gray-500 truncate">
+              <div className="mt-2 min-w-0">
+                <p className="text-xs text-gray-500 truncate break-all max-w-full" title={file.url}>
                   {file.url}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
@@ -253,7 +253,7 @@ export const MediaManager = () => {
               ابدأ برفع الملفات الأولى لإدارة وسائط موقعك
             </p>
             <Button onClick={() => setIsUploadOpen(true)}>
-              <Upload className="h-4 w-4 ml-2" />
+              <Upload className="h-4 w-4 me-2" />
               رفع ملف جديد
             </Button>
           </CardContent>

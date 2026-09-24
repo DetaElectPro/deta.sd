@@ -5,11 +5,12 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, ArrowLeft } from "lucide-react";
+import { Calendar, User, ArrowRight, Newspaper } from "lucide-react";
 import { useMultilingualArticles } from "@/hooks/useMultilingualArticles";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useLanguage } from "@/hooks/useLanguage";
+import SEO from "@/components/SEO";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const News = () => {
@@ -21,18 +22,18 @@ const News = () => {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "الزراعة": 
-      case "Agriculture": return "bg-deta-green text-white";
+      case "Agriculture": return "bg-deta-green text-white hover:bg-deta-green";
       case "التصنيع": 
-      case "Manufacturing": return "bg-deta-gold text-white";
+      case "Manufacturing": return "bg-deta-gold text-white hover:bg-deta-gold";
       case "التكنولوجيا": 
-      case "Technology": return "bg-blue-600 text-white";
+      case "Technology": return "bg-blue-600 text-white hover:bg-blue-700";
       case "الشراكات": 
-      case "Partnerships": return "bg-purple-600 text-white";
+      case "Partnerships": return "bg-purple-600 text-white hover:bg-purple-700";
       case "المعارض": 
-      case "Exhibitions": return "bg-orange-600 text-white";
+      case "Exhibitions": return "bg-orange-600 text-white hover:bg-orange-700";
       case "الجودة": 
-      case "Quality": return "bg-red-600 text-white";
-      default: return "bg-gray-600 text-white";
+      case "Quality": return "bg-red-600 text-white hover:bg-red-700";
+      default: return "bg-slate-600 text-white hover:bg-slate-700";
     }
   };
 
@@ -58,19 +59,19 @@ const News = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-slate-50">
         <Header />
-        <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
+        <section className="bg-gradient-to-bl from-emerald-950 via-deta-green to-deta-green-light py-14 sm:py-20">
           <div className="container mx-auto px-4 text-center text-white">
-            <Skeleton className="h-12 w-96 mx-auto mb-6 bg-white/20" />
-            <Skeleton className="h-6 w-[600px] mx-auto bg-white/20" />
+            <Skeleton className="h-10 sm:h-12 w-64 sm:w-96 mx-auto mb-6 bg-white/20" />
+            <Skeleton className="h-5 sm:h-6 w-full max-w-[600px] mx-auto bg-white/20" />
           </div>
         </section>
-        <section className="py-20">
+        <section className="py-14 sm:py-20">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
               {[...Array(6)].map((_, i) => (
-                <Card key={i} className="border-none shadow-lg">
+                <Card key={i} className="border border-slate-100 shadow-sm rounded-2xl overflow-hidden">
                   <CardContent className="p-0">
                     <Skeleton className="h-48 w-full" />
                     <div className="p-6 space-y-4">
@@ -90,16 +91,36 @@ const News = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
+      <SEO
+        title="Deta Group - مجموعة ديتا | الأخبار"
+        description="آخر أخبار مجموعة ديتا: مشاريع وشراكات وفعاليات في الزراعة والتصنيع والتكنولوجيا."
+        keywords="أخبار ديتا, أخبار الزراعة, فعاليات, شراكات, مشاريع السودان"
+        url="https://deta.sd/news"
+        canonical="https://deta.sd/news"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "أخبار مجموعة ديتا",
+          url: "https://deta.sd/news",
+          description: "آخر أخبار مجموعة ديتا في الزراعة والتصنيع والتكنولوجيا.",
+        }}
+      />
       <Header />
       
       {/* Hero Section - Fixed gradient background with proper text contrast */}
-      <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
-        <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">
+      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-950 via-deta-green to-deta-green-light py-14 sm:py-20">
+        <div aria-hidden="true" className="absolute -top-24 -start-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div aria-hidden="true" className="absolute -bottom-28 -end-16 h-80 w-80 rounded-full bg-deta-gold/20 blur-3xl" />
+        <div className="relative container mx-auto px-4 text-center text-white">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-medium sm:text-sm">
+            <Newspaper className="h-4 w-4" />
+            {t('news.featured')}
+          </span>
+          <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 arabic-heading">
             {t('news.title')}
           </h1>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed text-white/90">
             {t('news.description')}
           </p>
         </div>
@@ -107,15 +128,15 @@ const News = () => {
 
       {/* Featured News */}
       {featuredNews && (
-        <section className="py-20">
+        <section className="py-12 sm:py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-deta-green mb-8 arabic-heading">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-deta-green mb-6 sm:mb-8 arabic-heading">
               {t('news.featured')}
             </h2>
-            <Card className="border-none shadow-xl overflow-hidden">
+            <Card className="border border-slate-100 shadow-lg overflow-hidden rounded-3xl bg-white">
               <CardContent className="p-0">
-                <div className="grid lg:grid-cols-2 gap-0">
-                  <div className="h-64 lg:h-auto bg-gradient-to-br from-deta-green to-deta-green-light">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                  <div className="h-56 sm:h-64 lg:h-auto bg-gradient-to-br from-deta-green to-deta-green-light overflow-hidden">
                     {featuredNews.image_url && (
                       <img 
                         src={featuredNews.image_url} 
@@ -124,30 +145,30 @@ const News = () => {
                       />
                     )}
                   </div>
-                  <div className="p-8">
-                    <div className="flex items-center gap-4 mb-4">
+                  <div className="p-6 sm:p-8">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4">
                       <Badge className={getCategoryColor(featuredNews.category)}>
                         {featuredNews.category}
                       </Badge>
-                      <div className="flex items-center gap-2 text-gray-500 text-sm">
-                        <Calendar className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
+                        <Calendar className="w-4 h-4 shrink-0" />
                         <span>{formatDate(featuredNews.published_at)}</span>
                       </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-deta-green mb-4 arabic-heading leading-tight">
+                    <h3 className="text-xl sm:text-2xl font-bold text-deta-green mb-3 sm:mb-4 arabic-heading leading-tight">
                       {featuredNews.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed mb-6">
+                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
                       {featuredNews.excerpt}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-gray-500 text-sm">
-                        <User className="w-4 h-4" />
-                        <span>{featuredNews.author}</span>
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
+                      <div className="flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
+                        <User className="w-4 h-4 shrink-0" />
+                        <span className="line-clamp-1">{featuredNews.author}</span>
                       </div>
-                      <Button className="bg-deta-green hover:bg-deta-green/90">
+                      <Button className="bg-deta-green hover:bg-deta-green/90 rounded-full">
                         {t('buttons.read_more')}
-                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                       </Button>
                     </div>
                   </div>
@@ -159,46 +180,47 @@ const News = () => {
       )}
 
       {/* Regular News */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 sm:py-16 bg-white border-y border-slate-100">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-deta-green mb-12 arabic-heading">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-deta-green mb-8 sm:mb-12 arabic-heading">
             {t('news.all_news')}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
             {regularNews.map((article) => (
-              <Card key={article.id} className="border-none shadow-lg hover-scale overflow-hidden">
+              <Card key={article.id} className="border border-slate-100 shadow-sm hover:shadow-lg transition-shadow overflow-hidden rounded-2xl bg-white">
                 <CardContent className="p-0">
-                  <div className="h-48 bg-gradient-to-br from-deta-green-light to-deta-green">
+                  <div className="aspect-[16/9] bg-gradient-to-br from-deta-green-light to-deta-green overflow-hidden">
                     {article.image_url && (
                       <img 
                         src={article.image_url} 
                         alt={article.title}
-                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                     )}
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-3">
+                  <div className="p-5 sm:p-6">
+                    <div className="flex flex-wrap items-center gap-3 mb-3">
                       <Badge className={getCategoryColor(article.category)}>
                         {article.category}
                       </Badge>
-                      <div className="flex items-center gap-2 text-gray-500 text-sm">
-                        <Calendar className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
+                        <Calendar className="w-4 h-4 shrink-0" />
                         <span>{formatDate(article.published_at)}</span>
                       </div>
                     </div>
-                    <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading leading-tight">
+                    <h3 className="text-base sm:text-lg font-bold text-deta-green mb-2 sm:mb-3 arabic-heading leading-tight line-clamp-2">
                       {article.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-3">
                       {article.excerpt}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-gray-500 text-xs">
-                        <User className="w-3 h-3" />
-                        <span>{article.author}</span>
+                    <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                      <div className="flex items-center gap-2 text-slate-500 text-xs">
+                        <User className="w-3 h-3 shrink-0" />
+                        <span className="line-clamp-1">{article.author}</span>
                       </div>
-                      <Button variant="outline" size="sm" className="border-deta-green text-deta-green hover:bg-deta-green hover:text-white">
+                      <Button variant="outline" size="sm" className="rounded-full border-deta-green text-deta-green hover:bg-deta-green hover:text-white shrink-0">
                         {t('buttons.read_more')}
                       </Button>
                     </div>
@@ -211,23 +233,23 @@ const News = () => {
       </section>
 
       {/* Newsletter Subscription */}
-      <section className="py-20">
+      <section className="py-12 sm:py-16">
         <div className="container mx-auto px-4">
-          <Card className="border-none shadow-lg bg-gradient-to-r from-gray-50 to-gray-100">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold text-deta-green mb-4 arabic-heading">
+          <Card className="border border-slate-100 shadow-lg bg-gradient-to-bl from-emerald-950 via-deta-green to-deta-green-light rounded-3xl overflow-hidden">
+            <CardContent className="p-8 sm:p-12 text-center text-white">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 arabic-heading">
                 {t('news.newsletter_title')}
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-base sm:text-lg text-white/90 mb-8">
                 {t('news.newsletter_description')}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto">
                 <input 
                   type="email" 
                   placeholder={t('news.email_placeholder')}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deta-green"
+                  className="flex-1 px-4 py-3 border border-white/30 bg-white text-slate-900 rounded-full focus:outline-none focus:ring-2 focus:ring-deta-gold text-sm sm:text-base"
                 />
-                <Button className="bg-deta-green hover:bg-deta-green/90 px-8">
+                <Button className="bg-deta-gold hover:bg-deta-gold/90 text-emerald-950 font-semibold px-8 rounded-full">
                   {t('news.subscribe')}
                 </Button>
               </div>

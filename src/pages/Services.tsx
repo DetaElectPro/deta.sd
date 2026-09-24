@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePageTracking } from "@/hooks/usePageTracking";
-import { Wheat, Factory, Code, Users, ShieldCheck, Lightbulb, TrendingUp } from 'lucide-react';
+import SEO from "@/components/SEO";
+import { Wheat, Factory, Code, Users, ShieldCheck, Lightbulb, TrendingUp, PackageCheck } from 'lucide-react';
 
 const Services = () => {
   usePageTracking();
@@ -78,44 +79,61 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-sand-50">
+      <SEO
+        title="Deta Group - مجموعة ديتا | خدماتنا"
+        description="خدمات مجموعة ديتا: زراعة حديثة وتصنيع أغذية وتطوير برمجيات واستشارات لدعم نمو أعمالك."
+        keywords="خدمات ديتا, زراعة حديثة, تصنيع أغذية, تطوير برمجيات, استشارات, السودان"
+        url="https://deta.sd/services"
+        canonical="https://deta.sd/services"
+      />
       <Header />
-      
-      {/* Hero Section - Fixed gradient background */}
-      <section className="bg-gradient-to-r from-deta-green to-deta-green-light py-20">
-        <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 arabic-heading">
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-palm-950 py-14 sm:py-20">
+        <div className="absolute -top-24 end-0 h-72 w-72 rounded-full bg-deta-gold/15 blur-3xl" aria-hidden="true" />
+        <div className="absolute -bottom-28 start-0 h-72 w-72 rounded-full bg-deta-green-light/20 blur-3xl" aria-hidden="true" />
+        <div className="container relative mx-auto px-4 text-center text-white">
+          <span className="mb-4 inline-flex items-center justify-center rounded-2xl bg-white/10 p-3 ring-1 ring-white/15" aria-hidden="true">
+            <PackageCheck className="h-6 w-6 text-deta-gold" />
+          </span>
+          <h1 className="mx-auto mb-5 max-w-3xl text-3xl font-extrabold leading-tight arabic-heading sm:text-4xl lg:text-5xl">
             {t('services.title')}
           </h1>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <div className="mx-auto mb-5 h-1 w-16 rounded-full bg-deta-gold" aria-hidden="true" />
+          <p className="mx-auto max-w-3xl text-base leading-relaxed text-white/80 sm:text-xl">
             {t('services.description')}
           </p>
         </div>
       </section>
 
       {/* Main Services Section */}
-      <section className="py-20">
+      <section className="bg-white py-14 sm:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-deta-green mb-12 text-center arabic-heading">
-            {t('services.main_services')}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+            <h2 className="mb-3 text-2xl font-extrabold text-deta-green arabic-heading sm:text-3xl">
+              {t('services.main_services')}
+            </h2>
+            <div className="mx-auto h-1 w-16 rounded-full bg-deta-gold" aria-hidden="true" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4 lg:gap-8">
             {mainServices.map((service, index) => (
-              <Card key={index} className="border-none shadow-lg hover-scale overflow-hidden">
+              <Card key={index} className="group overflow-hidden rounded-3xl border border-deta-green/10 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift">
+                <div className="h-1.5 bg-gradient-to-b from-deta-green to-deta-green-light" aria-hidden="true" />
                 <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-gradient-to-r from-deta-green to-deta-green-light rounded-lg flex items-center justify-center mb-4">
-                    <service.icon className="w-8 h-8 text-white" />
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-deta-green to-palm-800 shadow-soft transition-transform duration-300 group-hover:scale-105">
+                    <service.icon className="h-7 w-7 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-deta-green mb-3 arabic-heading">
+                  <h3 className="mb-2.5 text-lg font-bold text-deta-green arabic-heading sm:text-xl">
                     {service.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4">
+                  <p className="mb-5 text-sm leading-relaxed text-stone-500">
                     {service.description}
                   </p>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2.5 border-t border-sand-200 pt-4">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
-                        <div className="w-2 h-2 bg-deta-gold rounded-full"></div>
+                      <li key={idx} className="flex items-center gap-2.5 text-xs text-stone-600 sm:text-sm">
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-deta-gold" aria-hidden="true" />
                         {feature}
                       </li>
                     ))}
@@ -128,22 +146,25 @@ const Services = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="bg-sand-100 py-14 sm:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-deta-green mb-12 text-center arabic-heading">
-            {t('services.why_choose_us')}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+            <h2 className="mb-3 text-2xl font-extrabold text-deta-green arabic-heading sm:text-3xl">
+              {t('services.why_choose_us')}
+            </h2>
+            <div className="mx-auto h-1 w-16 rounded-full bg-deta-gold" aria-hidden="true" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             {whyChooseUs.map((item, index) => (
-              <Card key={index} className="border-none shadow-lg text-center">
+              <Card key={index} className="rounded-3xl border border-deta-green/10 bg-white text-center shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift">
                 <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-deta-gold to-deta-gold-light rounded-full flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="w-6 h-6 text-white" />
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-deta-gold to-deta-gold-light shadow-soft">
+                    <item.icon className="h-6 w-6 text-palm-950" />
                   </div>
-                  <h3 className="text-lg font-bold text-deta-green mb-3 arabic-heading">
+                  <h3 className="mb-2.5 text-base font-bold text-deta-green arabic-heading sm:text-lg">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-xs leading-relaxed text-stone-500 sm:text-sm">
                     {item.description}
                   </p>
                 </CardContent>
@@ -154,21 +175,22 @@ const Services = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="bg-white py-14 sm:py-20">
         <div className="container mx-auto px-4">
-          <Card className="border-none shadow-lg bg-gradient-to-r from-deta-green to-deta-green-light">
-            <CardContent className="p-12 text-center text-white">
-              <h2 className="text-3xl font-bold mb-4 arabic-heading">
+          <Card className="relative overflow-hidden rounded-4xl border-none bg-gradient-to-br from-deta-green via-palm-800 to-palm-950 shadow-lift">
+            <div className="absolute -top-16 end-10 h-48 w-48 rounded-full bg-deta-gold/20 blur-3xl" aria-hidden="true" />
+            <CardContent className="relative p-8 text-center text-white sm:p-12">
+              <h2 className="mx-auto mb-4 max-w-2xl text-2xl font-extrabold arabic-heading sm:text-3xl">
                 {t('services.ready_to_start')}
               </h2>
-              <p className="text-lg mb-8 max-w-2xl mx-auto">
+              <p className="mx-auto mb-8 max-w-2xl text-base text-white/80 sm:text-lg">
                 {t('services.contact_us_today')}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="outline" className="bg-white text-deta-green border-white hover:bg-gray-100">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+                <Button size="lg" variant="outline" className="rounded-full border-white bg-white font-bold text-deta-green hover:bg-sand-100">
                   {t('buttons.contact_us')}
                 </Button>
-                <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-deta-green">
+                <Button size="lg" variant="outline" className="rounded-full border-white/40 bg-transparent text-white hover:bg-white hover:text-deta-green">
                   {t('buttons.view_portfolio')}
                 </Button>
               </div>

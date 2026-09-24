@@ -38,8 +38,6 @@ export const useMultilingualProducts = () => {
   return useQuery({
     queryKey: ['multilingual_products', currentLanguage],
     queryFn: async () => {
-      console.log('Fetching products for language:', currentLanguage);
-      
       const { data: products, error } = await supabase
         .from('products')
         .select(`
@@ -72,8 +70,6 @@ export const useMultilingualProducts = () => {
         throw error;
       }
       
-      console.log('Fetched products:', products);
-      
       return products?.map(product => ({
         ...product,
         name: product.product_translations?.[0]?.name || '',
@@ -93,8 +89,6 @@ export const useCreateMultilingualProduct = () => {
       productData: any; 
       translations: Record<string, ProductTranslationInput> 
     }) => {
-      console.log('Creating product with data:', productData, translations);
-      
       // إنشاء المنتج الأساسي
       const { data: product, error: productError } = await supabase
         .from('products')
@@ -106,8 +100,6 @@ export const useCreateMultilingualProduct = () => {
         console.error('Error creating product:', productError);
         throw productError;
       }
-      
-      console.log('Created product:', product);
       
       // إنشاء الترجمات
       const translationPromises = Object.entries(translations).map(([langCode, translation]) => {
@@ -125,8 +117,7 @@ export const useCreateMultilingualProduct = () => {
         return null;
       }).filter(Boolean);
       
-      const results = await Promise.all(translationPromises);
-      console.log('Translation results:', results);
+      await Promise.all(translationPromises);
       
       return product;
     },
@@ -149,8 +140,6 @@ export const useUpdateMultilingualProduct = () => {
       productData: any; 
       translations: Record<string, ProductTranslationInput> 
     }) => {
-      console.log('Updating product:', productId, productData, translations);
-      
       // تحديث المنتج الأساسي
       const { error: productError } = await supabase
         .from('products')

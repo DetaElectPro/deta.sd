@@ -110,8 +110,8 @@ export const AnalyticsView = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <Card key={stat.title} className="overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-gray-600">
                   {stat.title}
                 </CardTitle>
@@ -134,12 +134,12 @@ export const AnalyticsView = () => {
       </div>
 
       {/* مخطط الزيارات اليومية */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle>الزيارات اليومية (آخر أسبوع)</CardTitle>
+          <CardTitle className="text-lg font-semibold">الزيارات اليومية (آخر أسبوع)</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[300px] min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={analytics?.chartData || []}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -160,12 +160,12 @@ export const AnalyticsView = () => {
       </Card>
 
       {/* الصفحات الأكثر زيارة */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle>الصفحات الأكثر زيارة</CardTitle>
+          <CardTitle className="text-lg font-semibold">الصفحات الأكثر زيارة</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[300px] min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={analytics?.topPages || []}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -180,9 +180,9 @@ export const AnalyticsView = () => {
       </Card>
 
       {/* نصائح التحسين */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle>نصائح لتحسين الأداء</CardTitle>
+          <CardTitle className="text-lg font-semibold">نصائح لتحسين الأداء</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

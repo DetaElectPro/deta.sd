@@ -53,25 +53,25 @@ export const SiteSettingsManager = () => {
       </div>
 
       {/* إعدادات عامة */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Globe className="h-5 w-5 ml-2" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <Globe className="h-5 w-5 shrink-0" />
             الإعدادات العامة
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <Label htmlFor="site_title">عنوان الموقع</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="site_title"
                   value={getValue('site_title')}
                   onChange={(e) => handleInputChange('site_title', e.target.value)}
                   placeholder="مجموعة ديتا"
                 />
-                <Button size="sm" onClick={() => handleSave('site_title')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('site_title')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -79,14 +79,14 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="google_analytics_id">معرف Google Analytics</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="google_analytics_id"
                   value={getValue('google_analytics_id')}
                   onChange={(e) => handleInputChange('google_analytics_id', e.target.value)}
                   placeholder="GA-XXXXXXXXX"
                 />
-                <Button size="sm" onClick={() => handleSave('google_analytics_id')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('google_analytics_id')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -95,7 +95,7 @@ export const SiteSettingsManager = () => {
 
           <div>
             <Label htmlFor="site_description">وصف الموقع</Label>
-            <div className="flex space-x-2">
+            <div className="flex gap-2">
               <Textarea
                 id="site_description"
                 value={getValue('site_description')}
@@ -103,7 +103,7 @@ export const SiteSettingsManager = () => {
                 placeholder="وصف موجز عن الموقع"
                 rows={3}
               />
-              <Button size="sm" onClick={() => handleSave('site_description')}>
+              <Button size="sm" className="shrink-0" onClick={() => handleSave('site_description')}>
                 <Save className="h-4 w-4" />
               </Button>
             </div>
@@ -112,10 +112,10 @@ export const SiteSettingsManager = () => {
       </Card>
 
       {/* إعدادات الألوان */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Palette className="h-5 w-5 ml-2" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <Palette className="h-5 w-5 shrink-0" />
             ألوان الموقع
           </CardTitle>
         </CardHeader>
@@ -123,7 +123,7 @@ export const SiteSettingsManager = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="primary_color">اللون الأساسي</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="primary_color"
                   type="color"
@@ -135,7 +135,7 @@ export const SiteSettingsManager = () => {
                   onChange={(e) => handleInputChange('primary_color', e.target.value)}
                   placeholder="#2D5016"
                 />
-                <Button size="sm" onClick={() => handleSave('primary_color')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('primary_color')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -143,7 +143,7 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="secondary_color">اللون الثانوي</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="secondary_color"
                   type="color"
@@ -155,7 +155,7 @@ export const SiteSettingsManager = () => {
                   onChange={(e) => handleInputChange('secondary_color', e.target.value)}
                   placeholder="#4A7C59"
                 />
-                <Button size="sm" onClick={() => handleSave('secondary_color')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('secondary_color')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -163,7 +163,7 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="accent_color">لون التمييز</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="accent_color"
                   type="color"
@@ -175,7 +175,7 @@ export const SiteSettingsManager = () => {
                   onChange={(e) => handleInputChange('accent_color', e.target.value)}
                   placeholder="#D4AF37"
                 />
-                <Button size="sm" onClick={() => handleSave('accent_color')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('accent_color')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -185,10 +185,10 @@ export const SiteSettingsManager = () => {
       </Card>
 
       {/* معلومات التواصل */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Mail className="h-5 w-5 ml-2" />
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <Mail className="h-5 w-5 shrink-0" />
             معلومات التواصل
           </CardTitle>
         </CardHeader>
@@ -196,7 +196,7 @@ export const SiteSettingsManager = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="contact_email">البريد الإلكتروني</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="contact_email"
                   type="email"
@@ -204,7 +204,7 @@ export const SiteSettingsManager = () => {
                   onChange={(e) => handleInputChange('contact_email', e.target.value)}
                   placeholder="info@example.com"
                 />
-                <Button size="sm" onClick={() => handleSave('contact_email')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('contact_email')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -212,14 +212,14 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="contact_phone">رقم الهاتف</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="contact_phone"
                   value={getValue('contact_phone')}
                   onChange={(e) => handleInputChange('contact_phone', e.target.value)}
                   placeholder="+249123456789"
                 />
-                <Button size="sm" onClick={() => handleSave('contact_phone')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('contact_phone')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -229,22 +229,22 @@ export const SiteSettingsManager = () => {
       </Card>
 
       {/* وسائل التواصل الاجتماعي */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle>وسائل التواصل الاجتماعي</CardTitle>
+          <CardTitle className="text-lg font-semibold">وسائل التواصل الاجتماعي</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="facebook_url">فيسبوك</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="facebook_url"
                   value={getValue('facebook_url')}
                   onChange={(e) => handleInputChange('facebook_url', e.target.value)}
                   placeholder="https://facebook.com/company"
                 />
-                <Button size="sm" onClick={() => handleSave('facebook_url')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('facebook_url')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -252,14 +252,14 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="twitter_url">تويتر</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="twitter_url"
                   value={getValue('twitter_url')}
                   onChange={(e) => handleInputChange('twitter_url', e.target.value)}
                   placeholder="https://twitter.com/company"
                 />
-                <Button size="sm" onClick={() => handleSave('twitter_url')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('twitter_url')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>
@@ -267,14 +267,14 @@ export const SiteSettingsManager = () => {
 
             <div>
               <Label htmlFor="linkedin_url">لينكد إن</Label>
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Input
                   id="linkedin_url"
                   value={getValue('linkedin_url')}
                   onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
                   placeholder="https://linkedin.com/company"
                 />
-                <Button size="sm" onClick={() => handleSave('linkedin_url')}>
+                <Button size="sm" className="shrink-0" onClick={() => handleSave('linkedin_url')}>
                   <Save className="h-4 w-4" />
                 </Button>
               </div>

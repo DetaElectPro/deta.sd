@@ -61,6 +61,20 @@ export default {
 					'gold-light': '#F4D03F',
 					brown: '#8B4513',
 					'brown-light': '#CD853F',
+				},
+				// Harvest neutrals (warm sand tones for agri-export surfaces)
+				sand: {
+					50: '#FBF8F0',
+					100: '#F5EEDC',
+					200: '#EADFC2',
+					300: '#DCC99B',
+				},
+				// Deep palm greens for dark sections
+				palm: {
+					700: '#2D5016',
+					800: '#1E3A10',
+					900: '#14280B',
+					950: '#0C1A07',
 				}
 			},
 			fontFamily: {
@@ -70,7 +84,13 @@ export default {
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'4xl': '2rem',
+			},
+			boxShadow: {
+				soft: '0 10px 40px -12px rgb(18 42 14 / 0.22)',
+				lift: '0 20px 55px -14px rgb(18 42 14 / 0.35)',
+				gold: '0 0 0 4px rgb(212 175 55 / 0.22)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -106,13 +126,31 @@ export default {
 					'100%': {
 						transform: 'translateX(0)'
 					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-12px)'
+					}
+				},
+				'kenburns': {
+					'0%': {
+						transform: 'scale(1.05)'
+					},
+					'100%': {
+						transform: 'scale(1.14)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
-				'slide-in-right': 'slide-in-right 0.5s ease-out'
+				'slide-in-right': 'slide-in-right 0.5s ease-out',
+				'float': 'float 7s ease-in-out infinite',
+				'kenburns': 'kenburns 9s ease-in-out infinite alternate',
 			}
 		}
 	},

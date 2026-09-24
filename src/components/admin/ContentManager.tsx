@@ -147,8 +147,8 @@ export const ContentManager = () => {
 
   if (editingArticle || isCreating) {
     return (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="max-w-4xl mx-auto space-y-6 min-w-0">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
           <h2 className="text-2xl font-bold arabic-heading">
             {editingArticle ? 'تعديل المقال' : 'إضافة مقال جديد'}
           </h2>
@@ -228,7 +228,7 @@ export const ContentManager = () => {
               />
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 id="is_featured"
@@ -246,30 +246,30 @@ export const ContentManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap gap-4 items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة المحتوى</h1>
         <Button onClick={() => setIsCreating(true)} className="bg-deta-green hover:bg-deta-green/90">
-          <Plus className="h-4 w-4 ml-2" />
+          <Plus className="h-4 w-4 me-2" />
           إضافة مقال جديد
         </Button>
       </div>
 
       {/* أدوات البحث والفلترة */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
+            <div className="flex-1 min-w-0">
               <div className="relative">
-                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute start-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   placeholder="البحث في المقالات..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pr-10"
+                  className="ps-10"
                 />
               </div>
             </div>
-            <div className="w-full md:w-48">
+            <div className="w-full md:w-48 shrink-0">
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
@@ -288,10 +288,10 @@ export const ContentManager = () => {
       {/* قائمة المقالات */}
       <div className="grid gap-4">
         {filteredArticles?.map((article) => (
-          <Card key={article.id} className="hover:shadow-md transition-shadow">
+          <Card key={article.id} className="overflow-hidden hover:shadow-md transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-lg font-semibold">{article.title}</h3>
                     {article.is_featured && (
@@ -316,7 +316,7 @@ export const ContentManager = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex items-center gap-2 ms-4 shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"

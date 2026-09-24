@@ -132,16 +132,16 @@ export const ArticlesManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap gap-4 justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة المقالات</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={resetForm}>
-              <Plus className="h-4 w-4 ml-2" />
+              <Plus className="h-4 w-4 me-2" />
               مقال جديد
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
             <DialogHeader>
               <DialogTitle>
                 {editingArticle ? 'تعديل المقال' : 'إنشاء مقال جديد'}
@@ -278,7 +278,7 @@ export const ArticlesManager = () => {
                 </Tabs>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                 <Switch
                   id="is_featured"
                   checked={formData.is_featured}
@@ -287,7 +287,7 @@ export const ArticlesManager = () => {
                 <Label htmlFor="is_featured">مقال مميز</Label>
               </div>
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-wrap justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   إلغاء
                 </Button>
@@ -302,10 +302,10 @@ export const ArticlesManager = () => {
 
       <div className="grid gap-4">
         {articles?.map((article) => (
-          <Card key={article.id}>
+          <Card key={article.id} className="overflow-hidden">
             <CardHeader>
               <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <CardTitle className="text-lg">{article.title}</CardTitle>
                   <p className="text-sm text-gray-600 mt-1">
                     {article.category} • {article.author} •
@@ -329,7 +329,7 @@ export const ArticlesManager = () => {
                     />
                   </div>
                 )}
-                <div className="flex space-x-2">
+                <div className="flex gap-2 shrink-0">
                   <Button variant="outline" size="sm" onClick={() => handleEdit(article)}>
                     <Pencil className="h-4 w-4" />
                   </Button>

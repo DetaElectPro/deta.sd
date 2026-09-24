@@ -147,7 +147,7 @@ export const ImageUploader = ({
               type="button"
               variant="destructive"
               size="sm"
-              className="absolute top-2 right-2"
+              className="absolute top-2 end-2"
               onClick={(e) => {
                 e.stopPropagation();
                 handleRemoveImage();
@@ -185,12 +185,12 @@ export const ImageUploader = ({
 
       {/* معلومات الملف المحدد */}
       {selectedFile && !uploading && (
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <ImageIcon className="h-4 w-4 text-gray-500" />
-              <div>
-                <p className="text-sm font-medium">{selectedFile.name}</p>
+        <div className="bg-gray-50 p-3 rounded-lg overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <ImageIcon className="h-4 w-4 shrink-0 text-gray-500" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium truncate break-all">{selectedFile.name}</p>
                 <p className="text-xs text-gray-500">
                   {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
                 </p>
@@ -201,8 +201,9 @@ export const ImageUploader = ({
               onClick={handleUpload}
               disabled={disabled}
               size="sm"
+              className="shrink-0"
             >
-              <Upload className="h-4 w-4 ml-1" />
+              <Upload className="h-4 w-4 me-1" />
               رفع
             </Button>
           </div>
@@ -210,7 +211,7 @@ export const ImageUploader = ({
       )}
 
       {/* رسالة تحذيرية */}
-      <div className="flex items-start space-x-2 text-xs text-gray-500">
+      <div className="flex items-start gap-2 text-xs text-gray-500">
         <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
         <div>
           <p>تأكد من أن الصورة ذات جودة عالية ومناسبة للعرض كخلفية.</p>

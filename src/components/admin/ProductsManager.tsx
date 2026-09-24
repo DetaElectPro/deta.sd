@@ -157,18 +157,18 @@ const ProductsManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">إدارة المنتجات</h2>
+      <div className="flex flex-wrap gap-4 justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة المنتجات</h1>
         <Button onClick={() => setIsCreating(true)} className="bg-deta-green hover:bg-deta-green/90">
-          <Plus className="h-4 w-4 ml-2" />
+          <Plus className="h-4 w-4 me-2" />
           إضافة منتج جديد
         </Button>
       </div>
 
       {(isCreating || editingId) && (
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
-            <CardTitle>{editingId ? 'تعديل المنتج' : 'إضافة منتج جديد'}</CardTitle>
+            <CardTitle className="text-lg font-semibold">{editingId ? 'تعديل المنتج' : 'إضافة منتج جديد'}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -194,7 +194,7 @@ const ProductsManager = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <Switch
                     id="is_new"
                     checked={formData.is_new}
@@ -202,7 +202,7 @@ const ProductsManager = () => {
                   />
                   <Label htmlFor="is_new">منتج جديد</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <Switch
                     id="is_featured"
                     checked={formData.is_featured}
@@ -284,13 +284,13 @@ const ProductsManager = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button type="submit" disabled={createProduct.isPending || updateProduct.isPending}>
-                  <Save className="h-4 w-4 ml-2" />
+                  <Save className="h-4 w-4 me-2" />
                   حفظ
                 </Button>
                 <Button type="button" variant="outline" onClick={handleCancel}>
-                  <X className="h-4 w-4 ml-2" />
+                  <X className="h-4 w-4 me-2" />
                   إلغاء
                 </Button>
               </div>
@@ -301,21 +301,21 @@ const ProductsManager = () => {
 
       <div className="grid gap-4">
         {products.map((product) => (
-          <Card key={product.id}>
+          <Card key={product.id} className="overflow-hidden">
             <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold">{product.name}</h3>
-                    {product.is_new && <Badge className="bg-green-500">جديد</Badge>}
-                    {product.is_featured && <Badge className="bg-blue-500">مميز</Badge>}
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="font-semibold truncate">{product.name}</h3>
+                    {product.is_new && <Badge className="bg-green-500 shrink-0">جديد</Badge>}
+                    {product.is_featured && <Badge className="bg-blue-500 shrink-0">مميز</Badge>}
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+                  <p className="text-sm text-gray-600 mb-2 break-words line-clamp-3">{product.description}</p>
                   {product.price && (
                     <p className="text-lg font-bold text-deta-green">${product.price}</p>
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 shrink-0">
                   <Button
                     variant="outline"
                     size="sm"

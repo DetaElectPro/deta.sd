@@ -128,11 +128,11 @@ export const CategoriesManager = () => {
   if (editingCategory || isCreating) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
           <h2 className="text-2xl font-bold arabic-heading">
             {editingCategory ? 'تعديل الفئة' : 'إضافة فئة جديدة'}
           </h2>
-          <div className="space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button onClick={handleSave} className="bg-deta-green hover:bg-deta-green/90">
               حفظ
             </Button>
@@ -191,27 +191,27 @@ export const CategoriesManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap gap-4 items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة الفئات</h1>
         <Button onClick={() => setIsCreating(true)} className="bg-deta-green hover:bg-deta-green/90">
-          <Plus className="h-4 w-4 ml-2" />
+          <Plus className="h-4 w-4 me-2" />
           إضافة فئة جديدة
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories?.map((category) => (
-          <Card key={category.id} className="hover:shadow-md transition-shadow">
+          <Card key={category.id} className="overflow-hidden hover:shadow-md transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-2">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex items-center gap-2 min-w-0">
                   <div 
-                    className="w-4 h-4 rounded-full"
+                    className="w-4 h-4 shrink-0 rounded-full"
                     style={{ backgroundColor: category.color }}
                   />
-                  <h3 className="text-lg font-semibold">{category.name}</h3>
+                  <h3 className="text-lg font-semibold truncate">{category.name}</h3>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -232,7 +232,7 @@ export const CategoriesManager = () => {
               </div>
               
               {category.description && (
-                <p className="text-gray-600 text-sm mb-3">{category.description}</p>
+                <p className="text-gray-600 text-sm mb-3 break-words line-clamp-3">{category.description}</p>
               )}
               
               <div className="text-xs text-gray-500">

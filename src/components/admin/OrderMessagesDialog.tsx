@@ -78,15 +78,15 @@ const OrderMessagesDialog = ({ orderId, isOpen, onClose }: OrderMessagesDialogPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh]">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5" />
+          <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
+            <MessageCircle className="h-5 w-5 shrink-0" />
             رسائل الطلب
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col h-96">
+        <div className="flex flex-col h-96 min-w-0">
           {/* Messages List */}
           <div className="flex-1 overflow-y-auto space-y-3 p-4 border rounded-lg bg-gray-50">
             {isLoading ? (
@@ -108,16 +108,16 @@ const OrderMessagesDialog = ({ orderId, isOpen, onClose }: OrderMessagesDialogPr
                         : 'bg-blue-500 text-white'
                     }`}
                   >
-                    <p className="text-sm font-medium mb-1">
+                    <p className="text-sm font-medium mb-1 break-words">
                       {message.sender_name}
-                      <span className="text-xs opacity-75 mr-2">
+                      <span className="text-xs opacity-75 ms-2">
                         {new Date(message.created_at).toLocaleTimeString('ar', {
                           hour: '2-digit',
                           minute: '2-digit'
                         })}
                       </span>
                     </p>
-                    <p>{message.message}</p>
+                    <p className="break-words">{message.message}</p>
                   </div>
                 </div>
               ))

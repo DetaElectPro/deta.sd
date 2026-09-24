@@ -6,8 +6,6 @@ import { Globe } from 'lucide-react';
 export const LanguageSelector = () => {
   const { currentLanguage, setCurrentLanguage, languages, t, isLoading } = useLanguage();
 
-  console.log('LanguageSelector render:', { currentLanguage, languages, isLoading });
-
   if (isLoading) {
     return (
       <div className="flex items-center gap-2">

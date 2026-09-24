@@ -152,20 +152,20 @@ const OrdersManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">إدارة الطلبات</h2>
+      <div className="flex flex-wrap gap-4 justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة الطلبات</h1>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 items-center">
+      <div className="flex flex-wrap gap-4 items-center">
         <Input
           placeholder="البحث بالاسم أو البريد الإلكتروني..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          className="flex-1 min-w-[200px] max-w-sm"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-48 shrink-0">
             <SelectValue placeholder="تصفية حسب الحالة" />
           </SelectTrigger>
           <SelectContent>
@@ -182,46 +182,47 @@ const OrdersManager = () => {
       {/* Orders List */}
       <div className="space-y-4">
         {orders.map((order) => (
-          <Card key={order.id}>
+          <Card key={order.id} className="overflow-hidden">
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-2">
-                    <h3 className="font-semibold text-lg">{order.customer_name}</h3>
-                    <Badge className={`text-white ${getStatusBadgeColor(order.status)}`}>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-4 mb-2">
+                    <h3 className="font-semibold text-lg truncate">{order.customer_name}</h3>
+                    <Badge className={`text-white shrink-0 ${getStatusBadgeColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </Badge>
                   </div>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                    <div>
-                      <span className="font-medium">البريد الإلكتروني:</span> {order.customer_email}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 min-w-0">
+                    <div className="min-w-0">
+                      <span className="font-medium">البريد الإلكتروني:</span>{' '}
+                      <span className="break-all">{order.customer_email}</span>
                     </div>
-                    <div>
+                    <div className="min-w-0 truncate">
                       <span className="font-medium">الهاتف:</span> {order.customer_phone}
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <span className="font-medium">تاريخ الطلب:</span> {new Date(order.created_at).toLocaleDateString('ar')}
                     </div>
                     {order.company_name && (
-                      <div>
+                      <div className="min-w-0 truncate">
                         <span className="font-medium">الشركة:</span> {order.company_name}
                       </div>
                     )}
                     {order.countries && (
-                      <div>
+                      <div className="min-w-0 truncate">
                         <span className="font-medium">الدولة:</span> {order.countries.name_ar}
                       </div>
                     )}
                     {order.delivery_methods && (
-                      <div>
+                      <div className="min-w-0 truncate">
                         <span className="font-medium">طريقة التسليم:</span> {order.delivery_methods.name_ar}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 shrink-0">
                   <Link to={`/admin/orders/${order.id}`}>
                     <Button
                       variant="outline"
@@ -250,41 +251,41 @@ const OrdersManager = () => {
                         <Eye className="h-4 w-4" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
                       <DialogHeader>
-                        <DialogTitle>تفاصيل الطلب</DialogTitle>
+                        <DialogTitle className="text-lg font-semibold">تفاصيل الطلب</DialogTitle>
                       </DialogHeader>
                       {selectedOrder && (
-                        <div className="space-y-4">
+                        <div className="space-y-4 min-w-0">
                           <div className="grid grid-cols-2 gap-4">
-                            <div>
+                            <div className="min-w-0">
                               <label className="font-medium">اسم العميل:</label>
-                              <p>{selectedOrder.customer_name}</p>
+                              <p className="truncate">{selectedOrder.customer_name}</p>
                             </div>
-                            <div>
+                            <div className="min-w-0">
                               <label className="font-medium">البريد الإلكتروني:</label>
-                              <p>{selectedOrder.customer_email}</p>
+                              <p className="break-all">{selectedOrder.customer_email}</p>
                             </div>
-                            <div>
+                            <div className="min-w-0">
                               <label className="font-medium">رقم الهاتف:</label>
-                              <p>{selectedOrder.customer_phone}</p>
+                              <p className="truncate">{selectedOrder.customer_phone}</p>
                             </div>
                             {selectedOrder.company_name && (
-                              <div>
+                              <div className="min-w-0">
                                 <label className="font-medium">اسم الشركة:</label>
-                                <p>{selectedOrder.company_name}</p>
+                                <p className="truncate">{selectedOrder.company_name}</p>
                               </div>
                             )}
                           </div>
                           
                           {selectedOrder.notes && (
-                            <div>
+                            <div className="min-w-0">
                               <label className="font-medium">ملاحظات:</label>
-                              <p className="mt-1 p-2 bg-gray-50 rounded">{selectedOrder.notes}</p>
+                              <p className="mt-1 p-2 bg-gray-50 rounded break-words">{selectedOrder.notes}</p>
                             </div>
                           )}
 
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-2">
                             <Select
                               value={selectedOrder.status}
                               onValueChange={(value) => 

@@ -60,18 +60,18 @@ export const AdminDashboard = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
+            <Card key={stat.title} className="overflow-hidden">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-600 truncate">
                       {stat.title}
                     </p>
                     <p className="text-3xl font-bold text-gray-900">
                       {stat.value}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-full ${stat.bgColor}`}>
+                  <div className={`p-3 shrink-0 rounded-full ${stat.bgColor}`}>
                     <Icon className={`h-6 w-6 ${stat.color}`} />
                   </div>
                 </div>

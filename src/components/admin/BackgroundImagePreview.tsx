@@ -89,14 +89,14 @@ export const BackgroundImagePreview = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
           
           {/* عنوان الصورة */}
-          <div className="absolute bottom-4 left-4 text-white">
-            <h3 className="text-lg font-semibold">
+          <div className="absolute bottom-4 start-4 end-20 text-white min-w-0">
+            <h3 className="text-lg font-semibold truncate">
               {backgroundImages[currentImageIndex]?.title}
             </h3>
           </div>
           
           {/* مؤشرات الصور */}
-          <div className="absolute bottom-4 right-4 flex space-x-2">
+          <div className="absolute bottom-4 end-4 flex gap-2">
             {backgroundImages.map((_, index) => (
               <button
                 key={index}
@@ -113,7 +113,7 @@ export const BackgroundImagePreview = () => {
         </div>
         
         {/* أزرار التحكم */}
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex items-center justify-center gap-2">
           <Button
             size="sm"
             variant="outline"

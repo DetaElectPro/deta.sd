@@ -21,7 +21,7 @@ const AnimatedBackground = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
+      setCurrentImageIndex((prevIndex) =>
         (prevIndex + 1) % backgroundImages.length
       );
     }, 5000); // تغيير الصورة كل 5 ثواني
@@ -30,43 +30,48 @@ const AnimatedBackground = () => {
   }, [backgroundImages.length]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden bg-palm-950" aria-hidden="true">
       {backgroundImages.map((image, index) => (
         <div
           key={index}
-          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-[2000ms] ease-in-out ${
+            index === currentImageIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
           style={{
             backgroundImage: `url(${image})`,
           }}
         />
       ))}
-      
+
       {/* طبقة تدرج للتأكد من قراءة النص */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
-      
+      <div className="absolute inset-0 bg-gradient-to-t from-palm-950/95 via-palm-950/55 to-palm-950/25"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-palm-950/40 via-transparent to-transparent"></div>
+
       {/* طبقة إضافية للون العلامة التجارية */}
-      <div className="absolute inset-0 bg-deta-green/20"></div>
-      
+      <div className="absolute inset-0 bg-deta-green/25"></div>
+
+      {/* توهج ذهبي خافت */}
+      <div className="absolute -top-24 end-0 h-72 w-72 rounded-full bg-deta-gold/15 blur-3xl"></div>
+      <div className="absolute bottom-0 start-0 h-80 w-80 rounded-full bg-deta-green-light/20 blur-3xl"></div>
+
       {/* عناصر متحركة إضافية */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-deta-gold rounded-full animate-ping opacity-70"></div>
-        <div className="absolute top-40 right-20 w-3 h-3 bg-deta-gold/60 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-32 left-1/4 w-1.5 h-1.5 bg-white rounded-full animate-ping delay-1000"></div>
-        <div className="absolute bottom-20 right-1/3 w-2.5 h-2.5 bg-deta-gold/40 rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-20 start-10 h-2 w-2 animate-ping rounded-full bg-deta-gold opacity-70"></div>
+        <div className="absolute top-40 end-20 h-3 w-3 animate-pulse rounded-full bg-deta-gold/60"></div>
+        <div className="absolute bottom-32 start-1/4 h-1.5 w-1.5 animate-ping rounded-full bg-white delay-1000"></div>
+        <div className="absolute bottom-20 end-1/3 h-2.5 w-2.5 animate-pulse rounded-full bg-deta-gold/40 delay-500"></div>
       </div>
-      
+
       {/* مؤشرات الصور */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute inset-x-0 bottom-6 flex justify-center gap-2 sm:bottom-8">
         {backgroundImages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentImageIndex 
-                ? 'bg-deta-gold scale-110' 
-                : 'bg-white/50 hover:bg-white/70'
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === currentImageIndex
+                ? 'w-8 bg-deta-gold'
+                : 'w-2 bg-white/50 hover:bg-white/70'
             }`}
             aria-label={`انتقل إلى الصورة ${index + 1}`}
           />

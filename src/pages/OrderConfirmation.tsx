@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -7,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/useLanguage';
 import { usePageTracking } from '@/hooks/usePageTracking';
-import { CheckCircle, Package, User, Mail, Phone, MapPin, Building, FileText, Copy, ExternalLink } from 'lucide-react';
+import { CheckCircle, Package, User, Mail, Phone, MapPin, Building, FileText, Copy, ExternalLink, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 
 interface OrderDetails {
   id: string;
@@ -76,17 +78,17 @@ const OrderConfirmation = () => {
 
   if (!orderId) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm">
               <CardContent className="pt-6">
                 <p className="text-red-600">
                   {isRTL ? 'رقم الطلب مفقود' : 'Order ID is missing'}
                 </p>
                 <Link to="/order">
-                  <Button className="mt-4">
+                  <Button className="mt-4 rounded-full bg-deta-green hover:bg-deta-green/90">
                     {isRTL ? 'إنشاء طلب جديد' : 'Create New Order'}
                   </Button>
                 </Link>
@@ -101,14 +103,14 @@ const OrderConfirmation = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm">
               <CardContent className="pt-6">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-deta-green mx-auto"></div>
-                <p className="mt-4">{isRTL ? 'جاري التحميل...' : 'Loading...'}</p>
+                <p className="mt-4 text-slate-600">{isRTL ? 'جاري التحميل...' : 'Loading...'}</p>
               </CardContent>
             </Card>
           </div>
@@ -120,17 +122,17 @@ const OrderConfirmation = () => {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm">
               <CardContent className="pt-6">
                 <p className="text-red-600">
                   {isRTL ? 'لم يتم العثور على الطلب' : 'Order not found'}
                 </p>
                 <Link to="/order">
-                  <Button className="mt-4">
+                  <Button className="mt-4 rounded-full bg-deta-green hover:bg-deta-green/90">
                     {isRTL ? 'إنشاء طلب جديد' : 'Create New Order'}
                   </Button>
                 </Link>
@@ -144,20 +146,29 @@ const OrderConfirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
+      <SEO
+        title="تأكيد الطلب | مجموعة ديتا"
+        description="تم استلام طلبكم بنجاح، تابعوا تفاصيل وحالة الطلب هنا."
+        url="https://deta.sd/order-confirmation"
+        canonical="https://deta.sd/order-confirmation"
+        noindex
+      />
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto space-y-6">
+      <div className="container mx-auto px-4 py-8 sm:py-10">
+        <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
           {/* Success Message */}
-          <Card className="border-green-200 bg-green-50">
-            <CardContent className="pt-6">
+          <Card className="border-emerald-200 bg-gradient-to-bl from-emerald-50 to-green-50 rounded-3xl shadow-sm overflow-hidden">
+            <CardContent className="pt-6 sm:pt-8 pb-6 sm:pb-8">
               <div className="text-center">
-                <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-                <h1 className="text-2xl font-bold text-green-800 mb-2">
+                <span className="mx-auto mb-4 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-emerald-500/10">
+                  <CheckCircle className="h-12 w-12 sm:h-14 sm:w-14 text-emerald-600" />
+                </span>
+                <h1 className="text-xl sm:text-2xl font-bold text-emerald-800 mb-2">
                   {isRTL ? 'تم إرسال طلبك بنجاح!' : 'Order Submitted Successfully!'}
                 </h1>
-                <p className="text-green-700">
+                <p className="text-emerald-700 text-sm sm:text-base">
                   {isRTL ? 'شكراً لك، سيتم التواصل معك قريباً' : 'Thank you, we will contact you soon'}
                 </p>
               </div>
@@ -165,49 +176,58 @@ const OrderConfirmation = () => {
           </Card>
 
           {/* Order Details */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5" />
+          <Card className="rounded-3xl border border-slate-100 shadow-sm">
+            <CardHeader className="border-b border-slate-100 pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl text-slate-900">
+                <Package className="h-5 w-5 shrink-0 text-deta-green" />
                 {isRTL ? 'تفاصيل الطلب' : 'Order Details'}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-5 pt-5">
               {/* Order ID */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">{isRTL ? 'رقم الطلب:' : 'Order ID:'}</p>
-                  <p className="text-sm text-gray-600 font-mono">{order.id}</p>
+              <div className="flex items-center justify-between gap-3 p-3 sm:p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                <div className="min-w-0">
+                  <p className="font-medium text-sm sm:text-base text-slate-900">{isRTL ? 'رقم الطلب:' : 'Order ID:'}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 font-mono break-all">{order.id}</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={copyOrderId}>
+                <Button variant="outline" size="sm" onClick={copyOrderId} className="rounded-full shrink-0">
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
 
               {/* Customer Information */}
               <div className="space-y-3">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <User className="h-4 w-4" />
+                <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base text-slate-900">
+                  <User className="h-4 w-4 shrink-0 text-deta-green" />
                   {isRTL ? 'معلومات العميل' : 'Customer Information'}
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="font-medium">{isRTL ? 'الاسم:' : 'Name:'}</p>
-                    <p className="text-gray-600">{order.customer_name}</p>
+                  <div className="rounded-2xl border border-slate-100 p-3">
+                    <p className="font-medium text-slate-900">{isRTL ? 'الاسم:' : 'Name:'}</p>
+                    <p className="text-slate-600 break-words">{order.customer_name}</p>
                   </div>
-                  <div>
-                    <p className="font-medium">{isRTL ? 'البريد الإلكتروني:' : 'Email:'}</p>
-                    <p className="text-gray-600">{order.customer_email}</p>
+                  <div className="rounded-2xl border border-slate-100 p-3">
+                    <p className="font-medium flex items-center gap-1.5 text-slate-900">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                      {isRTL ? 'البريد الإلكتروني:' : 'Email:'}
+                    </p>
+                    <p className="text-slate-600 break-all">{order.customer_email}</p>
                   </div>
-                  <div>
-                    <p className="font-medium">{isRTL ? 'الهاتف:' : 'Phone:'}</p>
-                    <p className="text-gray-600">{order.customer_phone}</p>
+                  <div className="rounded-2xl border border-slate-100 p-3">
+                    <p className="font-medium flex items-center gap-1.5 text-slate-900">
+                      <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                      {isRTL ? 'الهاتف:' : 'Phone:'}
+                    </p>
+                    <p className="text-slate-600" dir="ltr">{order.customer_phone}</p>
                   </div>
                   {order.company_name && (
-                    <div>
-                      <p className="font-medium">{isRTL ? 'الشركة:' : 'Company:'}</p>
-                      <p className="text-gray-600">{order.company_name}</p>
+                    <div className="rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium flex items-center gap-1.5 text-slate-900">
+                        <Building className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                        {isRTL ? 'الشركة:' : 'Company:'}
+                      </p>
+                      <p className="text-slate-600 break-words">{order.company_name}</p>
                     </div>
                   )}
                 </div>
@@ -215,28 +235,28 @@ const OrderConfirmation = () => {
 
               {/* Location Information */}
               <div className="space-y-3">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
+                <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base text-slate-900">
+                  <MapPin className="h-4 w-4 shrink-0 text-deta-green" />
                   {isRTL ? 'معلومات الموقع' : 'Location Information'}
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="font-medium">{isRTL ? 'الدولة:' : 'Country:'}</p>
-                    <p className="text-gray-600">
+                  <div className="rounded-2xl border border-slate-100 p-3">
+                    <p className="font-medium text-slate-900">{isRTL ? 'الدولة:' : 'Country:'}</p>
+                    <p className="text-slate-600">
                       {order.countries ? (isRTL ? order.countries.name_ar : order.countries.name_en) : '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="font-medium">{isRTL ? 'المدينة:' : 'City:'}</p>
-                    <p className="text-gray-600">
+                  <div className="rounded-2xl border border-slate-100 p-3">
+                    <p className="font-medium text-slate-900">{isRTL ? 'المدينة:' : 'City:'}</p>
+                    <p className="text-slate-600">
                       {order.cities ? (isRTL ? order.cities.name_ar : order.cities.name_en) : '-'}
                     </p>
                   </div>
                   {order.ports && (
-                    <div className="md:col-span-2">
-                      <p className="font-medium">{isRTL ? 'الميناء/المطار:' : 'Port/Airport:'}</p>
-                      <p className="text-gray-600">
+                    <div className="md:col-span-2 rounded-2xl border border-slate-100 p-3">
+                      <p className="font-medium text-slate-900">{isRTL ? 'الميناء/المطار:' : 'Port/Airport:'}</p>
+                      <p className="text-slate-600">
                         {isRTL ? order.ports.name_ar : order.ports.name_en}
                       </p>
                     </div>
@@ -247,27 +267,27 @@ const OrderConfirmation = () => {
               {/* Notes */}
               {order.notes && (
                 <div className="space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
+                  <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base text-slate-900">
+                    <FileText className="h-4 w-4 shrink-0 text-deta-green" />
                     {isRTL ? 'الملاحظات' : 'Notes'}
                   </h3>
-                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                  <p className="text-sm text-slate-600 bg-slate-50 border border-slate-100 p-3 rounded-2xl">
                     {order.notes}
                   </p>
                 </div>
               )}
 
               {/* Status and Date */}
-              <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-100">
                 <div>
-                  <p className="font-medium">{isRTL ? 'الحالة:' : 'Status:'}</p>
-                  <Badge className="bg-yellow-100 text-yellow-800">
+                  <p className="font-medium text-sm sm:text-base text-slate-900">{isRTL ? 'الحالة:' : 'Status:'}</p>
+                  <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 mt-1">
                     {isRTL ? 'قيد المراجعة' : 'Pending Review'}
                   </Badge>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">{isRTL ? 'تاريخ الطلب:' : 'Order Date:'}</p>
-                  <p className="text-sm text-gray-600">
+                <div className="text-end">
+                  <p className="font-medium text-sm sm:text-base text-slate-900">{isRTL ? 'تاريخ الطلب:' : 'Order Date:'}</p>
+                  <p className="text-xs sm:text-sm text-slate-600">
                     {new Date(order.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                   </p>
                 </div>
@@ -276,31 +296,32 @@ const OrderConfirmation = () => {
           </Card>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <Button 
               onClick={copyTrackingLink}
-              className="flex-1"
+              className="flex-1 rounded-full"
               variant="outline"
             >
-              <Copy className="h-4 w-4 mr-2" />
+              <Copy className="h-4 w-4 me-2" />
               {isRTL ? 'نسخ رابط التتبع' : 'Copy Tracking Link'}
             </Button>
             
             <Link to={`/track-order?id=${orderId}&email=${order.customer_email}`} className="flex-1">
-              <Button className="w-full bg-deta-green hover:bg-deta-green/90">
-                <ExternalLink className="h-4 w-4 mr-2" />
+              <Button className="w-full bg-deta-green hover:bg-deta-green/90 rounded-full">
+                <ExternalLink className="h-4 w-4 me-2" />
                 {isRTL ? 'تتبع الطلب' : 'Track Order'}
               </Button>
             </Link>
           </div>
 
           {/* Additional Information */}
-          <Card className="bg-blue-50 border-blue-200">
+          <Card className="bg-blue-50/60 border-blue-100 rounded-3xl">
             <CardContent className="pt-6">
-              <h3 className="font-semibold text-blue-800 mb-2">
+              <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                <Info className="h-4 w-4 shrink-0" />
                 {isRTL ? 'معلومات مهمة' : 'Important Information'}
               </h3>
-              <ul className="text-sm text-blue-700 space-y-1">
+              <ul className="text-xs sm:text-sm text-blue-800 space-y-1.5">
                 <li>• {isRTL ? 'احتفظ برقم الطلب للمراجعة المستقبلية' : 'Keep your order ID for future reference'}</li>
                 <li>• {isRTL ? 'سيتم التواصل معك خلال 24-48 ساعة' : 'We will contact you within 24-48 hours'}</li>
                 <li>• {isRTL ? 'يمكنك تتبع حالة طلبك في أي وقت' : 'You can track your order status anytime'}</li>

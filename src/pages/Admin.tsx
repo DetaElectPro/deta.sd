@@ -12,10 +12,18 @@ import { AnalyticsView } from '@/components/admin/AnalyticsView';
 import ProductsManager from '@/components/admin/ProductsManager';
 import OrdersManager from '@/components/admin/OrdersManager';
 import OrderDetailsView from '@/components/admin/OrderDetailsView';
+import SEO from '@/components/SEO';
 
 const Admin = () => {
   return (
     <AdminLayout>
+      <SEO
+        title="لوحة الإدارة | مجموعة ديتا"
+        description="لوحة إدارة محتوى مجموعة ديتا الداخلية."
+        url="https://deta.sd/admin"
+        canonical="https://deta.sd/admin"
+        noindex
+      />
       <Routes>
         <Route index element={<AdminDashboard />} />
         <Route path="content" element={<MultilingualContentManager />} />

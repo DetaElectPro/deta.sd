@@ -35,8 +35,6 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  console.log('AdminLayout render:', { userProfile, currentPath: location.pathname });
-
   const navigation = [
     { name: isRTL ? 'لوحة التحكم' : 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: isRTL ? 'المحتوى' : 'Content', href: '/admin/content', icon: FileText },
@@ -128,8 +126,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                   } ${sidebarCollapsed ? 'justify-center' : ''}`}
                   title={sidebarCollapsed ? item.name : ''}
                 >
-                  <Icon className={`h-5 w-5 flex-shrink-0 ${sidebarCollapsed ? '' : isRTL ? 'ml-3' : 'mr-3'}`} />
-                  {!sidebarCollapsed && <span>{item.name}</span>}
+                  <Icon className={`h-5 w-5 flex-shrink-0 ${sidebarCollapsed ? '' : 'me-3'}`} />
+                  {!sidebarCollapsed && <span className="truncate">{item.name}</span>}
                 </Link>
               );
             })}
@@ -139,13 +137,13 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         {/* User Profile & Logout */}
         <div className="absolute bottom-0 w-full p-4 border-t bg-gray-50">
           {!sidebarCollapsed && (
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-deta-green rounded-full flex items-center justify-center text-white font-bold">
+            <div className="flex items-center mb-4 min-w-0">
+              <div className="w-8 h-8 shrink-0 bg-deta-green rounded-full flex items-center justify-center text-white font-bold">
                 {userProfile?.full_name?.charAt(0) || 'A'}
               </div>
-              <div className={`${isRTL ? 'mr-3' : 'ml-3'}`}>
-                <p className="text-sm font-medium text-gray-700">{userProfile?.full_name || 'Admin'}</p>
-                <p className="text-xs text-gray-500">{userProfile?.role || 'admin'}</p>
+              <div className="ms-3 min-w-0">
+                <p className="text-sm font-medium text-gray-700 truncate">{userProfile?.full_name || 'Admin'}</p>
+                <p className="text-xs text-gray-500 truncate">{userProfile?.role || 'admin'}</p>
               </div>
             </div>
           )}
@@ -154,14 +152,14 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             className={`w-full hover:bg-red-50 hover:text-red-600 hover:border-red-200 ${sidebarCollapsed ? 'px-2' : ''}`}
             onClick={handleSignOut}
           >
-            <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : isRTL ? 'ml-2' : 'mr-2'}`} />
+            <LogOut className={`h-4 w-4 shrink-0 ${sidebarCollapsed ? '' : 'me-2'}`} />
             {!sidebarCollapsed && (isRTL ? 'تسجيل الخروج' : 'Logout')}
           </Button>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Top bar for mobile */}
         <div className="bg-white shadow-sm border-b lg:hidden">
           <div className="flex items-center justify-between h-16 px-4">
@@ -180,7 +178,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
         {/* Page content */}
         <main className="flex-1 p-6 overflow-auto">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto w-full min-w-0">
             {children}
           </div>
         </main>

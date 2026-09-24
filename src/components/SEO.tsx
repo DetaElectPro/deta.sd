@@ -14,6 +14,11 @@ interface SEOProps {
   section?: string;
   locale?: string;
   noindex?: boolean;
+  canonical?: string;
+  jsonLd?: object;
+  imageWidth?: number;
+  imageHeight?: number;
+  localeAlternate?: 'en_US' | 'ar_SD';
 }
 
 const SEO = ({
@@ -28,9 +33,15 @@ const SEO = ({
   author = "Deta Group",
   section,
   locale = "ar_SD",
-  noindex = false
+  noindex = false,
+  canonical,
+  jsonLd,
+  imageWidth = 1200,
+  imageHeight = 630,
+  localeAlternate = "en_US"
 }: SEOProps) => {
   const fullTitle = title.includes('Deta Group') ? title : `${title} | Deta Group - مجموعة ديتا`;
+  const canonicalUrl = canonical ?? url;
 
   return (
     <Helmet>
@@ -39,7 +50,7 @@ const SEO = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
-      <link rel="canonical" href={url} />
+      <link rel="canonical" href={canonicalUrl} />
       
       {/* Robots */}
       {noindex ? (
@@ -53,9 +64,18 @@ const SEO = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
+      {image && (
+        <meta property="og:image:width" content={String(imageWidth)} />
+      )}
+      {image && (
+        <meta property="og:image:height" content={String(imageHeight)} />
+      )}
       <meta property="og:url" content={url} />
       <meta property="og:site_name" content="Deta Group" />
       <meta property="og:locale" content={locale} />
+      {localeAlternate && (
+        <meta property="og:locale:alternate" content={localeAlternate} />
+      )}
       
       {/* Article specific */}
       {type === 'article' && publishedTime && (
@@ -76,11 +96,17 @@ const SEO = ({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:site" content="@detagroup" />
       <meta name="twitter:creator" content="@detagroup" />
 
       {/* Additional SEO tags */}
       <meta name="format-detection" content="telephone=no" />
       <meta name="theme-color" content="#1e5b3a" />
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      )}
     </Helmet>
   );
 };

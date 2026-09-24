@@ -22,17 +22,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
-    console.log('Setting up auth state listener...');
-    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          console.log('User logged in, fetching profile...');
           // Use setTimeout to avoid blocking the auth state change
           setTimeout(async () => {
             try {
@@ -42,20 +38,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .eq('id', session.user.id)
                 .maybeSingle();
               
-              console.log('Profile fetch result:', { profile, error });
-              
               if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching profile:', error);
                 // إذا لم يكن هناك ملف شخصي، قم بإنشاء واحد
                 if (error.code === 'PGRST301' || error.message?.includes('no rows returned')) {
-                  console.log('No profile found, creating one...');
                   const { data: newProfile, error: insertError } = await supabase
                     .from('profiles')
                     .insert({
                       id: session.user.id,
                       email: session.user.email,
                       full_name: session.user.user_metadata?.full_name || session.user.email,
-                      role: 'admin' // مؤقتاً جعل جميع المستخدمين مديرين للاختبار
+                      role: 'user' // الحسابات الجديدة مستخدمون عاديون; الترقية لمشرف يدوياً فقط
                     })
                     .select()
                     .single();
@@ -63,12 +56,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   if (insertError) {
                     console.error('Error creating profile:', insertError);
                   } else {
-                    console.log('Profile created successfully:', newProfile);
                     setUserProfile(newProfile);
                   }
                 }
               } else {
-                console.log('Profile loaded successfully:', profile);
                 setUserProfile(profile);
               }
             } catch (err) {
@@ -76,7 +67,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }, 0);
         } else {
-          console.log('User logged out, clearing profile...');
           setUserProfile(null);
         }
         setLoading(false);
@@ -88,21 +78,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         console.error('Error getting session:', error);
       }
-      console.log('Initial session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => {
-      console.log('Cleaning up auth subscription');
       subscription.unsubscribe();
     };
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    console.log('Attempting sign in for:', email);
-    
     // Check network connectivity first
     if (!navigator.onLine) {
       throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى.');
@@ -125,8 +111,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         throw error;
       }
-      
-      console.log('Sign in successful:', data.user?.email);
     } catch (error: any) {
       console.error('Sign in failed:', error);
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -137,8 +121,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    console.log('Attempting sign up for:', email);
-    
     // Check network connectivity first
     if (!navigator.onLine) {
       throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى.');
@@ -164,8 +146,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         throw error;
       }
-      
-      console.log('Sign up successful:', data.user?.email);
     } catch (error: any) {
       console.error('Sign up failed:', error);
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -176,14 +156,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    console.log('Attempting sign out');
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
         throw error;
       }
-      console.log('Sign out successful');
     } catch (error: any) {
       console.error('Sign out failed:', error);
       if (error.name === 'TypeError' && error.message.includes('fetch')) {

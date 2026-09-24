@@ -88,7 +88,7 @@ export const FileInfo = ({
   }
 
   return (
-    <Card className={className}>
+    <Card className={`overflow-hidden ${className ?? ''}`}>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           {getFileTypeIcon(fileType)}
@@ -97,9 +97,9 @@ export const FileInfo = ({
       </CardHeader>
       <CardContent className="space-y-3">
         {fileName && (
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">اسم الملف:</span>
-            <span className="text-sm font-medium truncate max-w-[200px]" title={fileName}>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-sm shrink-0 text-gray-600">اسم الملف:</span>
+            <span className="text-sm font-medium truncate max-w-[200px] break-all" title={fileName}>
               {fileName}
             </span>
           </div>
@@ -153,7 +153,7 @@ export const FileInfo = ({
               onClick={handleDownload}
               className="flex-1"
             >
-              <Download className="h-3 w-3 mr-1" />
+              <Download className="h-3 w-3 me-1" />
               تحميل
             </Button>
             <Button
@@ -162,7 +162,7 @@ export const FileInfo = ({
               onClick={handleOpenInNewTab}
               className="flex-1"
             >
-              <ExternalLink className="h-3 w-3 mr-1" />
+              <ExternalLink className="h-3 w-3 me-1" />
               فتح
             </Button>
           </div>

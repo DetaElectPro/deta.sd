@@ -199,7 +199,7 @@ export const BackgroundImagesManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap gap-4 justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900 arabic-heading">إدارة صور الخلفية المتحركة</h1>
         <Dialog open={isCreateOpen} onOpenChange={(open) => {
           setIsCreateOpen(open);
@@ -207,11 +207,11 @@ export const BackgroundImagesManager = () => {
         }}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="h-4 w-4 ml-2" />
+              <Plus className="h-4 w-4 me-2" />
               إضافة صورة جديدة
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto overflow-x-hidden">
             <DialogHeader>
               <DialogTitle>
                 {editingImage ? 'تعديل صورة الخلفية' : 'إضافة صورة خلفية جديدة'}
@@ -261,7 +261,7 @@ export const BackgroundImagesManager = () => {
                 />
               </div>
 
-              <div className="flex items-center space-x-2">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <Switch
                   id="is_active"
                   checked={formData.is_active}
@@ -270,7 +270,7 @@ export const BackgroundImagesManager = () => {
                 <Label htmlFor="is_active">تفعيل الصورة</Label>
               </div>
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-wrap justify-end gap-2">
                 <Button 
                   type="button" 
                   variant="outline" 
@@ -279,14 +279,14 @@ export const BackgroundImagesManager = () => {
                     resetForm();
                   }}
                 >
-                  <X className="h-4 w-4 ml-1" />
+                  <X className="h-4 w-4 me-1" />
                   إلغاء
                 </Button>
                 <Button 
                   type="submit" 
                   disabled={createImage.isPending || updateImage.isPending}
                 >
-                  <Save className="h-4 w-4 ml-1" />
+                  <Save className="h-4 w-4 me-1" />
                   {editingImage ? 'تحديث' : 'إضافة'}
                 </Button>
               </div>
@@ -305,7 +305,7 @@ export const BackgroundImagesManager = () => {
         {images?.map((image, index) => (
           <Card key={image.id} className={`overflow-hidden ${!image.is_active ? 'opacity-60' : ''}`}>
             <CardContent className="p-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                   <img
                     src={image.url}
@@ -336,7 +336,7 @@ export const BackgroundImagesManager = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                   <Button
                     size="sm"
                     variant="outline"
@@ -390,7 +390,7 @@ export const BackgroundImagesManager = () => {
               ابدأ بإضافة صور الخلفية المتحركة لموقعك
             </p>
             <Button onClick={() => setIsCreateOpen(true)}>
-              <Plus className="h-4 w-4 ml-2" />
+              <Plus className="h-4 w-4 me-2" />
               إضافة صورة جديدة
             </Button>
           </CardContent>
